@@ -1,2 +1,2 @@
 # Vidar
-Private communication application
+Private communications application
