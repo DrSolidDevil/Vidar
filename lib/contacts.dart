@@ -184,7 +184,6 @@ class ContactList extends ChangeNotifier {
       notifyListeners();
       return true;
     } else {
-      print("(removeContactByName) Contact name \"$name\" not found");
       return false;
     }
   }
