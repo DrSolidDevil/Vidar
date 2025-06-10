@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:vidar/chat.dart';
+import 'package:vidar/edit_contact.dart';
 import 'configuration.dart';
 
 
@@ -33,10 +35,16 @@ class _ContactListPageState extends State<ContactListPage> {
             color: Colors.white, 
             width: 2
           ),
-          borderRadius: BorderRadius.all(Radius.circular(10.0))
+          borderRadius: BorderRadius.circular(10.0),
         ),
         child: FloatingActionButton(
-          onPressed: () {print("FloatingActionButton was pressed");},
+          onPressed: () {
+            Contact newContact = Contact("", "", "");
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => EditContactPage(newContact, contactList, "newcontact")),
+            );
+          },
           backgroundColor: Colors.transparent,
           foregroundColor: Colors.white,
           child: Icon(Icons.add_comment),
@@ -69,7 +77,7 @@ class _ContactListPageState extends State<ContactListPage> {
           Container(
             margin: EdgeInsets.only(right: 10),
             child: IconButton(
-              onPressed: () {print("Settingg button pressed");},
+              onPressed: () {print("Settings button pressed");},
               icon: const Icon(
                 Icons.settings,
                 color: Colors.white,
@@ -84,37 +92,52 @@ class _ContactListPageState extends State<ContactListPage> {
 }
 
 class ContactBadge extends StatelessWidget {
-  const ContactBadge(this.contact, {super.key});
+  const ContactBadge(this.contact, this.contactList, {super.key});
   final Contact contact;
+  final ContactList contactList;
 
   @override
   Widget build(BuildContext context) {
     return InkWell( 
       child: Container(
-        height: 70,
-        width: 100, // MediaQuery.sizeOf(context).width
         alignment: Alignment.center,
         padding: const EdgeInsets.only(top: 10, bottom: 10),
         margin: EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
         decoration: BoxDecoration(
           color: VidarColors.primaryDarkSpaceCadet,
-          borderRadius: BorderRadius.all(Radius.circular(10.0))
+          borderRadius: BorderRadius.circular(10.0),
         ),
       
-        child: Text(
-          contact.name,
-          style: const TextStyle(
-            fontSize: 32,
-            color: Colors.white,
-            decoration: TextDecoration.none
-          ),
+        child: Column(
+          children: [
+            Text(
+              contact.name,
+              style: const TextStyle(
+                fontSize: 32,
+                color: Colors.white,
+                decoration: TextDecoration.none
+              ),
+            ),
+            Text(
+              contact.phoneNumber,
+              style: const TextStyle(
+                fontSize: 12,
+                color: Colors.white,
+                decoration: TextDecoration.none
+              ),
+            )
+          ],
         ),
       ),
       onTap: () {
-        print("Go to contact \"" + contact.name + "\"");
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ChatPage(contact, contactList)),
+        );
       },
       onLongPress: () {
         print("Long hold on contact \"" + contact.name + "\"");
+        // alert dialog
       },
     );
   }
@@ -124,7 +147,7 @@ class Contact {
   Contact(this.name, this.encryptionKey, this.phoneNumber);
   String name;
   String encryptionKey;
-  final String phoneNumber;
+  String phoneNumber;
 }
 
 class ContactList extends ChangeNotifier {
@@ -220,12 +243,31 @@ class ContactList extends ChangeNotifier {
   List<ContactBadge> getContactBadges() {
     final List<ContactBadge> contactBadges = [];
     for (final Contact contact in listOfContacts) {
-      contactBadges.add(ContactBadge(contact));
+      contactBadges.add(ContactBadge(contact, this));
     }
     return contactBadges;
   }
 
   ContactBadge getContactBadgeAtIndex(final int index) {
-    return ContactBadge(listOfContacts[index]);
+    return ContactBadge(listOfContacts[index], this);
   }
+}
+
+/// True if it is invalid
+bool isInvalidContactByParams(String? name, String? encryptionKey, String? phoneNumber) {
+  if (name == null || phoneNumber == null) {
+    return true;
+  }
+  if (name == "" || phoneNumber == "") {
+    return true;
+  }
+  // phone number contains non numberic characters
+  if (phoneNumber.contains(RegExp(r"[^\d]"))) {
+    return true;
+  }
+  return true;
+}
+
+bool isInvalidContact(Contact contact) {
+  return isInvalidContactByParams(contact.name, contact.encryptionKey, contact.phoneNumber);
 }

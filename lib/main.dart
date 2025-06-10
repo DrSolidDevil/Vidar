@@ -5,7 +5,12 @@ import 'contacts.dart';
 /*
 Notes:
 You can't have multiple people with the same name
+Use the edit contact page to create new ones by just entering a blank contact
+If a part is missing then do an alert
 
+if contact has no key then no encryption is done (i.e it sends plain text)
+
+to format phone numbers maybe use the "phone_numbers_parser" package
 */
 
 void main() {
