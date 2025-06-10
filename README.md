@@ -1,3 +1,2 @@
-# vidar
-
-A new Flutter project.
+# Vidar
+Private communication application
