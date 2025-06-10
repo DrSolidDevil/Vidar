@@ -11,6 +11,8 @@ If a part is missing then do an alert
 if contact has no key then no encryption is done (i.e it sends plain text)
 
 to format phone numbers maybe use the "phone_numbers_parser" package
+
+have a "generate key" button beside the key field 
 */
 
 void main() {
