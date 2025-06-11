@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vidar/chat.dart';
+import 'package:vidar/utils.dart';
+import 'package:vidar/keys.dart';
 import 'contacts.dart';
 import 'configuration.dart';
 
@@ -22,6 +24,8 @@ class _EditContactPageState extends State<EditContactPage> {
   late Contact contact;
   late ContactList contactList;
   late String caller;
+  final Updater updater = Updater();
+  final TextEditingController encryptionKeyController = TextEditingController();
 
   String? newName;
   String? newKey;
@@ -36,6 +40,14 @@ class _EditContactPageState extends State<EditContactPage> {
   }
 
   @override
+  void dispose() {
+    // Clean up the controller when the widget is removed from the
+    // widget tree.
+    encryptionKeyController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       color: VidarColors.primaryDarkSpaceCadet,
@@ -46,7 +58,9 @@ class _EditContactPageState extends State<EditContactPage> {
               Container(
                 margin: EdgeInsets.only(left: 50, right: 50, top: 30, bottom: 30),
                 child: Material(
+                  color: VidarColors.secondaryMetallicViolet,
                   child: Container(
+                    height: 50,
                     decoration: BoxDecoration(
                       color: VidarColors.secondaryMetallicViolet,
                     ),
@@ -71,34 +85,73 @@ class _EditContactPageState extends State<EditContactPage> {
               ),
               Container(
                 margin: EdgeInsets.only(left: 50, right: 50, top: 30, bottom: 30),
-                child: Material(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: VidarColors.secondaryMetallicViolet,
-                    ),
-                    padding: EdgeInsets.only(left: 10),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: "Encryption Key",
-                        hintStyle: const TextStyle(
-                          color: Colors.white,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Material(
+                        color: VidarColors.secondaryMetallicViolet,
+                        child: Container(
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: VidarColors.secondaryMetallicViolet,
+                          ),
+                          padding: EdgeInsets.only(left: 10),
+                          child: ListenableBuilder(
+                            listenable: updater,
+                            builder: (BuildContext context, Widget? child) { 
+                              return TextField(
+                                controller: encryptionKeyController,
+                                decoration: InputDecoration(
+                                  hintText: "Encryption Key",
+                                  hintStyle: const TextStyle(
+                                    color: Colors.white,
+                                  ),
+                                  border: InputBorder.none,
+                                ),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                ),
+                                onChanged: (String value) {
+                                  newKey = value;
+                                },
+                              );
+                            },
+                          ),
                         ),
-                        border: InputBorder.none,
                       ),
-                      style: const TextStyle(
-                        color: Colors.white,
-                      ),
-                      onChanged: (String value) {
-                        newKey = value;
-                      },
                     ),
-                  ),
+                    Container(
+                      height: 50,
+                      margin: EdgeInsets.only(left: 10),
+                      child: Expanded(
+                        child: IconButton(
+                          onPressed: () async {
+                              newKey = await generateRandomKey();
+                              encryptionKeyController.text = newKey ?? "";
+                          }, 
+                          style: IconButton.styleFrom(
+                            backgroundColor: VidarColors.secondaryMetallicViolet,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadiusGeometry.circular(10)
+                            )
+                          ),
+                          icon: Icon(
+                            Icons.change_circle_outlined,
+                            color: Colors.white,
+                          )
+                        )
+                      )
+                    ),
+                  ],
                 ),
               ),
+              
               Container(
                 margin: EdgeInsets.only(left: 50, right: 50, top: 30, bottom: 30),
                 child: Material(
+                  color: VidarColors.secondaryMetallicViolet,
                   child: Container(
+                    height: 50,
                     decoration: BoxDecoration(
                       color: VidarColors.secondaryMetallicViolet,
                     ),
@@ -129,6 +182,7 @@ class _EditContactPageState extends State<EditContactPage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Material(
+                  color: VidarColors.secondaryMetallicViolet,
                   child: InkWell(
                     child: SizedBox(
                       width: 100,
@@ -168,13 +222,14 @@ class _EditContactPageState extends State<EditContactPage> {
                 ),
 
                 Material(
+                  color: VidarColors.tertiaryGold,
                   child: InkWell(
                     child: SizedBox(
                       width: 100,
                       height: 50,
                       child: Container(
                         alignment: Alignment.center,
-                        color: VidarColors.secondaryGold,
+                        color: VidarColors.tertiaryGold,
                         child: Text(
                           "Save",
                           style: TextStyle(

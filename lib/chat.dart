@@ -201,7 +201,7 @@ class SpeechBubble extends StatelessWidget {
             margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
             decoration: BoxDecoration(
-              color: isMe ? VidarColors.secondaryMetallicViolet : VidarColors.secondaryGold,
+              color: isMe ? VidarColors.secondaryMetallicViolet : VidarColors.tertiaryGold,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(10),
                 topRight: Radius.circular(10),
