@@ -264,7 +264,7 @@ bool isInvalidContactByParams(String? name, String? encryptionKey, String? phone
   if (phoneNumber.contains(RegExp(r"[^\d]"))) {
     return true;
   }
-  return true;
+  return false;
 }
 
 bool isInvalidContact(Contact contact) {
