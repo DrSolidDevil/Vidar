@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sms_advanced/sms_advanced.dart';
 import 'package:vidar/chat.dart';
 import 'package:vidar/edit_contact.dart';
 import 'configuration.dart';
@@ -6,8 +7,9 @@ import 'configuration.dart';
 
 
 class ContactListPage extends StatefulWidget {
-  const ContactListPage(this.contactList, {super.key});
+  const ContactListPage(this.contactList, this.query, {super.key});
   final ContactList contactList;
+  final SmsQuery query;
 
   @override
   createState() => _ContactListPageState();
@@ -16,11 +18,13 @@ class ContactListPage extends StatefulWidget {
 class _ContactListPageState extends State<ContactListPage> {
   _ContactListPageState();
   late ContactList contactList;
+  late SmsQuery query;
 
   @override
   void initState() {
     super.initState();
     contactList = widget.contactList;
+    query = widget.query;
   }
 
   @override
@@ -42,7 +46,7 @@ class _ContactListPageState extends State<ContactListPage> {
             Contact newContact = Contact("", "", "");
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => EditContactPage(newContact, contactList, "newcontact")),
+              MaterialPageRoute(builder: (context) => EditContactPage(newContact, contactList, "newcontact", query)),
             );
           },
           backgroundColor: Colors.transparent,
@@ -57,7 +61,7 @@ class _ContactListPageState extends State<ContactListPage> {
           return Material(
             color:  Colors.transparent,
             child: ListView(
-              children: contactList.getContactBadges(),
+              children: contactList.getContactBadges(query),
             ),
           );
         },
@@ -92,9 +96,10 @@ class _ContactListPageState extends State<ContactListPage> {
 }
 
 class ContactBadge extends StatelessWidget {
-  const ContactBadge(this.contact, this.contactList, {super.key});
+  const ContactBadge(this.contact, this.contactList, this.query, {super.key});
   final Contact contact;
   final ContactList contactList;
+  final SmsQuery query;
 
   @override
   Widget build(BuildContext context) {
@@ -132,7 +137,7 @@ class ContactBadge extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ChatPage(contact, contactList)),
+          MaterialPageRoute(builder: (context) => ChatPage(contact, contactList, query)),
         );
       },
       onLongPress: () {
@@ -239,16 +244,16 @@ class ContactList extends ChangeNotifier {
     return true;
   }
 
-  List<ContactBadge> getContactBadges() {
+  List<ContactBadge> getContactBadges(SmsQuery query) {
     final List<ContactBadge> contactBadges = [];
     for (final Contact contact in listOfContacts) {
-      contactBadges.add(ContactBadge(contact, this));
+      contactBadges.add(ContactBadge(contact, this, query));
     }
     return contactBadges;
   }
 
-  ContactBadge getContactBadgeAtIndex(final int index) {
-    return ContactBadge(listOfContacts[index], this);
+  ContactBadge getContactBadgeAtIndex(final int index, SmsQuery query) {
+    return ContactBadge(listOfContacts[index], this, query);
   }
 }
 

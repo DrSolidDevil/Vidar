@@ -22,4 +22,5 @@ class VidarColors {
 class CryptographicConfiguration {
   // Length in bytes (18 bytes = 144 bits)
   static const int keyGenerationHashLength = 18; 
+  static const int nonceLength = 32;
 }

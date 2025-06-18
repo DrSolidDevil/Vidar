@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   cryptography: ^2.7.0
+  sms_advanced: ^1.1.0
 
 dev_dependencies:
   flutter_test:
