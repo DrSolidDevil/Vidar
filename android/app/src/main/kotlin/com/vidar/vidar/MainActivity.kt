@@ -8,20 +8,37 @@ import io.flutter.plugin.common.MethodChannel
 
 class MainActivity: FlutterActivity() {
     private val CHANNEL = "flutter.native/helper"
+    private val SMS_NOTIFIER_CHANNEL = "flutter.native/smsnotifier"
+    private var eventSink: EventChannel.EventSink? = null
+    private lateinit var broadcastReceiver: BroadcastReceiver
+    private val context = this
 
     @ExperimentalStdlibApi
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler{
-            call, result -> 
-            when {
-                call.method.equals("changeColor") -> {
-                    changeColor(call, result)
+        EventChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
+            .setStreamHandler(object : EventChannel.StreamHandler {
+                override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+                    eventSink = events
+                    broadcastReceiver = EmptyReceiver()
                 }
+
+                override fun onCancel(arguments: Any?) {
+                    unregisterReceiver(broadcastReceiver)
+                    eventSink = null
+                }
+            })
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, SMS_NOTIFIER_CHANNEL).setMethodCallHandler {
+            call, result ->
+            if call.method == "querySms" {
+                result.success(querySms(context, call.argument("phoneNumber"))) 
+            } else if call.method = "sendSms" {
+                sendSms(context, call.argument("body"), call.argument("phoneNumber"))
+                result.success()
+            } else if call.method = "smsConstants" {
+                result.success(smsConstants)
+            } else {
+                result.notImplemented()
             }
         }
-    }
-    private fun changeColor(call: MethodCall, result: MethodChannel.Result) {
-        var color = call.argument<String>("color");
-        result.success(color);
     }
 }

@@ -1,0 +1,90 @@
+package com.vidar.vidar
+
+import android.content.Context
+import android.database.Cursor
+import androidx.core.net.toUri
+import android.provider.Telephony.TextBasedSmsColumns
+
+
+public fun querySms(context: Context, phoneNumber: String?): List<HashMap<String, String>>? {
+    val inbox: Cursor?
+    if (phoneNumber != null) {
+        inbox = context.contentResolver.query(
+            "content://sms/inbox".toUri(),
+            includedQueryData,
+            "address=?",
+            arrayOf(phoneNumber),
+            null
+        )
+    } else {
+        inbox = context.contentResolver.query(
+            "content://sms/inbox".toUri(),
+            includedQueryData,
+            null,
+            null,
+            null
+        )
+    }
+    if (inbox == null || !inbox.moveToFirst()) {
+        return null
+    }
+    return cursorToListOfHashMap(inbox)
+}
+
+private val includedQueryData: Array<String> = arrayOf(
+    TextBasedSmsColumns.THREAD_ID,
+    TextBasedSmsColumns.TYPE,
+    TextBasedSmsColumns.ADDRESS,
+    TextBasedSmsColumns.DATE, // The date the message was received.
+    TextBasedSmsColumns.DATE_SENT, // The date the message was sent.
+    TextBasedSmsColumns.READ,
+    TextBasedSmsColumns.SEEN,
+    TextBasedSmsColumns.PROTOCOL, // Messaging protocol, ex. SMS or MMS
+    TextBasedSmsColumns.STATUS,
+    TextBasedSmsColumns.SUBSCRIPTION_ID,
+    TextBasedSmsColumns.SUBJECT,
+    TextBasedSmsColumns.BODY
+)
+
+
+// Closes the cursor when it's done
+// A list of hashmaps in kotlin is equivalent to a list of maps in dart
+private fun cursorToListOfHashMap(cursor: Cursor): List<HashMap<String, String>> {
+    val threadIdColumnIndex: Int = cursor.getColumnIndexOrThrow(TextBasedSmsColumns.THREAD_ID)
+    val typeColumnIndex: Int = cursor.getColumnIndexOrThrow(TextBasedSmsColumns.TYPE)
+    val addressColumnIndex: Int = cursor.getColumnIndexOrThrow(TextBasedSmsColumns.ADDRESS)
+    val dateColumnIndex: Int = cursor.getColumnIndexOrThrow(TextBasedSmsColumns.DATE)
+    val dateSentColumnIndex: Int = cursor.getColumnIndexOrThrow(TextBasedSmsColumns.DATE_SENT)
+    val readColumnIndex: Int = cursor.getColumnIndexOrThrow(TextBasedSmsColumns.READ)
+    val seenColumnIndex: Int = cursor.getColumnIndexOrThrow(TextBasedSmsColumns.SEEN)
+    val protocolColumnIndex: Int = cursor.getColumnIndexOrThrow(TextBasedSmsColumns.PROTOCOL)
+    val statusColumnIndex: Int = cursor.getColumnIndexOrThrow(TextBasedSmsColumns.STATUS)
+    val subscriptionIdColumnIndex: Int = cursor.getColumnIndexOrThrow(TextBasedSmsColumns.SUBSCRIPTION_ID)
+    val subjectColumnIndex: Int = cursor.getColumnIndexOrThrow(TextBasedSmsColumns.SUBJECT)
+    val bodyColumnIndex: Int = cursor.getColumnIndexOrThrow(TextBasedSmsColumns.BODY)
+    val hashMapList: List<HashMap<String, String>> = emptyList()
+
+    try {
+        do {
+            val entry: HashMap<String, String> = HashMap<String, String>()
+            entry[TextBasedSmsColumns.THREAD_ID] = cursor.getString(threadIdColumnIndex)
+            entry[TextBasedSmsColumns.TYPE] = cursor.getString(typeColumnIndex)
+            entry[TextBasedSmsColumns.ADDRESS] = cursor.getString(addressColumnIndex)
+            entry[TextBasedSmsColumns.DATE] = cursor.getString(dateColumnIndex)
+            entry[TextBasedSmsColumns.DATE_SENT] = cursor.getString(dateSentColumnIndex)
+            entry[TextBasedSmsColumns.READ] = cursor.getString(readColumnIndex)
+            entry[TextBasedSmsColumns.SEEN] = cursor.getString(seenColumnIndex)
+            entry[TextBasedSmsColumns.PROTOCOL] = cursor.getString(protocolColumnIndex)
+            entry[TextBasedSmsColumns.STATUS] = cursor.getString(statusColumnIndex)
+            entry[TextBasedSmsColumns.SUBSCRIPTION_ID] = cursor.getString(subscriptionIdColumnIndex)
+            entry[TextBasedSmsColumns.SUBJECT] = cursor.getString(subjectColumnIndex)
+            entry[TextBasedSmsColumns.BODY] = cursor.getString(bodyColumnIndex)
+            // Append deep hashmap clone
+            hashMapList.plus(entry.toMap())
+        } while (cursor.moveToNext())
+    } finally {
+        cursor.close();
+    }
+
+    return hashMapList
+}
