@@ -120,6 +120,12 @@ class _ConversationWidgetState extends State<ConversationWidget> {
     super.initState();
     contact = widget.contact;
     conversation = Conversation(contact, widget.query);
+    conversation.chatLogs = [SmsMessage("010101", "hello", date: DateTime(2025, 2, 4, 4, 5, 12)), 
+    SmsMessage("010101", "world", date: DateTime(2025, 2, 4, 7, 1, 3)), 
+     SmsMessage("010101", "i am a text message", date: DateTime(2025, 2, 4, 7, 3, 10)), 
+     SmsMessage("010101", "ts is a linter", date: DateTime(2025, 2, 4, 7, 10, 3)), 
+     SmsMessage("010101", "flutter is weird", date: DateTime(2025, 2, 4, 8, 9, 8)), 
+    ];
   }
 
   @override
@@ -156,6 +162,7 @@ class Conversation extends ChangeNotifier {
   late final StreamSubscription<SmsMessage> receiver;
 
   Conversation(this.contact, SmsQuery query) {
+    print("Constructing conversation...");
     receiver = SmsReceiver().onSmsReceived!.listen(
       (SmsMessage message) {
         if (message.address == contact.phoneNumber) {
@@ -163,7 +170,9 @@ class Conversation extends ChangeNotifier {
         }
       }
     );
+    print("updating chatlogs...");
     updateChatLogs(query);
+    print("chatlogs updated");
   }
   
   Future<List<SpeechBubble>> getSpeechBubbles() async {
@@ -190,6 +199,7 @@ class Conversation extends ChangeNotifier {
 
   void updateChatLogs(final SmsQuery query) async {
     chatLogs = await query.querySms(address: contact.phoneNumber);
+    print("chatlogs updated");
     notifyListeners();
   }
 
@@ -254,33 +264,49 @@ class _MesssageBarState extends State<MesssageBar> {
           return Container(
             color: VidarColors.tertiaryGold,
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Container(
-                  color: VidarColors.secondaryMetallicViolet,
+                  decoration: BoxDecoration(
+                    color: VidarColors.secondaryMetallicViolet,
+                    borderRadius: BorderRadius.circular(4.0)
+                  ),
+                  padding: EdgeInsets.only(left: 10),
+                  width: MediaQuery.sizeOf(context).width - SizeConfiguration.sendMessageIconSize*2.5,
                   child: TextField(
                     style: TextStyle(
                       color: Colors.white
                     ),
+                    decoration: InputDecoration(
+                        border: InputBorder.none,
+                    ),
                   ),
                 ),
-                IconButton(
-                  onPressed: () async {
-                    SmsMessage smsMessage = SmsMessage(contact.phoneNumber, await encryptMessage(message!, contact.encryptionKey));
-                    smsMessage.onStateChanged.listen(
-                      (SmsMessageState state) {
-                        if (state == SmsMessageState.Sent || state == SmsMessageState.Delivered) {
-                          updater.update();
-                        } else if (state == SmsMessageState.Fail) {
-                          messageFail = true;
-
-                        }
-                      } 
-                    );
-                  }, 
-                  icon: Icon(
-                    Icons.send,
-                    color: VidarColors.primaryDarkSpaceCadet,
-                  )
+                SizedBox(
+                  width: 50,
+                  height: 60,
+                  child: Center(
+                    child: IconButton(
+                      onPressed: () async {
+                        SmsMessage smsMessage = SmsMessage(contact.phoneNumber, await encryptMessage(message!, contact.encryptionKey));
+                        smsMessage.onStateChanged.listen(
+                          (SmsMessageState state) {
+                            if (state == SmsMessageState.Sent || state == SmsMessageState.Delivered) {
+                              updater.update();
+                            } else if (state == SmsMessageState.Fail) {
+                              messageFail = true;
+                    
+                            }
+                          } 
+                        );
+                      }, 
+                      icon: Icon(
+                        size: SizeConfiguration.sendMessageIconSize,
+                        Icons.send,
+                        color: VidarColors.secondaryMetallicViolet,
+                      )
+                    ),
+                  ),
                 )
               ],
             ),

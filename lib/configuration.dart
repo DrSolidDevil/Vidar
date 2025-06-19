@@ -24,3 +24,11 @@ class CryptographicConfiguration {
   static const int keyGenerationHashLength = 18; 
   static const int nonceLength = 32;
 }
+
+
+
+class SizeConfiguration {
+  static const double sendMessageIconSize = 30.0;
+}
+
+
