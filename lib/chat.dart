@@ -293,7 +293,7 @@ class _MesssageBarState extends State<MesssageBar> {
 
 
 class SpeechBubble extends StatelessWidget {
-  SpeechBubble(this.message, {super.key});
+  const SpeechBubble(this.message, {super.key});
   final SmsMessage message;
 
   @override
