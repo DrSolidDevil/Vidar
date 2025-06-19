@@ -61,7 +61,7 @@ Future<List<SmsMessage>?> querySms({String? phoneNumber}) async {
   } else {
     final List<SmsMessage> fakesms = [
     ];
-    print("(No implementation) Querying sms... sms:$fakesms")
+    print("(No implementation) Querying sms... sms:$fakesms");
   }
 }
 
