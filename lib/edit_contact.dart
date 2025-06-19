@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sms_advanced/sms_advanced.dart';
 import 'package:vidar/chat.dart';
 import 'package:vidar/utils.dart';
 import 'package:vidar/keys.dart';
@@ -8,11 +7,10 @@ import 'configuration.dart';
 
 
 class EditContactPage extends StatefulWidget {
-  const EditContactPage(this.contact, this.contactList, this.caller, this.query, {super.key});
+  const EditContactPage(this.contact, this.contactList, this.caller, {super.key});
   final Contact contact;
   final ContactList contactList;
   final String caller;
-  final SmsQuery query;
   
 
   @override
@@ -28,7 +26,6 @@ class _EditContactPageState extends State<EditContactPage> {
   late String caller;
   final Updater updater = Updater();
   final TextEditingController encryptionKeyController = TextEditingController();
-  late SmsQuery query;
 
   String? newName;
   String? newKey;
@@ -40,7 +37,6 @@ class _EditContactPageState extends State<EditContactPage> {
     contact = widget.contact;
     contactList = widget.contactList;
     caller = widget.caller;
-    query = widget.query;
   }
 
   @override
@@ -208,17 +204,17 @@ class _EditContactPageState extends State<EditContactPage> {
                         case "chatpage":
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => ChatPage(contact, contactList, query)),
+                            MaterialPageRoute(builder: (context) => ChatPage(contact, contactList)),
                           );
                         case "contactpage":
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => ContactListPage(contactList, query)),
+                            MaterialPageRoute(builder: (context) => ContactListPage(contactList)),
                           );
                         case "newcontact":
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => ContactListPage(contactList, query)),
+                            MaterialPageRoute(builder: (context) => ContactListPage(contactList)),
                           );
                       }
                     },
@@ -256,12 +252,12 @@ class _EditContactPageState extends State<EditContactPage> {
                         case "chatpage":
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => ChatPage(contact, contactList, query)),
+                            MaterialPageRoute(builder: (context) => ChatPage(contact, contactList)),
                           );
                         case "contactpage":
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => ContactListPage(contactList, query)),
+                            MaterialPageRoute(builder: (context) => ContactListPage(contactList)),
                           );
                         case "newcontact":
                           // Remove all non-numeric characters
@@ -278,7 +274,7 @@ class _EditContactPageState extends State<EditContactPage> {
                                       onPressed: () {
                                         Navigator.push(
                                           context,
-                                            MaterialPageRoute(builder: (context) => ContactListPage(contactList, query)),
+                                            MaterialPageRoute(builder: (context) => ContactListPage(contactList)),
                                         );
                                       }, 
                                       child: const Text("OK")
@@ -291,7 +287,7 @@ class _EditContactPageState extends State<EditContactPage> {
                             contactList.addContactByParams(newName!, newKey!, newPhoneNumber!);
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => ContactListPage(contactList, query)),
+                              MaterialPageRoute(builder: (context) => ContactListPage(contactList)),
                             );
                           }
                       }

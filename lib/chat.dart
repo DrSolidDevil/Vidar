@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'encrypt.dart';
 import 'package:flutter/material.dart';
-import 'package:sms_advanced/sms_advanced.dart';
 import 'package:vidar/utils.dart';
 import 'contacts.dart';
 import 'configuration.dart';
@@ -9,10 +8,9 @@ import 'edit_contact.dart';
 
 
 class ChatPage extends StatefulWidget {
-  const ChatPage(this.contact, this.contactList, this.query, {super.key});
+  const ChatPage(this.contact, this.contactList, {super.key});
   final Contact contact;
   final ContactList contactList;
-  final SmsQuery query;
 
   @override
   createState() => _ChatPageState();
@@ -24,7 +22,6 @@ class _ChatPageState extends State<ChatPage> {
   _ChatPageState();
   late Contact contact;
   late ContactList contactList;
-  late SmsQuery query;
   final Updater updater = Updater();
 
   @override
@@ -32,7 +29,6 @@ class _ChatPageState extends State<ChatPage> {
     super.initState();
     contact = widget.contact;
     contactList = widget.contactList;
-    query = widget.query;
   }
 
   @override
@@ -55,7 +51,7 @@ class _ChatPageState extends State<ChatPage> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ContactListPage(contactList, query)),
+                MaterialPageRoute(builder: (context) => ContactListPage(contactList)),
               );
             }, 
             icon: const Icon(
@@ -73,7 +69,7 @@ class _ChatPageState extends State<ChatPage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => EditContactPage(contact, contactList, "chatpage", query)),
+                  MaterialPageRoute(builder: (context) => EditContactPage(contact, contactList, "chatpage")),
                 );
               }, 
               icon: const Icon(
@@ -88,7 +84,7 @@ class _ChatPageState extends State<ChatPage> {
       body: ListenableBuilder(
         listenable: updater,
         builder: (BuildContext context, Widget? child) {
-          return ConversationWidget(contact, query);
+          return ConversationWidget(contact);
         },
       ),
       bottomNavigationBar: MesssageBar(contact, updater),
@@ -100,9 +96,8 @@ class _ChatPageState extends State<ChatPage> {
 
 
 class ConversationWidget extends StatefulWidget {
-  const ConversationWidget(this.contact, this.query, {super.key});
+  const ConversationWidget(this.contact, {super.key});
   final Contact contact;
-  final SmsQuery query;
 
   @override
   createState() => _ConversationWidgetState();
@@ -119,12 +114,13 @@ class _ConversationWidgetState extends State<ConversationWidget> {
   void initState() {
     super.initState();
     contact = widget.contact;
-    conversation = Conversation(contact, widget.query);
-    conversation.chatLogs = [SmsMessage("010101", "hello", date: DateTime(2025, 2, 4, 4, 5, 12)), 
-    SmsMessage("010101", "world", date: DateTime(2025, 2, 4, 7, 1, 3)), 
-     SmsMessage("010101", "i am a text message", date: DateTime(2025, 2, 4, 7, 3, 10)), 
-     SmsMessage("010101", "ts is a linter", date: DateTime(2025, 2, 4, 7, 10, 3)), 
-     SmsMessage("010101", "flutter is weird", date: DateTime(2025, 2, 4, 8, 9, 8)), 
+    conversation = Conversation(contact);
+    conversation.chatLogs = [
+      SmsMessage("010101", "hello", date: DateTime(2025, 2, 4, 4, 5, 12)), 
+      SmsMessage("010101", "world", date: DateTime(2025, 2, 4, 7, 1, 3)), 
+      SmsMessage("010101", "i am a text message", date: DateTime(2025, 2, 4, 7, 3, 10)), 
+      SmsMessage("010101", "ts is a linter", date: DateTime(2025, 2, 4, 7, 10, 3)), 
+      SmsMessage("010101", "flutter is weird", date: DateTime(2025, 2, 4, 8, 9, 8)), 
     ];
   }
 
@@ -161,7 +157,7 @@ class Conversation extends ChangeNotifier {
   late List<SmsMessage> chatLogs;
   late final StreamSubscription<SmsMessage> receiver;
 
-  Conversation(this.contact, SmsQuery query) {
+  Conversation(this.contact) {
     print("Constructing conversation...");
     receiver = SmsReceiver().onSmsReceived!.listen(
       (SmsMessage message) {
@@ -171,7 +167,6 @@ class Conversation extends ChangeNotifier {
       }
     );
     print("updating chatlogs...");
-    updateChatLogs(query);
     print("chatlogs updated");
   }
   
@@ -186,10 +181,7 @@ class Conversation extends ChangeNotifier {
             date: message.date,
             kind: message.kind,
             id: message.id,
-            dateSent: message.dateSent,
-            read: message.isRead,
-            sim: message.sim,
-            threadId: message.threadId
+            read: message.isRead
           )
         )
       );
@@ -197,8 +189,8 @@ class Conversation extends ChangeNotifier {
     return speechBubbles;
   }
 
-  void updateChatLogs(final SmsQuery query) async {
-    chatLogs = await query.querySms(address: contact.phoneNumber);
+  void updateChatLogs() async {
+    chatLogs = await querySms(address: contact.phoneNumber);
     print("chatlogs updated");
     notifyListeners();
   }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sms_advanced/sms_advanced.dart';
 import 'contacts.dart';
 
 
@@ -42,10 +41,9 @@ class App extends StatelessWidget {
       Contact("Price", "testkey", ""),
       Contact("Ghost", "testkey", ""),
     ]);
-    SmsQuery query = SmsQuery();
     return MaterialApp(
       title: 'Vidar', 
-      home: ContactListPage(contactList, query),
+      home: ContactListPage(contactList),
     );
   }
 }
