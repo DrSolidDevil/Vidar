@@ -1,4 +1,4 @@
-package com.example.vidar
+package com.vidar.vidar
 
 import androidx.annotation.NonNull
 import io.flutter.embedding.android.FlutterActivity
