@@ -103,13 +103,26 @@ class _ConversationWidgetState extends State<ConversationWidget> {
   _ConversationWidgetState();
   late Contact contact;
   late Conversation conversation;
+  bool chatLoaded = false;
+  String loadMessage = "Loading...";
 
   @override
-  void initState() async {
+  void initState() {
     super.initState();
     contact = widget.contact;
     conversation = Conversation(contact);
-    conversation.chatLogs = (await querySms())!;
+    print("Querying sms for ${contact.name}...");
+    querySms(phoneNumber: contact.phoneNumber).then((queryResponse) {
+      if (queryResponse == null) {
+        loadMessage = "SMS query failed, please ensure the phone number is correct.";
+        print("SMS query failed, please ensure the phone number is correct.");
+      } else {
+        conversation.chatLogs = queryResponse;
+        chatLoaded = true;
+        conversation.externalNotify();
+        print("Sms query complete");
+      }
+    });
     /*[
       SmsMessage("010101", "hello", date: DateTime(2025, 2, 4, 4, 5, 12)), 
       SmsMessage("010101", "world", date: DateTime(2025, 2, 4, 7, 1, 3)), 
@@ -121,6 +134,19 @@ class _ConversationWidgetState extends State<ConversationWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (!chatLoaded) {
+      return Container(
+        color: VidarColors.primaryDarkSpaceCadet,
+        child: Center(
+          child: Text(
+            loadMessage,
+            style: TextStyle(
+              color: Colors.white
+            ),
+          ),
+        ),
+      );
+    }
     return ListenableBuilder(
       listenable: conversation,
       builder: (BuildContext context, Widget? child) {
@@ -163,6 +189,10 @@ class Conversation extends ChangeNotifier {
 
   void closeConversation() async {
     smsNotifier.removeListener(notifyListeners);
+  }
+
+  void externalNotify() {
+    notifyListeners();
   }
 }
 

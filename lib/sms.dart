@@ -93,7 +93,7 @@ class SmsMessage {
 }
 
 /// Requires an initialization of SmsConstants beforehand
-SmsMessage? queryMapToSms(Map<String, String> smsMap) {
+SmsMessage? _queryMapToSms(Map<String, String> smsMap) {
   if (SmsConstants.mapConstants == null) {
     return null;
   }
@@ -148,7 +148,7 @@ Future<List<SmsMessage>?> querySms({String? phoneNumber}) async {
 
       final List<SmsMessage> smsMessages = [];
       for (final Map<String, String> mapMessage in result) {
-        smsMessages.add(queryMapToSms(mapMessage)!);
+        smsMessages.add(_queryMapToSms(mapMessage)!);
       }
       return smsMessages;
     } on PlatformException catch (e) {
