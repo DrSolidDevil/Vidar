@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'contacts.dart';
-
+import 'sms.dart';
 
 /*
 Notes:
@@ -15,7 +15,8 @@ to format phone numbers maybe use the "phone_numbers_parser" package
 have a "generate key" button beside the key field 
 */
 
-void main() {
+void main() async {
+  SmsConstants(await retrieveSmsConstantsMap());
   runApp(App());
 }
 

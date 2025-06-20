@@ -1,4 +1,8 @@
 import 'dart:async';
+import 'dart:io';
+
+import 'package:vidar/sms.dart';
+
 import 'encrypt.dart';
 import 'package:flutter/material.dart';
 import 'package:vidar/utils.dart';
@@ -111,17 +115,18 @@ class _ConversationWidgetState extends State<ConversationWidget> {
   late Conversation conversation;
 
   @override
-  void initState() {
+  void initState() async {
     super.initState();
     contact = widget.contact;
     conversation = Conversation(contact);
-    conversation.chatLogs = [
+    conversation.chatLogs = (await querySms())!;
+    /*[
       SmsMessage("010101", "hello", date: DateTime(2025, 2, 4, 4, 5, 12)), 
       SmsMessage("010101", "world", date: DateTime(2025, 2, 4, 7, 1, 3)), 
       SmsMessage("010101", "i am a text message", date: DateTime(2025, 2, 4, 7, 3, 10)), 
       SmsMessage("010101", "ts is a linter", date: DateTime(2025, 2, 4, 7, 10, 3)), 
       SmsMessage("010101", "flutter is weird", date: DateTime(2025, 2, 4, 8, 9, 8)), 
-    ];
+    ];*/
   }
 
   @override
@@ -134,10 +139,10 @@ class _ConversationWidgetState extends State<ConversationWidget> {
         for (final message in messages) {
           decryptedSpeechBubbles.add(
             FutureBuilder(
-              future: decryptMessage(message.body!, contact.encryptionKey), 
+              future: decryptMessage(message.body, contact.encryptionKey), 
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
-                  return SpeechBubble(copySmsMessage(message, body: snapshot.data as String));
+                  return SpeechBubble(message.clone(newBody: snapshot.data));
                 }
                 return SizedBox.shrink();
               }
@@ -155,48 +160,22 @@ class _ConversationWidgetState extends State<ConversationWidget> {
 class Conversation extends ChangeNotifier {
   final Contact contact;
   late List<SmsMessage> chatLogs;
-  late final StreamSubscription<SmsMessage> receiver;
+  late final SmsNotifier smsNotifier;
 
   Conversation(this.contact) {
-    print("Constructing conversation...");
-    receiver = SmsReceiver().onSmsReceived!.listen(
-      (SmsMessage message) {
-        if (message.address == contact.phoneNumber) {
-          notifyListeners();
-        }
-      }
-    );
-    print("updating chatlogs...");
-    print("chatlogs updated");
+    smsNotifier = SmsNotifier();
+    smsNotifier.addListener(notifyListeners);
   }
   
-  Future<List<SpeechBubble>> getSpeechBubbles() async {
-    List<SpeechBubble> speechBubbles = [];
-    for (SmsMessage message in chatLogs) {
-      speechBubbles.add(
-        SpeechBubble(
-          SmsMessage(
-            contact.phoneNumber, 
-            await encryptMessage(message.body!, contact.encryptionKey), 
-            date: message.date,
-            kind: message.kind,
-            id: message.id,
-            read: message.isRead
-          )
-        )
-      );
-    }
-    return speechBubbles;
-  }
 
   void updateChatLogs() async {
-    chatLogs = await querySms(address: contact.phoneNumber);
+    chatLogs = (await querySms(phoneNumber: contact.phoneNumber))!;
     print("chatlogs updated");
     notifyListeners();
   }
 
   void closeConversation() async {
-    await receiver.cancel();
+    smsNotifier.removeListener(notifyListeners);
   }
 }
 
@@ -280,17 +259,9 @@ class _MesssageBarState extends State<MesssageBar> {
                   child: Center(
                     child: IconButton(
                       onPressed: () async {
-                        SmsMessage smsMessage = SmsMessage(contact.phoneNumber, await encryptMessage(message!, contact.encryptionKey));
-                        smsMessage.onStateChanged.listen(
-                          (SmsMessageState state) {
-                            if (state == SmsMessageState.Sent || state == SmsMessageState.Delivered) {
-                              updater.update();
-                            } else if (state == SmsMessageState.Fail) {
-                              messageFail = true;
-                    
-                            }
-                          } 
-                        );
+                        sendSms(await encryptMessage(message!, contact.encryptionKey), contact.phoneNumber);
+                        sleep(Duration(seconds: 5));
+                        updater.update();
                       }, 
                       icon: Icon(
                         size: SizeConfiguration.sendMessageIconSize,
@@ -317,24 +288,24 @@ class SpeechBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: (message.kind == SmsMessageKind.Sent) ? Alignment.centerRight : Alignment.centerLeft,
+      alignment: (message.type == SmsConstants.MESSAGE_TYPE_SENT) ? Alignment.centerRight : Alignment.centerLeft,
       child: Column(
         children: [
           Container(
             margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
             decoration: BoxDecoration(
-              color: (message.kind == SmsMessageKind.Sent) ? VidarColors.secondaryMetallicViolet : VidarColors.tertiaryGold,
+              color: (message.type == SmsConstants.MESSAGE_TYPE_SENT) ? VidarColors.secondaryMetallicViolet : VidarColors.tertiaryGold,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(10),
                 topRight: Radius.circular(10),
-                bottomLeft: Radius.circular((message.kind == SmsMessageKind.Sent) ? 10 : 0),
-                bottomRight: Radius.circular((message.kind == SmsMessageKind.Sent) ? 0 : 10),
+                bottomLeft: Radius.circular((message.type == SmsConstants.MESSAGE_TYPE_SENT) ? 10 : 0),
+                bottomRight: Radius.circular((message.type == SmsConstants.MESSAGE_TYPE_SENT) ? 0 : 10),
               ),
             ),
             child: Text(
               
-              message.body!,
+              message.body,
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 12,
@@ -342,7 +313,7 @@ class SpeechBubble extends StatelessWidget {
             ),
           ),
           Text(
-            ((message.kind == SmsMessageKind.Sent) ? "Sent at " : "Received at ") + message.date!.toIso8601String().replaceRange(0, 11, ""),
+            ((message.type == SmsConstants.MESSAGE_TYPE_SENT) ? "Sent at " : "Received at ") + message.date!.toIso8601String().replaceRange(0, 11, ""),
             style: const TextStyle(
               color: Colors.white,
               fontSize: 8,

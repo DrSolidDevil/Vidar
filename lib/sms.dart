@@ -59,6 +59,36 @@ class SmsMessage {
   /// The subject of the message, if present.
   final String? subject;
   final String body;
+
+  SmsMessage clone({
+    String? newBody,
+    String? newPhoneNumber, 
+    int? newThreadId, 
+    int? newType, 
+    DateTime? newDate, 
+    DateTime? newDateSent, 
+    bool? newSeen, 
+    bool? newRead, 
+    int? newProtocol, 
+    int? newStatus, 
+    int? newSubscriptionId, 
+    String? newSubject,
+    }) {
+    return SmsMessage(
+      newBody ?? body,
+      newPhoneNumber ?? phoneNumber,
+      threadId: newThreadId ?? threadId,
+      type: newType ?? type,
+      date: newDate ?? date,
+      dateSent: newDateSent ?? dateSent,
+      seen: newSeen ?? seen,
+      read: newRead ?? read,
+      protocol: newProtocol ?? protocol,
+      status: newStatus ?? status,
+      subscriptionId: newSubscriptionId ?? subscriptionId,
+      subject: newSubject ?? subject,
+    );
+  }
 }
 
 /// Requires an initialization of SmsConstants beforehand
