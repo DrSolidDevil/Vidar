@@ -13,5 +13,17 @@ public val smsConstants: HashMap<String, String> = hashMapOf(
     "STATUS_NONE" to TextBasedSmsColumns.STATUS_NONE,
     "STATUS_FAILED" to TextBasedSmsColumns.STATUS_FAILED,
     "STATUS_PENDING" to TextBasedSmsColumns.STATUS_PENDING,
-    "STATUS_COMPLETE" to TextBasedSmsColumns.STATUS_COMPLETE
+    "STATUS_COMPLETE" to TextBasedSmsColumns.STATUS_COMPLETE,
+    "THREAD_ID" to TextBasedSmsColumns.THREAD_ID,
+    "TYPE" to TextBasedSmsColumns.TYPE,
+    "ADDRESS" to TextBasedSmsColumns.ADDRESS,
+    "DATE" to TextBasedSmsColumns.DATE, 
+    "DATE_SENT" to TextBasedSmsColumns.DATE_SENT,
+    "READ" to TextBasedSmsColumns.READ,
+    "SEEN" to TextBasedSmsColumns.SEEN,
+    "PROTOCOL" to TextBasedSmsColumns.PROTOCOL,
+    "STATUS" to TextBasedSmsColumns.STATUS,
+    "SUBSCRIPTION_ID" to TextBasedSmsColumns.SUBSCRIPTION_ID,
+    "SUBJECT" to TextBasedSmsColumns.SUBJECT,
+    "BODY" to TextBasedSmsColumns.BODY
 )
