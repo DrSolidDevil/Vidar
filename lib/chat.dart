@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:vidar/sms.dart';
@@ -10,7 +9,6 @@ import 'contacts.dart';
 import 'configuration.dart';
 import 'edit_contact.dart';
 
-
 class ChatPage extends StatefulWidget {
   const ChatPage(this.contact, this.contactList, {super.key});
   final Contact contact;
@@ -19,8 +17,6 @@ class ChatPage extends StatefulWidget {
   @override
   createState() => _ChatPageState();
 }
-
-
 
 class _ChatPageState extends State<ChatPage> {
   _ChatPageState();
@@ -45,7 +41,7 @@ class _ChatPageState extends State<ChatPage> {
           style: const TextStyle(
             fontSize: 18,
             color: Colors.white,
-            decoration: TextDecoration.none
+            decoration: TextDecoration.none,
           ),
         ),
 
@@ -55,13 +51,12 @@ class _ChatPageState extends State<ChatPage> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ContactListPage(contactList)),
+                MaterialPageRoute(
+                  builder: (context) => ContactListPage(contactList),
+                ),
               );
-            }, 
-            icon: const Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-            ),
+            },
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
             tooltip: "Go back",
           ),
         ),
@@ -73,13 +68,13 @@ class _ChatPageState extends State<ChatPage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => EditContactPage(contact, contactList, "chatpage")),
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        EditContactPage(contact, contactList, "chatpage"),
+                  ),
                 );
-              }, 
-              icon: const Icon(
-                Icons.edit,
-                color: Colors.white,
-              ),
+              },
+              icon: const Icon(Icons.edit, color: Colors.white),
               tooltip: "Edit",
             ),
           ),
@@ -96,9 +91,6 @@ class _ChatPageState extends State<ChatPage> {
   }
 }
 
-
-
-
 class ConversationWidget extends StatefulWidget {
   const ConversationWidget(this.contact, {super.key});
   final Contact contact;
@@ -106,8 +98,6 @@ class ConversationWidget extends StatefulWidget {
   @override
   createState() => _ConversationWidgetState();
 }
-
-
 
 class _ConversationWidgetState extends State<ConversationWidget> {
   _ConversationWidgetState();
@@ -132,27 +122,25 @@ class _ConversationWidgetState extends State<ConversationWidget> {
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
-      listenable: conversation, 
+      listenable: conversation,
       builder: (BuildContext context, Widget? child) {
         List<SmsMessage> messages = conversation.chatLogs;
         List<Widget> decryptedSpeechBubbles = [];
         for (final message in messages) {
           decryptedSpeechBubbles.add(
             FutureBuilder(
-              future: decryptMessage(message.body, contact.encryptionKey), 
+              future: decryptMessage(message.body, contact.encryptionKey),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
                   return SpeechBubble(message.clone(newBody: snapshot.data));
                 }
                 return SizedBox.shrink();
-              }
-            )
+              },
+            ),
           );
         }
-        return ListView(
-          children: decryptedSpeechBubbles,
-        );
-      }
+        return ListView(children: decryptedSpeechBubbles);
+      },
     );
   }
 }
@@ -166,7 +154,6 @@ class Conversation extends ChangeNotifier {
     smsNotifier = SmsNotifier();
     smsNotifier.addListener(notifyListeners);
   }
-  
 
   void updateChatLogs() async {
     chatLogs = (await querySms(phoneNumber: contact.phoneNumber))!;
@@ -217,17 +204,12 @@ class _MesssageBarState extends State<MesssageBar> {
               children: [
                 Text(
                   "Failed to send message",
-                  style: TextStyle(
-                    color: Colors.white
-                  ),
+                  style: TextStyle(color: Colors.white),
                 ),
                 IconButton(
-                  onPressed: () => failUpdater.update, 
-                  icon: Icon(
-                    Icons.sms,
-                    color: Colors.white,
-                  )
-                )
+                  onPressed: () => failUpdater.update,
+                  icon: Icon(Icons.sms, color: Colors.white),
+                ),
               ],
             ),
           );
@@ -240,17 +222,15 @@ class _MesssageBarState extends State<MesssageBar> {
                 Container(
                   decoration: BoxDecoration(
                     color: VidarColors.secondaryMetallicViolet,
-                    borderRadius: BorderRadius.circular(4.0)
+                    borderRadius: BorderRadius.circular(4.0),
                   ),
                   padding: EdgeInsets.only(left: 10),
-                  width: MediaQuery.sizeOf(context).width - SizeConfiguration.sendMessageIconSize*2.5,
+                  width:
+                      MediaQuery.sizeOf(context).width -
+                      SizeConfiguration.sendMessageIconSize * 2.5,
                   child: TextField(
-                    style: TextStyle(
-                      color: Colors.white
-                    ),
-                    decoration: InputDecoration(
-                        border: InputBorder.none,
-                    ),
+                    style: TextStyle(color: Colors.white),
+                    decoration: InputDecoration(border: InputBorder.none),
                   ),
                 ),
                 SizedBox(
@@ -259,27 +239,29 @@ class _MesssageBarState extends State<MesssageBar> {
                   child: Center(
                     child: IconButton(
                       onPressed: () async {
-                        sendSms(await encryptMessage(message!, contact.encryptionKey), contact.phoneNumber);
+                        sendSms(
+                          await encryptMessage(message!, contact.encryptionKey),
+                          contact.phoneNumber,
+                        );
                         sleep(Duration(seconds: 5));
                         updater.update();
-                      }, 
+                      },
                       icon: Icon(
                         size: SizeConfiguration.sendMessageIconSize,
                         Icons.send,
                         color: VidarColors.secondaryMetallicViolet,
-                      )
+                      ),
                     ),
                   ),
-                )
+                ),
               ],
             ),
           );
-        } 
-      }
+        }
+      },
     );
   }
 }
-
 
 class SpeechBubble extends StatelessWidget {
   const SpeechBubble(this.message, {super.key});
@@ -288,40 +270,43 @@ class SpeechBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: (message.type == SmsConstants.MESSAGE_TYPE_SENT) ? Alignment.centerRight : Alignment.centerLeft,
+      alignment: (message.type == SmsConstants.MESSAGE_TYPE_SENT)
+          ? Alignment.centerRight
+          : Alignment.centerLeft,
       child: Column(
         children: [
           Container(
             margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
             padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
             decoration: BoxDecoration(
-              color: (message.type == SmsConstants.MESSAGE_TYPE_SENT) ? VidarColors.secondaryMetallicViolet : VidarColors.tertiaryGold,
+              color: (message.type == SmsConstants.MESSAGE_TYPE_SENT)
+                  ? VidarColors.secondaryMetallicViolet
+                  : VidarColors.tertiaryGold,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(10),
                 topRight: Radius.circular(10),
-                bottomLeft: Radius.circular((message.type == SmsConstants.MESSAGE_TYPE_SENT) ? 10 : 0),
-                bottomRight: Radius.circular((message.type == SmsConstants.MESSAGE_TYPE_SENT) ? 0 : 10),
+                bottomLeft: Radius.circular(
+                  (message.type == SmsConstants.MESSAGE_TYPE_SENT) ? 10 : 0,
+                ),
+                bottomRight: Radius.circular(
+                  (message.type == SmsConstants.MESSAGE_TYPE_SENT) ? 0 : 10,
+                ),
               ),
             ),
             child: Text(
-              
               message.body,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 12,
-              ),
+              style: const TextStyle(color: Colors.white, fontSize: 12),
             ),
           ),
           Text(
-            ((message.type == SmsConstants.MESSAGE_TYPE_SENT) ? "Sent at " : "Received at ") + message.date!.toIso8601String().replaceRange(0, 11, ""),
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 8,
-            ),
-          )
+            ((message.type == SmsConstants.MESSAGE_TYPE_SENT)
+                    ? "Sent at "
+                    : "Received at ") +
+                message.date!.toIso8601String().replaceRange(0, 11, ""),
+            style: const TextStyle(color: Colors.white, fontSize: 8),
+          ),
         ],
-      )
+      ),
     );
   }
 }
-
