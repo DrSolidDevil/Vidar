@@ -71,17 +71,17 @@ SmsMessage? queryMapToSms(Map<String, String> smsMap) {
   );
   final int? type = int.tryParse(smsMap[SmsConstants.COLUMN_NAME_TYPE]!);
   final String phoneNumber = smsMap[SmsConstants.COLUMN_NAME_ADDRESS]!;
-  final DateTime? date = DateTime.fromMicrosecondsSinceEpoch(
+  final DateTime date = DateTime.fromMicrosecondsSinceEpoch(
     int.parse(smsMap[SmsConstants.COLUMN_NAME_DATE]!),
   );
-  final DateTime? dateSent = DateTime.fromMicrosecondsSinceEpoch(
+  final DateTime dateSent = DateTime.fromMicrosecondsSinceEpoch(
     int.parse(smsMap[SmsConstants.COLUMN_NAME_DATE_SENT]!),
   );
-  final bool? seen = int.parse(smsMap[SmsConstants.COLUMN_NAME_SEEN]!) != 0;
-  final bool? read = int.parse(smsMap[SmsConstants.COLUMN_NAME_READ]!) != 0;
-  final int? protocol = int.parse(smsMap[SmsConstants.COLUMN_NAME_PROTOCOL]!);
-  final int? status = int.parse(smsMap[SmsConstants.COLUMN_NAME_STATUS]!);
-  final int? subscriptionId = int.parse(
+  final bool seen = int.parse(smsMap[SmsConstants.COLUMN_NAME_SEEN]!) != 0;
+  final bool read = int.parse(smsMap[SmsConstants.COLUMN_NAME_READ]!) != 0;
+  final int protocol = int.parse(smsMap[SmsConstants.COLUMN_NAME_PROTOCOL]!);
+  final int status = int.parse(smsMap[SmsConstants.COLUMN_NAME_STATUS]!);
+  final int subscriptionId = int.parse(
     smsMap[SmsConstants.COLUMN_NAME_SUBSCRIPTION_ID]!,
   );
   final String? subject = smsMap[SmsConstants.COLUMN_NAME_SUBJECT];
