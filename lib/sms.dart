@@ -193,8 +193,12 @@ Future<List<SmsMessage>?> querySms({String? phoneNumber}) async {
         type: SmsConstants.MESSAGE_TYPE_INBOX,
       ),
     ];
-    print("(No implementation) Querying sms... sms:$fakesms");
-    return null;
+    print("(No implementation) Querying sms...");
+    print("========SMS========");
+    for (final SmsMessage sms in fakesms) {
+      print("Body: ${sms.body} | Phone Number: ${sms.phoneNumber} | Date: ${sms.date} | Type:${sms.type}");
+    }
+    return fakesms;
   }
 }
 

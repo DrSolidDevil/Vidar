@@ -119,9 +119,9 @@ class _ConversationWidgetState extends State<ConversationWidget> {
       } else {
         conversation.chatLogs = queryResponse;
         chatLoaded = true;
-        conversation.externalNotify();
         print("Sms query complete");
       }
+      conversation.externalNotify();
     });
     /*[
       SmsMessage("010101", "hello", date: DateTime(2025, 2, 4, 4, 5, 12)), 
@@ -134,7 +134,11 @@ class _ConversationWidgetState extends State<ConversationWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (!chatLoaded) {
+    return ListenableBuilder(
+      listenable: conversation,
+      builder: (BuildContext context, Widget? child) {
+        if (!chatLoaded) {
+      print("Chat not loaded");
       return Container(
         color: VidarColors.primaryDarkSpaceCadet,
         child: Center(
@@ -148,9 +152,7 @@ class _ConversationWidgetState extends State<ConversationWidget> {
         ),
       );
     }
-    return ListenableBuilder(
-      listenable: conversation,
-      builder: (BuildContext context, Widget? child) {
+    
         List<SmsMessage> messages = conversation.chatLogs;
         List<Widget> decryptedSpeechBubbles = [];
         for (final message in messages) {
@@ -193,6 +195,7 @@ class Conversation extends ChangeNotifier {
   }
 
   void externalNotify() {
+    print("External notify");
     notifyListeners();
   }
 }
