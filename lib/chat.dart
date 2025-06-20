@@ -114,7 +114,8 @@ class _ConversationWidgetState extends State<ConversationWidget> {
     print("Querying sms for ${contact.name}...");
     querySms(phoneNumber: contact.phoneNumber).then((queryResponse) {
       if (queryResponse == null) {
-        loadMessage = "SMS query failed, please ensure the phone number is correct.";
+        loadMessage =
+            "SMS query failed, please ensure the phone number is correct.";
         print("SMS query failed, please ensure the phone number is correct.");
       } else {
         conversation.chatLogs = queryResponse;
@@ -138,21 +139,18 @@ class _ConversationWidgetState extends State<ConversationWidget> {
       listenable: conversation,
       builder: (BuildContext context, Widget? child) {
         if (!chatLoaded) {
-      print("Chat not loaded");
-      return Container(
-        color: VidarColors.primaryDarkSpaceCadet,
-        child: Center(
-          child: Text(
-            loadMessage,
-            style: TextStyle(
-              fontSize: 30.0,
-              color: Colors.white
+          print("Chat not loaded");
+          return Container(
+            color: VidarColors.primaryDarkSpaceCadet,
+            child: Center(
+              child: Text(
+                loadMessage,
+                style: TextStyle(fontSize: 30.0, color: Colors.white),
+              ),
             ),
-          ),
-        ),
-      );
-    }
-    
+          );
+        }
+
         List<SmsMessage> messages = conversation.chatLogs;
         List<Widget> decryptedSpeechBubbles = [];
         for (final message in messages) {
