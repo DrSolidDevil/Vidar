@@ -10,7 +10,7 @@ class MainActivity: FlutterActivity() {
     private val CHANNEL = "flutter.native/helper"
     private val SMS_NOTIFIER_CHANNEL = "flutter.native/smsnotifier"
     private var eventSink: EventChannel.EventSink? = null
-    private lateinit var broadcastReceiver: BroadcastReceiver
+    private lateinit var smsReceiver: SmsReceiver
     private val context = this
 
     @ExperimentalStdlibApi
@@ -19,11 +19,11 @@ class MainActivity: FlutterActivity() {
             .setStreamHandler(object : EventChannel.StreamHandler {
                 override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
                     eventSink = events
-                    broadcastReceiver = EmptyReceiver()
+                    smsReceiver = SmsReceiver()
                 }
 
                 override fun onCancel(arguments: Any?) {
-                    unregisterReceiver(broadcastReceiver)
+                    unregisterReceiver(smsReceiver)
                     eventSink = null
                 }
             })

@@ -1,11 +1,12 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, constant_identifier_names
 
 import 'dart:core';
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-const mainChannel = MethodChannel("flutter.native/helper");
-const smsNotifierChannel = MethodChannel("flutter.native/smsnotifier");
+const MAIN_SMS_CHANNEL = MethodChannel("flutter.native/helper");
+
 
 class SmsMessage {
   const SmsMessage(
@@ -93,7 +94,7 @@ SmsMessage? queryMapToSms(Map<String, String> smsMap) {
 Future<List<SmsMessage>?> querySms({String? phoneNumber}) async {
   if (Platform.isAndroid) {
     try {
-    final List<Map<String, String>>? result = await mainChannel.invokeMethod<List<Map<String, String>>>('querySms');
+    final List<Map<String, String>>? result = await MAIN_SMS_CHANNEL.invokeMethod<List<Map<String, String>>>('querySms');
     
     if (result == null) {
       return null;
@@ -126,7 +127,7 @@ Future<List<SmsMessage>?> querySms({String? phoneNumber}) async {
 
 void sendSms(String body, String phoneNumber) async {
   if (Platform.isAndroid) {
-    await mainChannel.invokeMethod('sendSms', {"body":body, "phoneNumber":phoneNumber});
+    await MAIN_SMS_CHANNEL.invokeMethod('sendSms', {"body":body, "phoneNumber":phoneNumber});
   } else {
     print("(No implementation) Sending sms... body:$body  phoneNumber:$phoneNumber");
   }
@@ -137,7 +138,7 @@ void sendSms(String body, String phoneNumber) async {
 Future<Map<String, dynamic>> retrieveSmsConstantsMap() async {
   final Map<String, dynamic> smsConstants;
   if (Platform.isAndroid) {
-    smsConstants = await mainChannel.invokeMethod('smsConstants');
+    smsConstants = await MAIN_SMS_CHANNEL.invokeMethod('smsConstants');
   } else {
     smsConstants = {
       "MESSAGE_TYPE_ALL" : 0,
@@ -233,5 +234,17 @@ class SmsConstants {
 
 }
 
-
-// todo setup notifier
+/// Notifies when (any) sms is recieved
+class SmsNotifier extends ChangeNotifier {
+  // if later you can choose the specific phone number then this can't be static
+  static const SMS_NOTIFIER_CHANNEL = EventChannel("flutter.native/smsnotifier");
+  SmsNotifier() {
+    SMS_NOTIFIER_CHANNEL.receiveBroadcastStream(
+      (event) {
+        if (event is String && event == "smsreceived") {
+          notifyListeners();
+        }
+      }
+    );
+  }
+}
