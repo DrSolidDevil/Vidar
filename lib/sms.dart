@@ -4,6 +4,7 @@ import 'dart:core';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
 
 const MAIN_SMS_CHANNEL = MethodChannel("flutter.native/helper");
 
@@ -136,7 +137,7 @@ SmsMessage? queryMapToSms(Map<String, String> smsMap) {
 
 /// Requires an initialization of SmsConstants beforehand
 Future<List<SmsMessage>?> querySms({String? phoneNumber}) async {
-  if (Platform.isAndroid) {
+  if (defaultTargetPlatform == TargetPlatform.android) {
     try {
       final List<Map<String, String>>? result = await MAIN_SMS_CHANNEL
           .invokeMethod<List<Map<String, String>>>('querySms');
@@ -198,7 +199,7 @@ Future<List<SmsMessage>?> querySms({String? phoneNumber}) async {
 }
 
 void sendSms(String body, String phoneNumber) async {
-  if (Platform.isAndroid) {
+  if (defaultTargetPlatform == TargetPlatform.android) {
     await MAIN_SMS_CHANNEL.invokeMethod('sendSms', {
       "body": body,
       "phoneNumber": phoneNumber,
@@ -212,7 +213,7 @@ void sendSms(String body, String phoneNumber) async {
 
 Future<Map<String, dynamic>> retrieveSmsConstantsMap() async {
   final Map<String, dynamic> smsConstants;
-  if (Platform.isAndroid) {
+  if (defaultTargetPlatform == TargetPlatform.android) {
     smsConstants = await MAIN_SMS_CHANNEL.invokeMethod('smsConstants');
   } else {
     smsConstants = {
@@ -293,18 +294,18 @@ class SmsConstants {
     STATUS_PENDING = mapConstants!["STATUS_PENDING"];
     STATUS_COMPLETE = mapConstants!["STATUS_COMPLETE"];
 
-    COLUMN_NAME_THREAD_ID = mapConstants!["COLUMN_NAME_THREAD_ID"];
-    COLUMN_NAME_TYPE = mapConstants!["COLUMN_NAME_TYPE"];
-    COLUMN_NAME_ADDRESS = mapConstants!["COLUMN_NAME_ADDRESS"];
-    COLUMN_NAME_DATE = mapConstants!["COLUMN_NAME_DATE"];
-    COLUMN_NAME_DATE_SENT = mapConstants!["COLUMN_NAME_DATE_SENT"];
-    COLUMN_NAME_READ = mapConstants!["COLUMN_NAME_READ"];
-    COLUMN_NAME_SEEN = mapConstants!["COLUMN_NAME_SEEN"];
-    COLUMN_NAME_PROTOCOL = mapConstants!["COLUMN_NAME_PROTOCOL"];
-    COLUMN_NAME_STATUS = mapConstants!["COLUMN_NAME_STATUS"];
-    COLUMN_NAME_SUBSCRIPTION_ID = mapConstants!["COLUMN_NAME_SUBSCRIPTION_ID"];
-    COLUMN_NAME_SUBJECT = mapConstants!["COLUMN_NAME_SUBJECT"];
-    COLUMN_NAME_BODY = mapConstants!["COLUMN_NAME_BODY"];
+    COLUMN_NAME_THREAD_ID = mapConstants!["THREAD_ID"];
+    COLUMN_NAME_TYPE = mapConstants!["TYPE"];
+    COLUMN_NAME_ADDRESS = mapConstants!["ADDRESS"];
+    COLUMN_NAME_DATE = mapConstants!["DATE"];
+    COLUMN_NAME_DATE_SENT = mapConstants!["DATE_SENT"];
+    COLUMN_NAME_READ = mapConstants!["READ"];
+    COLUMN_NAME_SEEN = mapConstants!["SEEN"];
+    COLUMN_NAME_PROTOCOL = mapConstants!["PROTOCOL"];
+    COLUMN_NAME_STATUS = mapConstants!["STATUS"];
+    COLUMN_NAME_SUBSCRIPTION_ID = mapConstants!["SUBSCRIPTION_ID"];
+    COLUMN_NAME_SUBJECT = mapConstants!["SUBJECT"];
+    COLUMN_NAME_BODY = mapConstants!["BODY"];
   }
 }
 
