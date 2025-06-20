@@ -141,6 +141,7 @@ class _ConversationWidgetState extends State<ConversationWidget> {
           child: Text(
             loadMessage,
             style: TextStyle(
+              fontSize: 30.0,
               color: Colors.white
             ),
           ),
