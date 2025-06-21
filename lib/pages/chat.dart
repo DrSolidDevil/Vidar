@@ -1,8 +1,8 @@
-import 'package:vidar/sms.dart';
+import '../sms.dart';
 
 import '../encrypt.dart';
 import 'package:flutter/material.dart';
-import 'package:vidar/utils.dart';
+import '../utils.dart';
 import 'contacts.dart';
 import '../configuration.dart';
 import 'edit_contact.dart';

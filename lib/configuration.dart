@@ -7,16 +7,8 @@ class VidarColors {
   static const primaryDarkSpaceCadet = Color.fromARGB(255, 26, 28, 40);
   /// #b18c19
   static const tertiaryGold = Color.fromARGB(255, 	177, 140, 25);
-  /*static const primary2 = Color.fromARGB(255, );
-  static const primary2 = Color.fromARGB(255, );
-  static const primary2 = Color.fromARGB(255, );
-  
-  
-  
-  
-  
-  
-  */
+  /// #140627
+  static const extraMidnightPurple = Color.fromARGB(255, 20, 6, 39);
 }
 
 class CryptographicConfiguration {
@@ -34,6 +26,7 @@ class SizeConfiguration {
   static const double sendMessageIconSize = 30.0;
   static const double messageIndent = 10.0;
   static const double messageVerticalSeperation = 3.0;
+  static const double settingInfoText = 12.0;
 }
 
 class TimeConfiguration {
