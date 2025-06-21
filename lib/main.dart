@@ -1,4 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:vidar/fakesms.dart';
+import 'package:vidar/pages/settings.dart';
+import 'package:vidar/save.dart';
+import 'package:vidar/shutdownhandling.dart';
 import 'pages/contacts.dart';
 import 'sms.dart';
 
@@ -25,23 +30,17 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ContactList contactList = ContactList([
-      Contact("Bob", "testkey", ""),
-      Contact("John", "testkey", ""),
-      Contact("Jack", "testkey", ""),
-      Contact("Jeff", "testkey", ""),
-      Contact("Geff", "testkey", ""),
-      Contact("Garry", "testkey", ""),
-      Contact("Larry", "testkey", ""),
-      Contact("Barry", "testkey", ""),
-      Contact("Harry", "testkey", ""),
-      Contact("Gaylord", "testkey", ""),
-      Contact("Timmy", "testkey", ""),
-      Contact("Jimmy", "testkey", ""),
-      Contact("Soap", "testkey", ""),
-      Contact("Price", "testkey", ""),
-      Contact("Ghost", "testkey", ""),
-    ]);
+    final ContactList contactList = ContactList([]);
+    final Settings settings = Settings();
+
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      loadData(contactList, settings);
+    } else {
+      print("(No implementation) Loading fake contacts...");
+      contactList.listOfContacts = fakeListOfContacts;
+    }
+    WidgetsBinding.instance.addObserver(ShutdownHandler(settings, contactList));
+
     return MaterialApp(
       title: 'Vidar', 
       home: ContactListPage(contactList),

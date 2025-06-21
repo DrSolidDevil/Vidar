@@ -154,12 +154,28 @@ class Contact {
   String name;
   String encryptionKey;
   String phoneNumber;
+
+  Map<String, String> toMap() {
+    return {
+      "name": name,
+      "encryptionKey": encryptionKey,
+      "phoneNumber": phoneNumber,
+    };
+  }
+
+  factory Contact.fromMap(Map<String, String> map) {
+    return Contact(
+      map["name"]!,
+      map["encryptionKey"]!,
+      map["phoneNumber"]!
+    );
+  }
 }
 
 class ContactList extends ChangeNotifier {
   ContactList(this.listOfContacts);
 
-  final List<Contact> listOfContacts;
+  List<Contact> listOfContacts;
 
   /// Returns true upon success
   bool addContact(final Contact contact) {
@@ -256,6 +272,8 @@ class ContactList extends ChangeNotifier {
   ContactBadge getContactBadgeAtIndex(final int index) {
     return ContactBadge(listOfContacts[index], this);
   }
+
+  
 }
 
 /// True if it is invalid

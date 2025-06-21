@@ -1,0 +1,61 @@
+import 'pages/contacts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'pages/settings.dart';
+import 'dart:convert';
+
+
+
+
+
+
+void saveData(ContactList contactList, Settings settings) async {
+  try {
+    print("Saving data...");
+
+    final prefs = await SharedPreferences.getInstance();
+
+    final List<String> jsonContacts = [];
+    for (final Contact contact in contactList.listOfContacts) {
+      jsonContacts.add(jsonEncode(contact.toMap()));
+    }
+
+    await prefs.setStringList("contacts", jsonContacts);
+    await prefs.setString("settings", jsonEncode(settings.toMap()));
+
+    print("Data saved");
+  } catch (error, stackTrace) {
+    print("Loading data failed: $error");
+    print("Stacktrace:\n$stackTrace");
+  }
+}
+
+
+
+void loadData(ContactList contactList, Settings settings) async {
+  try {
+    print("Loading data...");
+
+    final prefs = await SharedPreferences.getInstance();
+
+    final List<String> jsonContacts = prefs.getStringList("contacts")!;
+    print("Contacts: $jsonContacts");
+    final String jsonSettings = prefs.getString("settings")!;
+    print("Settings: $jsonSettings");
+    final List<Contact> listOfContacts = [];
+
+    for (final String jsonContact in jsonContacts) {
+      listOfContacts.add(Contact.fromMap(jsonDecode(jsonContact)));
+    }
+
+    contactList.listOfContacts = listOfContacts;
+    settings.fromMap(jsonDecode(jsonSettings));
+
+    print("Data loaded");
+  } catch (error, stackTrace) {
+    print("Loading data failed: $error");
+    print("Stacktrace:\n$stackTrace");
+  }
+}
+
+
+

@@ -6,6 +6,16 @@ import 'contacts.dart';
 
 class Settings {
   static bool allowUnencryptedMessages = false;
+
+  Map<String, dynamic> toMap() {
+    return {
+      "allowUnencryptedMessages": allowUnencryptedMessages
+    };
+  }
+
+  void fromMap(Map<String, dynamic> map) {
+    allowUnencryptedMessages = map["allowUnencryptedMessages"]!;
+  }
 }
 
 class SettingsPage extends StatefulWidget {
