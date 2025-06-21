@@ -111,6 +111,30 @@ class _ConversationWidgetState extends State<ConversationWidget> {
     super.initState();
     contact = widget.contact;
     conversation = Conversation(contact);
+    //print("Querying sms for ${contact.name}...");
+    /*querySms(phoneNumber: contact.phoneNumber).then((queryResponse) {
+      if (queryResponse == null) {
+        loadMessage =
+            "SMS query failed, please ensure the phone number is correct.";
+        print("SMS query failed, please ensure the phone number is correct.");
+      } else {
+        conversation.chatLogs = queryResponse;
+        chatLoaded = true;
+        print("Sms query complete");
+      }
+      conversation.externalNotify();
+    });*/
+    /*[
+      SmsMessage("010101", "hello", date: DateTime(2025, 2, 4, 4, 5, 12)), 
+      SmsMessage("010101", "world", date: DateTime(2025, 2, 4, 7, 1, 3)), 
+      SmsMessage("010101", "i am a text message", date: DateTime(2025, 2, 4, 7, 3, 10)), 
+      SmsMessage("010101", "ts is a linter", date: DateTime(2025, 2, 4, 7, 10, 3)), 
+      SmsMessage("010101", "flutter is weird", date: DateTime(2025, 2, 4, 8, 9, 8)), 
+    ];*/
+  }
+
+  @override
+  Widget build(BuildContext context) {
     print("Querying sms for ${contact.name}...");
     querySms(phoneNumber: contact.phoneNumber).then((queryResponse) {
       if (queryResponse == null) {
@@ -124,17 +148,7 @@ class _ConversationWidgetState extends State<ConversationWidget> {
       }
       conversation.externalNotify();
     });
-    /*[
-      SmsMessage("010101", "hello", date: DateTime(2025, 2, 4, 4, 5, 12)), 
-      SmsMessage("010101", "world", date: DateTime(2025, 2, 4, 7, 1, 3)), 
-      SmsMessage("010101", "i am a text message", date: DateTime(2025, 2, 4, 7, 3, 10)), 
-      SmsMessage("010101", "ts is a linter", date: DateTime(2025, 2, 4, 7, 10, 3)), 
-      SmsMessage("010101", "flutter is weird", date: DateTime(2025, 2, 4, 8, 9, 8)), 
-    ];*/
-  }
 
-  @override
-  Widget build(BuildContext context) {
     return ListenableBuilder(
       listenable: conversation,
       builder: (BuildContext context, Widget? child) {
@@ -150,7 +164,7 @@ class _ConversationWidgetState extends State<ConversationWidget> {
             ),
           );
         }
-
+        print("Chat loaded");
         List<SmsMessage> messages = conversation.chatLogs;
         List<Widget> decryptedSpeechBubbles = [];
         for (final message in messages) {
@@ -160,13 +174,20 @@ class _ConversationWidgetState extends State<ConversationWidget> {
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
                   return SpeechBubble(message.clone(newBody: snapshot.data));
+                } else {
+                  print("Snapshot has no data, body: ${message.body}");
                 }
                 return SizedBox.shrink();
               },
             ),
           );
         }
-        return ListView(children: decryptedSpeechBubbles);
+        return Container(
+          color: VidarColors.primaryDarkSpaceCadet,
+          child: ListView(
+            children: decryptedSpeechBubbles
+          ),
+        );
       },
     );
   }
@@ -212,7 +233,8 @@ class _MesssageBarState extends State<MesssageBar> {
   late Contact contact;
   late Updater updater;
   String? message;
-  bool messageFail = false;
+  bool error = false;
+  String errorMessage = "";
   Updater failUpdater = Updater();
 
   @override
@@ -222,29 +244,45 @@ class _MesssageBarState extends State<MesssageBar> {
     updater = widget.updater;
   }
 
+  Widget buildErrorMessageWidget(BuildContext context, String text) {
+    return Container(
+      color: VidarColors.secondaryMetallicViolet,
+      child: Row(
+        children: [
+          Text(
+            text,
+            style: TextStyle(color: Colors.white),
+          ),
+          IconButton(
+            onPressed: () => failUpdater.update,
+            icon: Icon(Icons.sms, color: Colors.white),
+          ),
+        ],
+      ),
+    );
+  } 
+
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
       listenable: failUpdater,
       builder: (BuildContext context, Widget? child) {
-        if (messageFail) {
-          print("message failed");
-          messageFail = false;
-          return Container(
-            color: VidarColors.secondaryMetallicViolet,
-            child: Row(
-              children: [
-                Text(
-                  "Failed to send message",
-                  style: TextStyle(color: Colors.white),
-                ),
-                IconButton(
-                  onPressed: () => failUpdater.update,
-                  icon: Icon(Icons.sms, color: Colors.white),
-                ),
-              ],
-            ),
-          );
+        if (error) {
+          error = false;
+          Future.delayed(Duration(seconds: TimeConfiguration.messageWidgetErrorDisplayTime)).then((value) => failUpdater.update(),);
+          switch (errorMessage) {
+            case "MESSAGE_FAILED":
+              print("MESSAGE_FAILED");
+              return buildErrorMessageWidget(context, "Failed to send message");
+            case "NO_KEY":
+              return buildErrorMessageWidget(context, "No key set for contact, either disable key requirement or set a key");
+            case "DECRYPTION_FAILED":
+              return buildErrorMessageWidget(context, "Decryption of message failed, please ensure your key is correct");
+            case "ENCRYPTION_FAILED":
+              return buildErrorMessageWidget(context, "Encryption of message failed");
+            default:
+              return buildErrorMessageWidget(context, "Unknown error");
+          }
         } else {
           return Container(
             color: VidarColors.tertiaryGold,
@@ -263,6 +301,7 @@ class _MesssageBarState extends State<MesssageBar> {
                   child: TextField(
                     style: TextStyle(color: Colors.white),
                     decoration: InputDecoration(border: InputBorder.none),
+                    onChanged: (value) => message = value,
                   ),
                 ),
                 SizedBox(
@@ -271,12 +310,23 @@ class _MesssageBarState extends State<MesssageBar> {
                   child: Center(
                     child: IconButton(
                       onPressed: () async {
-                        sendSms(
-                          await encryptMessage(message!, contact.encryptionKey),
-                          contact.phoneNumber,
-                        );
-                        sleep(Duration(seconds: 5));
-                        updater.update();
+                        print("Sending message: $message");
+                        final String encryptedMessage = await encryptMessage(message!, contact.encryptionKey);
+                        if (encryptedMessage.startsWith(MiscellaneousConfiguration.errorPrefix)) {
+                          errorMessage = encryptedMessage.replaceFirst(MiscellaneousConfiguration.errorPrefix, "");
+                          error = true;
+                          failUpdater.update();
+                        } else {
+                          sendSms(
+                            encryptedMessage,
+                            contact.phoneNumber,
+                          );
+                          // On average it takes about 5 seconds for an sms to be sent
+                          await Future.delayed(Duration(seconds: 1));
+                          updater.update();
+                          //await Future.delayed(Duration(seconds: 4));
+                          //updater.update();
+                        }
                       },
                       icon: Icon(
                         size: SizeConfiguration.sendMessageIconSize,
@@ -301,43 +351,53 @@ class SpeechBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isMe = (message.type == SmsConstants.MESSAGE_TYPE_SENT);
     return Align(
-      alignment: (message.type == SmsConstants.MESSAGE_TYPE_SENT)
+      alignment: isMe
           ? Alignment.centerRight
           : Alignment.centerLeft,
-      child: Column(
-        children: [
-          Container(
-            margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-            decoration: BoxDecoration(
-              color: (message.type == SmsConstants.MESSAGE_TYPE_SENT)
-                  ? VidarColors.secondaryMetallicViolet
-                  : VidarColors.tertiaryGold,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10),
-                topRight: Radius.circular(10),
-                bottomLeft: Radius.circular(
-                  (message.type == SmsConstants.MESSAGE_TYPE_SENT) ? 10 : 0,
+      child: Container(
+        margin: EdgeInsets.only(top:SizeConfiguration.messageVerticalSeperation, bottom: SizeConfiguration.messageVerticalSeperation,left: isMe ? 0 : SizeConfiguration.messageIndent, right: isMe ? SizeConfiguration.messageIndent : 0),
+        child: Column(
+          crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start ,
+          children: [
+            ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width*0.75),
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                decoration: BoxDecoration(
+                  color: isMe
+                      ? VidarColors.secondaryMetallicViolet
+                      : VidarColors.tertiaryGold,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10),
+                    bottomLeft: Radius.circular(
+                      isMe ? 10 : 0,
+                    ),
+                    bottomRight: Radius.circular(
+                      isMe ? 0 : 10,
+                    ),
+                  ),
                 ),
-                bottomRight: Radius.circular(
-                  (message.type == SmsConstants.MESSAGE_TYPE_SENT) ? 0 : 10,
+                child: Text(
+                  message.body,
+                  style: const TextStyle(color: Colors.white, fontSize: 12),
                 ),
               ),
             ),
-            child: Text(
-              message.body,
-              style: const TextStyle(color: Colors.white, fontSize: 12),
+            Container(
+              margin: EdgeInsets.only(top: 2, bottom: 2),
+              child: Text(
+                (isMe
+                        ? "Sent at "
+                        : "Received at ") +
+                    (isMe ? message.dateSent!.toIso8601String().substring(11, 16) : message.date!.toIso8601String().substring(11, 16)),
+                style: const TextStyle(color: Colors.white, fontSize: 8),
+              ),
             ),
-          ),
-          Text(
-            ((message.type == SmsConstants.MESSAGE_TYPE_SENT)
-                    ? "Sent at "
-                    : "Received at ") +
-                message.date!.toIso8601String().replaceRange(0, 11, ""),
-            style: const TextStyle(color: Colors.white, fontSize: 8),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 
+// Only for testing
+import 'fakesms.dart';
+
 const MAIN_SMS_CHANNEL = MethodChannel("flutter.native/helper");
 
 class SmsMessage {
@@ -156,52 +159,17 @@ Future<List<SmsMessage>?> querySms({String? phoneNumber}) async {
       return null;
     }
   } else {
-    final List<SmsMessage> fakesms = [
-      SmsMessage(
-        "Hello",
-        "123456789",
-        date: DateTime(2025, 6, 20, 12, 0, 0),
-        status: SmsConstants.STATUS_COMPLETE,
-        type: SmsConstants.MESSAGE_TYPE_INBOX,
-      ),
-      SmsMessage(
-        "Hi, how are you",
-        "987654321",
-        date: DateTime(2025, 6, 20, 12, 1, 23),
-        status: SmsConstants.STATUS_COMPLETE,
-        type: SmsConstants.MESSAGE_TYPE_OUTBOX,
-      ),
-      SmsMessage(
-        "I'm fine",
-        "123456789",
-        date: DateTime(2025, 6, 20, 12, 5, 28),
-        status: SmsConstants.STATUS_COMPLETE,
-        type: SmsConstants.MESSAGE_TYPE_INBOX,
-      ),
-      SmsMessage(
-        "You know, it's annoying having to make an entire api for sms when the other one wont work",
-        "987654321",
-        date: DateTime(2025, 6, 20, 12, 6, 40),
-        status: SmsConstants.STATUS_COMPLETE,
-        type: SmsConstants.MESSAGE_TYPE_OUTBOX,
-      ),
-      SmsMessage(
-        "Indeeed it is",
-        "123456789",
-        date: DateTime(2025, 6, 20, 12, 8, 54),
-        status: SmsConstants.STATUS_COMPLETE,
-        type: SmsConstants.MESSAGE_TYPE_INBOX,
-      ),
-    ];
+    
     print("(No implementation) Querying sms...");
     print("========SMS========");
     for (final SmsMessage sms in fakesms) {
-      print("Body: ${sms.body} | Phone Number: ${sms.phoneNumber} | Date: ${sms.date} | Type:${sms.type}");
+      print("Body: ${sms.body} | Phone Number: ${sms.phoneNumber} | Date: ${sms.date} | Date Sent: ${sms.dateSent} | Type:${sms.type}");
     }
     return fakesms;
   }
 }
 
+/// The phone number is that of the other party
 void sendSms(String body, String phoneNumber) async {
   if (defaultTargetPlatform == TargetPlatform.android) {
     await MAIN_SMS_CHANNEL.invokeMethod('sendSms', {
@@ -212,6 +180,7 @@ void sendSms(String body, String phoneNumber) async {
     print(
       "(No implementation) Sending sms... body:$body  phoneNumber:$phoneNumber",
     );
+    fakesms.add(SmsMessage(body, phoneNumber, dateSent: DateTime.now(), type: SmsConstants.MESSAGE_TYPE_SENT, status: SmsConstants.STATUS_COMPLETE));
   }
 }
 

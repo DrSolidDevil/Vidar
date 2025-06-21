@@ -23,12 +23,26 @@ class CryptographicConfiguration {
   // Length in bytes (18 bytes = 144 bits)
   static const int keyGenerationHashLength = 18; 
   static const int nonceLength = 32;
+  static const String encryptionPrefix = "☍";
+  // Standard is 16 bytes for the cryptography library
+  static const int macLength = 16; 
 }
 
 
 
 class SizeConfiguration {
   static const double sendMessageIconSize = 30.0;
+  static const double messageIndent = 10.0;
+  static const double messageVerticalSeperation = 3.0;
+}
+
+class TimeConfiguration {
+  // Seconds
+  static const int messageWidgetErrorDisplayTime = 5;
+}
+
+class MiscellaneousConfiguration {
+  static const String errorPrefix = "⚠";
 }
 
 
