@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vidar/pages/chat.dart';
 import 'package:vidar/pages/edit_contact.dart';
+import 'package:vidar/pages/settings.dart';
 import '../configuration.dart';
 
 
@@ -77,7 +78,12 @@ class _ContactListPageState extends State<ContactListPage> {
           Container(
             margin: EdgeInsets.only(right: 10),
             child: IconButton(
-              onPressed: () {print("Settings button pressed");},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SettingsPage(contactList)),
+                );
+              },
               icon: const Icon(
                 Icons.settings,
                 color: Colors.white,

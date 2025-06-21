@@ -1,7 +1,7 @@
 import 'package:cryptography/cryptography.dart';
 import 'dart:convert';
 import 'configuration.dart';
-import 'settings.dart';
+import 'pages/settings.dart';
 
 /// If key is blank then it returns the message argument
 /// Will output with an encryption prefix (i.e. a string prefix that signals that this is an encrypted message)
