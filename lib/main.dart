@@ -35,11 +35,12 @@ class App extends StatelessWidget {
 
     if (defaultTargetPlatform == TargetPlatform.android) {
       loadData(contactList, settings);
+      WidgetsBinding.instance.addObserver(ShutdownHandler(settings, contactList));
     } else {
       print("(No implementation) Loading fake contacts...");
       contactList.listOfContacts = fakeListOfContacts;
     }
-    WidgetsBinding.instance.addObserver(ShutdownHandler(settings, contactList));
+    
 
     return MaterialApp(
       title: 'Vidar', 
