@@ -1,12 +1,10 @@
-import 'dart:io';
-
 import 'package:vidar/sms.dart';
 
-import 'encrypt.dart';
+import '../encrypt.dart';
 import 'package:flutter/material.dart';
 import 'package:vidar/utils.dart';
 import 'contacts.dart';
-import 'configuration.dart';
+import '../configuration.dart';
 import 'edit_contact.dart';
 
 class ChatPage extends StatefulWidget {

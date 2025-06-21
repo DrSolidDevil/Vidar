@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'contacts.dart';
+import 'pages/contacts.dart';
 import 'sms.dart';
 
 /*

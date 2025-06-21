@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:vidar/chat.dart';
+import 'package:vidar/pages/chat.dart';
 import 'package:vidar/utils.dart';
 import 'package:vidar/keys.dart';
 import 'contacts.dart';
-import 'configuration.dart';
+import '../configuration.dart';
 
 
 class EditContactPage extends StatefulWidget {

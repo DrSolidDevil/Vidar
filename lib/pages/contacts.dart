@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:vidar/chat.dart';
-import 'package:vidar/edit_contact.dart';
-import 'configuration.dart';
+import 'package:vidar/pages/chat.dart';
+import 'package:vidar/pages/edit_contact.dart';
+import '../configuration.dart';
 
 
 
