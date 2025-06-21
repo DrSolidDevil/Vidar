@@ -3,6 +3,7 @@ import 'package:vidar/configuration.dart';
 import 'contacts.dart';
 
 
+
 class Settings {
   static bool allowUnencryptedMessages = false;
 }
@@ -92,6 +93,11 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                     ),
                     onTap: () {
+                      Settings.allowUnencryptedMessages = allowUnencryptedMessages.setting;
+
+                      print("=========== New Settings ===========");
+                      print("allowUnencryptedMessages: ${Settings.allowUnencryptedMessages}");
+
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -111,9 +117,10 @@ class _SettingsPageState extends State<SettingsPage> {
 }
 
 
+// ignore: must_be_immutable
 class BooleanSetting extends StatefulWidget {
-  const BooleanSetting(this.setting, this.settingText, {super.key});
-  final bool setting;
+  BooleanSetting(this.setting, this.settingText, {super.key});
+  bool setting;
   final String settingText;
 
   @override
@@ -123,17 +130,12 @@ class BooleanSetting extends StatefulWidget {
 class _BooleanSettingState extends State<BooleanSetting> {
   _BooleanSettingState();
 
-  late bool originalSettingState;
   late String settingText;
-  late bool settingState;
 
   @override
   void initState() {
     super.initState();
-
-    originalSettingState = widget.setting;
     settingText = widget.settingText;
-    settingState = originalSettingState;
   }
 
 
@@ -157,10 +159,10 @@ class _BooleanSettingState extends State<BooleanSetting> {
                 trackOutlineColor: WidgetStateProperty.resolveWith(
                   (final Set<WidgetState> states) => states.contains(WidgetState.selected) ? null :  VidarColors.secondaryMetallicViolet
                 ),
-                value: settingState, 
+                value: widget.setting, 
                 onChanged: (bool value) {
                   setState(() {
-                    settingState = value;
+                    widget.setting = value;
                   });
                 }
               ),
