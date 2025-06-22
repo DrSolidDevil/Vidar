@@ -16,7 +16,7 @@ class MainActivity: FlutterActivity() {
 
     @ExperimentalStdlibApi
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
-        EventChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
+        EventChannel(flutterEngine.dartExecutor.binaryMessenger, SMS_NOTIFIER_CHANNEL)
             .setStreamHandler(object : EventChannel.StreamHandler {
                 override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
                     eventSink = events
@@ -28,7 +28,7 @@ class MainActivity: FlutterActivity() {
                     eventSink = null
                 }
             })
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, SMS_NOTIFIER_CHANNEL).setMethodCallHandler {
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
             call, result ->
             when (call.method) {
                 "querySms" -> {
