@@ -155,9 +155,14 @@ class _ConversationWidgetState extends State<ConversationWidget> {
           return Container(
             color: VidarColors.primaryDarkSpaceCadet,
             child: Center(
-              child: Text(
-                loadMessage,
-                style: TextStyle(fontSize: 30.0, color: Colors.white),
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width*0.6,
+                child: Center(
+                  child: Text(
+                    loadMessage,
+                    style: TextStyle(fontSize: 20.0, color: Colors.white),
+                  ),
+                ),
               ),
             ),
           );
