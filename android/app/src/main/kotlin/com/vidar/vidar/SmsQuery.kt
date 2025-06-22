@@ -6,7 +6,7 @@ import androidx.core.net.toUri
 import android.provider.Telephony.TextBasedSmsColumns
 
 
-public fun querySms(context: Context, phoneNumber: String?): List<HashMap<String, String>>? {
+fun querySms(context: Context, phoneNumber: String?): List<HashMap<String, String>>? {
     val inbox: Cursor?
     if (phoneNumber != null) {
         inbox = context.contentResolver.query(
@@ -64,6 +64,7 @@ private fun cursorToListOfHashMap(cursor: Cursor): List<HashMap<String, String>>
     val bodyColumnIndex: Int = cursor.getColumnIndexOrThrow(TextBasedSmsColumns.BODY)
     val hashMapList: List<HashMap<String, String>> = emptyList()
 
+    @Suppress("ConvertTryFinallyToUseCall")
     try {
         do {
             val entry: HashMap<String, String> = HashMap<String, String>()

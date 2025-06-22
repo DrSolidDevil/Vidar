@@ -179,7 +179,7 @@ class _BooleanSettingState extends State<BooleanSetting> {
             ),
           ),
           
-          Container(
+          SizedBox(
             width: MediaQuery.of(context).size.width*0.6,
             child: Text(
               settingText,

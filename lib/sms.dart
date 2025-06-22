@@ -1,7 +1,6 @@
 // ignore_for_file: non_constant_identifier_names, constant_identifier_names
 
 import 'dart:core';
-import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 
@@ -154,7 +153,7 @@ Future<List<SmsMessage>?> querySms({String? phoneNumber}) async {
       }
       return smsMessages;
     } on PlatformException catch (e) {
-      stderr.writeln(e.message);
+      print(e.message);
       return null;
     }
   } else {
@@ -171,7 +170,8 @@ Future<List<SmsMessage>?> querySms({String? phoneNumber}) async {
 /// The phone number is that of the other party
 void sendSms(String body, String phoneNumber) async {
   if (defaultTargetPlatform == TargetPlatform.android) {
-    await MAIN_SMS_CHANNEL.invokeMethod('sendSms', {
+    /// 0 = success
+    final int result = await MAIN_SMS_CHANNEL.invokeMethod('sendSms', {
       "body": body,
       "phoneNumber": phoneNumber,
     });
