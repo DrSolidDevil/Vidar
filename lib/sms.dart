@@ -140,12 +140,13 @@ SmsMessage? _queryMapToSms(Map<String, String> smsMap) {
 Future<List<SmsMessage>?> querySms({String? phoneNumber}) async {
   if (defaultTargetPlatform == TargetPlatform.android) {
     try {
-      final List<Map<String, String>>? result = await MAIN_SMS_CHANNEL
-          .invokeMethod<List<Map<String, String>>>('querySms');
-
-      if (result == null) {
+      final rawResult = await MAIN_SMS_CHANNEL
+          .invokeMethod('querySms');
+      if (rawResult == null) {
+        print("sms query is null");
         return null;
       }
+      final List<Map<String, String>> result = List<Map<String, String>>.from(rawResult as Iterable);
 
       final List<SmsMessage> smsMessages = [];
       for (final Map<String, String> mapMessage in result) {
@@ -170,8 +171,9 @@ Future<List<SmsMessage>?> querySms({String? phoneNumber}) async {
 /// The phone number is that of the other party
 void sendSms(String body, String phoneNumber) async {
   if (defaultTargetPlatform == TargetPlatform.android) {
-    /// 0 = success
-    final int result = await MAIN_SMS_CHANNEL.invokeMethod('sendSms', {
+    /// 0 = success, for now not used
+    // ignore: unused_local_variable
+    final int? result = await MAIN_SMS_CHANNEL.invokeMethod('sendSms', {
       "body": body,
       "phoneNumber": phoneNumber,
     });
@@ -186,7 +188,8 @@ void sendSms(String body, String phoneNumber) async {
 Future<Map<String, dynamic>> retrieveSmsConstantsMap() async {
   final Map<String, dynamic> smsConstants;
   if (defaultTargetPlatform == TargetPlatform.android) {
-    smsConstants = await MAIN_SMS_CHANNEL.invokeMethod('smsConstants');
+    final rawConstants = await MAIN_SMS_CHANNEL.invokeMethod('smsConstants');
+    smsConstants = Map<String, dynamic>.from(rawConstants);
   } else {
     smsConstants = {
       "MESSAGE_TYPE_ALL": 0,
@@ -253,18 +256,18 @@ class SmsConstants {
     if (mapConstantsParam != null) {
       mapConstants = mapConstantsParam;
     }
-    MESSAGE_TYPE_ALL = mapConstants!["MESSAGE_TYPE_ALL"];
-    MESSAGE_TYPE_DRAFT = mapConstants!["MESSAGE_TYPE_DRAFT"];
-    MESSAGE_TYPE_SENT = mapConstants!["MESSAGE_TYPE_SENT"];
-    MESSAGE_TYPE_INBOX = mapConstants!["MESSAGE_TYPE_INBOX"];
-    MESSAGE_TYPE_FAILED = mapConstants!["MESSAGE_TYPE_FAILED"];
-    MESSAGE_TYPE_OUTBOX = mapConstants!["MESSAGE_TYPE_OUTBOX"];
-    MESSAGE_TYPE_QUEUED = mapConstants!["MESSAGE_TYPE_QUEUED"];
+    MESSAGE_TYPE_ALL = int.parse(mapConstants!["MESSAGE_TYPE_ALL"]);
+    MESSAGE_TYPE_DRAFT = int.parse(mapConstants!["MESSAGE_TYPE_DRAFT"]);
+    MESSAGE_TYPE_SENT = int.parse(mapConstants!["MESSAGE_TYPE_SENT"]);
+    MESSAGE_TYPE_INBOX = int.parse(mapConstants!["MESSAGE_TYPE_INBOX"]);
+    MESSAGE_TYPE_FAILED = int.parse(mapConstants!["MESSAGE_TYPE_FAILED"]);
+    MESSAGE_TYPE_OUTBOX = int.parse(mapConstants!["MESSAGE_TYPE_OUTBOX"]);
+    MESSAGE_TYPE_QUEUED = int.parse(mapConstants!["MESSAGE_TYPE_QUEUED"]);
 
-    STATUS_NONE = mapConstants!["STATUS_NONE"];
-    STATUS_FAILED = mapConstants!["STATUS_FAILED"];
-    STATUS_PENDING = mapConstants!["STATUS_PENDING"];
-    STATUS_COMPLETE = mapConstants!["STATUS_COMPLETE"];
+    STATUS_NONE = int.parse(mapConstants!["STATUS_NONE"]);
+    STATUS_FAILED = int.parse(mapConstants!["STATUS_FAILED"]);
+    STATUS_PENDING = int.parse(mapConstants!["STATUS_PENDING"]);
+    STATUS_COMPLETE = int.parse(mapConstants!["STATUS_COMPLETE"]);
 
     COLUMN_NAME_THREAD_ID = mapConstants!["THREAD_ID"];
     COLUMN_NAME_TYPE = mapConstants!["TYPE"];

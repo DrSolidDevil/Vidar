@@ -16,6 +16,8 @@ class MainActivity: FlutterActivity() {
 
     @ExperimentalStdlibApi
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+        super.configureFlutterEngine(flutterEngine);
+        
         EventChannel(flutterEngine.dartExecutor.binaryMessenger, SMS_NOTIFIER_CHANNEL)
             .setStreamHandler(object : EventChannel.StreamHandler {
                 override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
