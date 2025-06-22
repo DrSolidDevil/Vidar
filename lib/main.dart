@@ -21,7 +21,10 @@ have a "generate key" button beside the key field
 */
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  print("Fetching sms constants...");
   SmsConstants(await retrieveSmsConstantsMap());
+  print("Sms constants fetched");
   runApp(App());
 }
 
