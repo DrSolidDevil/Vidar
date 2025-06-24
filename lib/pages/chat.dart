@@ -140,7 +140,7 @@ class _ConversationWidgetState extends State<ConversationWidget> {
             "SMS query failed, please ensure the phone number is correct.";
         print("SMS query failed, please ensure the phone number is correct.");
       } else {
-        conversation.chatLogs = queryResponse;
+        conversation.chatLogs = queryResponse.reversed.toList();
         chatLoaded = true;
         print("Sms query complete");
       }
@@ -207,7 +207,7 @@ class Conversation extends ChangeNotifier {
   }
 
   void updateChatLogs() async {
-    chatLogs = (await querySms(phoneNumber: contact.phoneNumber))!;
+    chatLogs = (await querySms(phoneNumber: contact.phoneNumber))!.reversed.toList();
     print("chatlogs updated");
     notifyListeners();
   }

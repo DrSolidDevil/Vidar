@@ -137,6 +137,7 @@ SmsMessage? _queryMapToSms(Map<String, String?> smsMap) {
 }
 
 /// Requires an initialization of SmsConstants beforehand
+/// SMS are returned oldest to newest
 Future<List<SmsMessage>?> querySms({String? phoneNumber}) async {
   if (defaultTargetPlatform == TargetPlatform.android) {
     try {
