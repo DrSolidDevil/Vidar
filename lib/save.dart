@@ -37,9 +37,9 @@ void loadData(ContactList contactList, Settings settings) async {
 
     final prefs = await SharedPreferences.getInstance();
 
-    final List<String> jsonContacts = prefs.getStringList("contacts")!;
+    final List<String> jsonContacts = prefs.getStringList("contacts") ?? [];
     print("Contacts: $jsonContacts");
-    final String jsonSettings = prefs.getString("settings")!;
+    final String? jsonSettings = prefs.getString("settings");
     print("Settings: $jsonSettings");
     final List<Contact> listOfContacts = [];
 
@@ -48,7 +48,11 @@ void loadData(ContactList contactList, Settings settings) async {
     }
 
     contactList.listOfContacts = listOfContacts;
-    settings.fromMap(jsonDecode(jsonSettings));
+    if (jsonSettings != null) {
+      settings.fromMap(jsonDecode(jsonSettings));
+    } else {
+      print("Could not fetch settings");
+    }
 
     print("Data loaded");
   } catch (error, stackTrace) {

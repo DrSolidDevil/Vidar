@@ -49,12 +49,10 @@ class _SettingsPageState extends State<SettingsPage> {
       color: VidarColors.primaryDarkSpaceCadet,
       child: Column(
         children: [
-          Container(
-            child: Column(
-              children: [
-                allowUnencryptedMessages
-              ],
-            ),
+          Column(
+            children: [
+              allowUnencryptedMessages
+            ],
           ),
           Container(
             margin: EdgeInsets.only(top: 60),
