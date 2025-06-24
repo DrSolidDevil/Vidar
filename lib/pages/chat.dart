@@ -156,7 +156,7 @@ class _ConversationWidgetState extends State<ConversationWidget> {
             color: VidarColors.primaryDarkSpaceCadet,
             child: Center(
               child: SizedBox(
-                width: MediaQuery.of(context).size.width*0.6,
+                width: MediaQuery.of(context).size.width * 0.6,
                 child: Center(
                   child: Text(
                     loadMessage,
@@ -187,9 +187,7 @@ class _ConversationWidgetState extends State<ConversationWidget> {
         }
         return Container(
           color: VidarColors.primaryDarkSpaceCadet,
-          child: ListView(
-            children: decryptedSpeechBubbles
-          ),
+          child: ListView(children: decryptedSpeechBubbles),
         );
       },
     );
@@ -207,7 +205,9 @@ class Conversation extends ChangeNotifier {
   }
 
   void updateChatLogs() async {
-    chatLogs = (await querySms(phoneNumber: contact.phoneNumber))!.reversed.toList();
+    chatLogs = (await querySms(
+      phoneNumber: contact.phoneNumber,
+    ))!.reversed.toList();
     print("chatlogs updated");
     notifyListeners();
   }
@@ -252,10 +252,7 @@ class _MesssageBarState extends State<MesssageBar> {
       color: VidarColors.secondaryMetallicViolet,
       child: Row(
         children: [
-          Text(
-            text,
-            style: TextStyle(color: Colors.white),
-          ),
+          Text(text, style: TextStyle(color: Colors.white)),
           IconButton(
             onPressed: () => failUpdater.update,
             icon: Icon(Icons.sms, color: Colors.white),
@@ -263,7 +260,7 @@ class _MesssageBarState extends State<MesssageBar> {
         ],
       ),
     );
-  } 
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -272,17 +269,28 @@ class _MesssageBarState extends State<MesssageBar> {
       builder: (BuildContext context, Widget? child) {
         if (error) {
           error = false;
-          Future.delayed(Duration(seconds: TimeConfiguration.messageWidgetErrorDisplayTime)).then((value) => failUpdater.update(),);
+          Future.delayed(
+            Duration(seconds: TimeConfiguration.messageWidgetErrorDisplayTime),
+          ).then((value) => failUpdater.update());
           switch (errorMessage) {
             case "MESSAGE_FAILED":
               print("MESSAGE_FAILED");
               return buildErrorMessageWidget(context, "Failed to send message");
             case "NO_KEY":
-              return buildErrorMessageWidget(context, "No key set for contact, either disable key requirement or set a key");
+              return buildErrorMessageWidget(
+                context,
+                "No key set for contact, either disable key requirement or set a key",
+              );
             case "DECRYPTION_FAILED":
-              return buildErrorMessageWidget(context, "Decryption of message failed, please ensure your key is correct");
+              return buildErrorMessageWidget(
+                context,
+                "Decryption of message failed, please ensure your key is correct",
+              );
             case "ENCRYPTION_FAILED":
-              return buildErrorMessageWidget(context, "Encryption of message failed");
+              return buildErrorMessageWidget(
+                context,
+                "Encryption of message failed",
+              );
             default:
               return buildErrorMessageWidget(context, "Unknown error");
           }
@@ -314,16 +322,21 @@ class _MesssageBarState extends State<MesssageBar> {
                     child: IconButton(
                       onPressed: () async {
                         print("Sending message: $message");
-                        final String encryptedMessage = await encryptMessage(message!, contact.encryptionKey);
-                        if (encryptedMessage.startsWith(MiscellaneousConfiguration.errorPrefix)) {
-                          errorMessage = encryptedMessage.replaceFirst(MiscellaneousConfiguration.errorPrefix, "");
+                        final String encryptedMessage = await encryptMessage(
+                          message!,
+                          contact.encryptionKey,
+                        );
+                        if (encryptedMessage.startsWith(
+                          MiscellaneousConfiguration.errorPrefix,
+                        )) {
+                          errorMessage = encryptedMessage.replaceFirst(
+                            MiscellaneousConfiguration.errorPrefix,
+                            "",
+                          );
                           error = true;
                           failUpdater.update();
                         } else {
-                          sendSms(
-                            encryptedMessage,
-                            contact.phoneNumber,
-                          );
+                          sendSms(encryptedMessage, contact.phoneNumber);
                           // On average it takes about 5 seconds for an sms to be sent
                           await Future.delayed(Duration(seconds: 1));
                           updater.update();
@@ -356,16 +369,23 @@ class SpeechBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool isMe = (message.type == SmsConstants.MESSAGE_TYPE_SENT);
     return Align(
-      alignment: isMe
-          ? Alignment.centerRight
-          : Alignment.centerLeft,
+      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
-        margin: EdgeInsets.only(top:SizeConfiguration.messageVerticalSeperation, bottom: SizeConfiguration.messageVerticalSeperation,left: isMe ? 0 : SizeConfiguration.messageIndent, right: isMe ? SizeConfiguration.messageIndent : 0),
+        margin: EdgeInsets.only(
+          top: SizeConfiguration.messageVerticalSeperation,
+          bottom: SizeConfiguration.messageVerticalSeperation,
+          left: isMe ? 0 : SizeConfiguration.messageIndent,
+          right: isMe ? SizeConfiguration.messageIndent : 0,
+        ),
         child: Column(
-          crossAxisAlignment: isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start ,
+          crossAxisAlignment: isMe
+              ? CrossAxisAlignment.end
+              : CrossAxisAlignment.start,
           children: [
             ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width*0.75),
+              constraints: BoxConstraints(
+                maxWidth: MediaQuery.of(context).size.width * 0.75,
+              ),
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                 decoration: BoxDecoration(
@@ -375,12 +395,8 @@ class SpeechBubble extends StatelessWidget {
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(10),
                     topRight: Radius.circular(10),
-                    bottomLeft: Radius.circular(
-                      isMe ? 10 : 0,
-                    ),
-                    bottomRight: Radius.circular(
-                      isMe ? 0 : 10,
-                    ),
+                    bottomLeft: Radius.circular(isMe ? 10 : 0),
+                    bottomRight: Radius.circular(isMe ? 0 : 10),
                   ),
                 ),
                 child: Text(
@@ -392,10 +408,10 @@ class SpeechBubble extends StatelessWidget {
             Container(
               margin: EdgeInsets.only(top: 2, bottom: 2),
               child: Text(
-                (isMe
-                        ? "Sent at "
-                        : "Received at ") +
-                    (isMe ? message.dateSent!.toIso8601String().substring(11, 16) : message.date!.toIso8601String().substring(11, 16)),
+                (isMe ? "Sent at " : "Received at ") +
+                    (isMe
+                        ? message.dateSent!.toIso8601String().substring(11, 16)
+                        : message.date!.toIso8601String().substring(11, 16)),
                 style: const TextStyle(color: Colors.white, fontSize: 8),
               ),
             ),

@@ -7,7 +7,7 @@ import android.content.Context
 import io.flutter.plugin.common.EventChannel
 
 @Suppress("PrivatePropertyName")
-class MainActivity: FlutterActivity() {
+class MainActivity : FlutterActivity() {
     private val CHANNEL = "flutter.native/helper"
     private val SMS_NOTIFIER_CHANNEL = "flutter.native/smsnotifier"
     private var eventSink: EventChannel.EventSink? = null
@@ -17,7 +17,7 @@ class MainActivity: FlutterActivity() {
     @ExperimentalStdlibApi
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine);
-        
+
         EventChannel(flutterEngine.dartExecutor.binaryMessenger, SMS_NOTIFIER_CHANNEL)
             .setStreamHandler(object : EventChannel.StreamHandler {
                 override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
@@ -30,19 +30,24 @@ class MainActivity: FlutterActivity() {
                     eventSink = null
                 }
             })
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
-            call, result ->
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            CHANNEL
+        ).setMethodCallHandler { call, result ->
             when (call.method) {
                 "querySms" -> {
                     result.success(querySms(context, call.argument("phoneNumber")))
                 }
+
                 "sendSms" -> {
                     sendSms(context, call.argument("body")!!, call.argument("phoneNumber")!!)
                     result.success(0)
                 }
+
                 "smsConstants" -> {
                     result.success(smsConstants)
                 }
+
                 else -> {
                     result.notImplemented()
                 }

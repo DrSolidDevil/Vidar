@@ -36,7 +36,8 @@ Future<String> encryptMessage(String message, String key) async {
       ...secretBox.mac.bytes,
     ];
 
-    return CryptographicConfiguration.encryptionPrefix + base64.encode(fullEncrypted);
+    return CryptographicConfiguration.encryptionPrefix +
+        base64.encode(fullEncrypted);
   } catch (error, stackTrace) {
     if (LoggingConfiguration.verboseEncryptionError) {
       print("Encryption Failed: $error");
@@ -73,7 +74,7 @@ Future<String> decryptMessage(String message, String key) async {
     final List<int> encryptedBytes = base64.decode(message);
 
     final nonce = encryptedBytes.sublist(
-      0, 
+      0,
       CryptographicConfiguration.nonceLength,
     );
     final cipherText = encryptedBytes.sublist(
@@ -81,11 +82,18 @@ Future<String> decryptMessage(String message, String key) async {
       encryptedBytes.length - CryptographicConfiguration.macLength,
     );
     final mac = encryptedBytes.sublist(
-      encryptedBytes.length - CryptographicConfiguration.macLength
+      encryptedBytes.length - CryptographicConfiguration.macLength,
     );
 
-    final SecretBox secretBox = SecretBox(cipherText, nonce: nonce, mac: Mac(mac));
-    final List<int> decryptedBytes = await algorithm.decrypt(secretBox, secretKey: secretKey);
+    final SecretBox secretBox = SecretBox(
+      cipherText,
+      nonce: nonce,
+      mac: Mac(mac),
+    );
+    final List<int> decryptedBytes = await algorithm.decrypt(
+      secretBox,
+      secretKey: secretKey,
+    );
     final String decryptedMessage = utf8.decode(decryptedBytes);
     return decryptedMessage;
   } catch (error, stackTrace) {

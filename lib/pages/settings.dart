@@ -2,15 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:vidar/configuration.dart';
 import 'contacts.dart';
 
-
-
 class Settings {
   static bool allowUnencryptedMessages = false;
 
   Map<String, dynamic> toMap() {
-    return {
-      "allowUnencryptedMessages": allowUnencryptedMessages
-    };
+    return {"allowUnencryptedMessages": allowUnencryptedMessages};
   }
 
   void fromMap(Map<String, dynamic> map) {
@@ -32,8 +28,8 @@ class _SettingsPageState extends State<SettingsPage> {
   late ContactList contactList;
 
   BooleanSetting allowUnencryptedMessages = BooleanSetting(
-    Settings.allowUnencryptedMessages, 
-    "Send unencrypted messages when contact has no key"
+    Settings.allowUnencryptedMessages,
+    "Send unencrypted messages when contact has no key",
   );
 
   @override
@@ -49,11 +45,7 @@ class _SettingsPageState extends State<SettingsPage> {
       color: VidarColors.primaryDarkSpaceCadet,
       child: Column(
         children: [
-          Column(
-            children: [
-              allowUnencryptedMessages
-            ],
-          ),
+          Column(children: [allowUnencryptedMessages]),
           Container(
             margin: EdgeInsets.only(top: 60),
             child: Row(
@@ -101,10 +93,13 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                     ),
                     onTap: () {
-                      Settings.allowUnencryptedMessages = allowUnencryptedMessages.setting;
+                      Settings.allowUnencryptedMessages =
+                          allowUnencryptedMessages.setting;
 
                       print("=========== New Settings ===========");
-                      print("allowUnencryptedMessages: ${Settings.allowUnencryptedMessages}");
+                      print(
+                        "allowUnencryptedMessages: ${Settings.allowUnencryptedMessages}",
+                      );
 
                       Navigator.push(
                         context,
@@ -123,7 +118,6 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 }
-
 
 // ignore: must_be_immutable
 class BooleanSetting extends StatefulWidget {
@@ -146,8 +140,6 @@ class _BooleanSettingState extends State<BooleanSetting> {
     settingText = widget.settingText;
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -157,7 +149,9 @@ class _BooleanSettingState extends State<BooleanSetting> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            margin: EdgeInsets.only(right: MediaQuery.of(context).size.width*0.1),
+            margin: EdgeInsets.only(
+              right: MediaQuery.of(context).size.width * 0.1,
+            ),
             child: Material(
               color: Colors.transparent,
               child: Switch(
@@ -165,29 +159,32 @@ class _BooleanSettingState extends State<BooleanSetting> {
                 inactiveThumbColor: VidarColors.secondaryMetallicViolet,
                 inactiveTrackColor: VidarColors.extraMidnightPurple,
                 trackOutlineColor: WidgetStateProperty.resolveWith(
-                  (final Set<WidgetState> states) => states.contains(WidgetState.selected) ? null :  VidarColors.secondaryMetallicViolet
+                  (final Set<WidgetState> states) =>
+                      states.contains(WidgetState.selected)
+                      ? null
+                      : VidarColors.secondaryMetallicViolet,
                 ),
-                value: widget.setting, 
+                value: widget.setting,
                 onChanged: (bool value) {
                   setState(() {
                     widget.setting = value;
                   });
-                }
+                },
               ),
             ),
           ),
-          
+
           SizedBox(
-            width: MediaQuery.of(context).size.width*0.6,
+            width: MediaQuery.of(context).size.width * 0.6,
             child: Text(
               settingText,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: SizeConfiguration.settingInfoText,
-                decoration: TextDecoration.none
+                decoration: TextDecoration.none,
               ),
             ),
-          ),  
+          ),
         ],
       ),
     );

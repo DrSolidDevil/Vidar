@@ -64,18 +64,18 @@ class SmsMessage {
 
   SmsMessage clone({
     String? newBody,
-    String? newPhoneNumber, 
-    int? newThreadId, 
-    int? newType, 
-    DateTime? newDate, 
-    DateTime? newDateSent, 
-    bool? newSeen, 
-    bool? newRead, 
-    int? newProtocol, 
-    int? newStatus, 
-    int? newSubscriptionId, 
+    String? newPhoneNumber,
+    int? newThreadId,
+    int? newType,
+    DateTime? newDate,
+    DateTime? newDateSent,
+    bool? newSeen,
+    bool? newRead,
+    int? newProtocol,
+    int? newStatus,
+    int? newSubscriptionId,
     String? newSubject,
-    }) {
+  }) {
     return SmsMessage(
       newBody ?? body,
       newPhoneNumber ?? phoneNumber,
@@ -111,7 +111,9 @@ SmsMessage? _queryMapToSms(Map<String, String?> smsMap) {
   );
   final bool seen = int.parse(smsMap[SmsConstants.COLUMN_NAME_SEEN]!) != 0;
   final bool read = int.parse(smsMap[SmsConstants.COLUMN_NAME_READ]!) != 0;
-  final int? protocol = smsMap[SmsConstants.COLUMN_NAME_PROTOCOL] == null ? null : int.parse(smsMap[SmsConstants.COLUMN_NAME_PROTOCOL]!);
+  final int? protocol = smsMap[SmsConstants.COLUMN_NAME_PROTOCOL] == null
+      ? null
+      : int.parse(smsMap[SmsConstants.COLUMN_NAME_PROTOCOL]!);
   final int status = int.parse(smsMap[SmsConstants.COLUMN_NAME_STATUS]!);
   final int subscriptionId = int.parse(
     smsMap[SmsConstants.COLUMN_NAME_SUBSCRIPTION_ID]!,
@@ -142,8 +144,9 @@ Future<List<SmsMessage>?> querySms({String? phoneNumber}) async {
   if (defaultTargetPlatform == TargetPlatform.android) {
     try {
       print("phonenumber = $phoneNumber");
-      final rawResult = await MAIN_SMS_CHANNEL
-          .invokeMethod("querySms", {"phoneNumber": phoneNumber});
+      final rawResult = await MAIN_SMS_CHANNEL.invokeMethod("querySms", {
+        "phoneNumber": phoneNumber,
+      });
       if (rawResult == null) {
         print("sms query is null");
         return null;
@@ -168,11 +171,12 @@ Future<List<SmsMessage>?> querySms({String? phoneNumber}) async {
       return null;
     }
   } else {
-    
     print("(No implementation) Querying sms...");
     print("========SMS========");
     for (final SmsMessage sms in fakesms) {
-      print("Body: ${sms.body} | Phone Number: ${sms.phoneNumber} | Date: ${sms.date} | Date Sent: ${sms.dateSent} | Type:${sms.type}");
+      print(
+        "Body: ${sms.body} | Phone Number: ${sms.phoneNumber} | Date: ${sms.date} | Date Sent: ${sms.dateSent} | Type:${sms.type}",
+      );
     }
     return fakesms;
   }
@@ -192,7 +196,15 @@ void sendSms(String body, String phoneNumber) async {
     print(
       "(No implementation) Sending sms... body:$body  phoneNumber:$phoneNumber",
     );
-    fakesms.add(SmsMessage(body, phoneNumber, dateSent: DateTime.now(), type: SmsConstants.MESSAGE_TYPE_SENT, status: SmsConstants.STATUS_COMPLETE));
+    fakesms.add(
+      SmsMessage(
+        body,
+        phoneNumber,
+        dateSent: DateTime.now(),
+        type: SmsConstants.MESSAGE_TYPE_SENT,
+        status: SmsConstants.STATUS_COMPLETE,
+      ),
+    );
   }
 }
 

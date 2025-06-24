@@ -3,11 +3,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'pages/settings.dart';
 import 'dart:convert';
 
-
-
-
-
-
 void saveData(ContactList contactList, Settings settings) async {
   try {
     print("Saving data...");
@@ -28,8 +23,6 @@ void saveData(ContactList contactList, Settings settings) async {
     print("Stacktrace:\n$stackTrace");
   }
 }
-
-
 
 void loadData(ContactList contactList, Settings settings) async {
   try {
@@ -60,6 +53,3 @@ void loadData(ContactList contactList, Settings settings) async {
     print("Stacktrace:\n$stackTrace");
   }
 }
-
-
-

@@ -69,7 +69,6 @@ private fun cursorToListOfHashMap(cursor: Cursor): ArrayList<HashMap<String, Str
     @Suppress("ConvertTryFinallyToUseCall")
     try {
         do {
-            
             val entry: MutableMap<String, String> = mutableMapOf<String, String>()
             entry[TextBasedSmsColumns.THREAD_ID] = cursor.getString(threadIdColumnIndex)
             entry[TextBasedSmsColumns.TYPE] = cursor.getString(typeColumnIndex)

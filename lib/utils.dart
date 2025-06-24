@@ -5,4 +5,3 @@ class Updater extends ChangeNotifier {
     notifyListeners();
   }
 }
-

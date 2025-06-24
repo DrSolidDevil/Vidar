@@ -3,8 +3,6 @@ import 'package:vidar/pages/contacts.dart';
 import 'package:vidar/pages/settings.dart';
 import 'package:vidar/save.dart';
 
-
-
 class ShutdownHandler extends WidgetsBindingObserver {
   ShutdownHandler(this.settings, this.contactList);
   final Settings settings;
