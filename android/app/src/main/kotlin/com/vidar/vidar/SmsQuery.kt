@@ -6,29 +6,30 @@ import androidx.core.net.toUri
 import android.provider.Telephony.TextBasedSmsColumns
 
 
-fun querySms(context: Context, phoneNumber: String?): List<HashMap<String, String>>? {
-    val inbox: Cursor?
+fun querySms(context: Context, phoneNumber: String?): ArrayList<HashMap<String, String>>? {
+    val sms: Cursor?
     if (phoneNumber != null) {
-        inbox = context.contentResolver.query(
-            "content://sms/inbox".toUri(),
+        sms = context.contentResolver.query(
+            "content://sms/".toUri(),
             includedQueryData,
             "address=?",
             arrayOf(phoneNumber),
             null
         )
     } else {
-        inbox = context.contentResolver.query(
-            "content://sms/inbox".toUri(),
+        sms = context.contentResolver.query(
+            "content://sms/".toUri(),
             includedQueryData,
             null,
             null,
             null
         )
     }
-    if (inbox == null || !inbox.moveToFirst()) {
+    if (sms == null || !sms.moveToFirst()) {
         return null
     }
-    return cursorToListOfHashMap(inbox)
+    val hashmap = cursorToListOfHashMap(sms);
+    return hashmap
 }
 
 private val includedQueryData: Array<String> = arrayOf(
@@ -49,7 +50,7 @@ private val includedQueryData: Array<String> = arrayOf(
 
 // Closes the cursor when it's done
 // A list of hashmaps in kotlin is equivalent to a list of maps in dart
-private fun cursorToListOfHashMap(cursor: Cursor): List<HashMap<String, String>> {
+private fun cursorToListOfHashMap(cursor: Cursor): ArrayList<HashMap<String, String>> {
     val threadIdColumnIndex: Int = cursor.getColumnIndexOrThrow(TextBasedSmsColumns.THREAD_ID)
     val typeColumnIndex: Int = cursor.getColumnIndexOrThrow(TextBasedSmsColumns.TYPE)
     val addressColumnIndex: Int = cursor.getColumnIndexOrThrow(TextBasedSmsColumns.ADDRESS)
@@ -62,12 +63,13 @@ private fun cursorToListOfHashMap(cursor: Cursor): List<HashMap<String, String>>
     val subscriptionIdColumnIndex: Int = cursor.getColumnIndexOrThrow(TextBasedSmsColumns.SUBSCRIPTION_ID)
     val subjectColumnIndex: Int = cursor.getColumnIndexOrThrow(TextBasedSmsColumns.SUBJECT)
     val bodyColumnIndex: Int = cursor.getColumnIndexOrThrow(TextBasedSmsColumns.BODY)
-    val hashMapList: List<HashMap<String, String>> = emptyList()
+    val hashMapList: ArrayList<HashMap<String, String>> = ArrayList<HashMap<String, String>>()
 
     @Suppress("ConvertTryFinallyToUseCall")
     try {
         do {
-            val entry: HashMap<String, String> = HashMap<String, String>()
+            
+            val entry: MutableMap<String, String> = mutableMapOf<String, String>()
             entry[TextBasedSmsColumns.THREAD_ID] = cursor.getString(threadIdColumnIndex)
             entry[TextBasedSmsColumns.TYPE] = cursor.getString(typeColumnIndex)
             entry[TextBasedSmsColumns.ADDRESS] = cursor.getString(addressColumnIndex)
@@ -80,8 +82,9 @@ private fun cursorToListOfHashMap(cursor: Cursor): List<HashMap<String, String>>
             entry[TextBasedSmsColumns.SUBSCRIPTION_ID] = cursor.getString(subscriptionIdColumnIndex)
             entry[TextBasedSmsColumns.SUBJECT] = cursor.getString(subjectColumnIndex)
             entry[TextBasedSmsColumns.BODY] = cursor.getString(bodyColumnIndex)
-            // Append deep hashmap clone
-            hashMapList.plus(entry.toMap())
+            // Append deep read only map clone
+            val newEntry = HashMap(entry)
+            hashMapList.add(newEntry)
         } while (cursor.moveToNext())
     } finally {
         cursor.close();

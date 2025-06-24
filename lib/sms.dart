@@ -94,7 +94,7 @@ class SmsMessage {
 }
 
 /// Requires an initialization of SmsConstants beforehand
-SmsMessage? _queryMapToSms(Map<String, String> smsMap) {
+SmsMessage? _queryMapToSms(Map<String, String?> smsMap) {
   if (SmsConstants.mapConstants == null) {
     return null;
   }
@@ -111,7 +111,7 @@ SmsMessage? _queryMapToSms(Map<String, String> smsMap) {
   );
   final bool seen = int.parse(smsMap[SmsConstants.COLUMN_NAME_SEEN]!) != 0;
   final bool read = int.parse(smsMap[SmsConstants.COLUMN_NAME_READ]!) != 0;
-  final int protocol = int.parse(smsMap[SmsConstants.COLUMN_NAME_PROTOCOL]!);
+  final int? protocol = smsMap[SmsConstants.COLUMN_NAME_PROTOCOL] == null ? null : int.parse(smsMap[SmsConstants.COLUMN_NAME_PROTOCOL]!);
   final int status = int.parse(smsMap[SmsConstants.COLUMN_NAME_STATUS]!);
   final int subscriptionId = int.parse(
     smsMap[SmsConstants.COLUMN_NAME_SUBSCRIPTION_ID]!,
@@ -146,11 +146,19 @@ Future<List<SmsMessage>?> querySms({String? phoneNumber}) async {
         print("sms query is null");
         return null;
       }
-      final List<Map<String, String>> result = List<Map<String, String>>.from(rawResult as Iterable);
-
+      print(rawResult.toString());
+      final List<Map<String, String?>> result = [];
+      for (final resultEntry in rawResult) {
+        result.add(Map<String, String?>.from(resultEntry));
+      }
+      //List<Map<String, String>>.from(rawResult as );
+      print("(quuerySms) num maps = ${rawResult.length}");
       final List<SmsMessage> smsMessages = [];
-      for (final Map<String, String> mapMessage in result) {
+      for (final Map<String, String?> mapMessage in result) {
         smsMessages.add(_queryMapToSms(mapMessage)!);
+      }
+      if (smsMessages.isEmpty) {
+        print("(querySms) smsMessages is empty");
       }
       return smsMessages;
     } on PlatformException catch (e) {
@@ -177,6 +185,7 @@ void sendSms(String body, String phoneNumber) async {
       "body": body,
       "phoneNumber": phoneNumber,
     });
+    print("Sending result: $result");
   } else {
     print(
       "(No implementation) Sending sms... body:$body  phoneNumber:$phoneNumber",
