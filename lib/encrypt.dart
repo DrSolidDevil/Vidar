@@ -38,8 +38,10 @@ Future<String> encryptMessage(String message, String key) async {
 
     return CryptographicConfiguration.encryptionPrefix + base64.encode(fullEncrypted);
   } catch (error, stackTrace) {
-    print("Encryption Failed: $error");
-    print("Stacktrace:\n$stackTrace");
+    if (LoggingConfiguration.verboseEncryptionError) {
+      print("Encryption Failed: $error");
+      print("Stacktrace:\n$stackTrace");
+    }
     return "ENCRYPTION_FAILED";
   }
 }
@@ -87,8 +89,10 @@ Future<String> decryptMessage(String message, String key) async {
     final String decryptedMessage = utf8.decode(decryptedBytes);
     return decryptedMessage;
   } catch (error, stackTrace) {
-    print("Decryption Failed: $error");
-    print("Stacktrace:\n$stackTrace");
+    if (LoggingConfiguration.verboseEncryptionError) {
+      print("Decryption Failed: $error");
+      print("Stacktrace:\n$stackTrace");
+    }
     return "${MiscellaneousConfiguration.errorPrefix}DECRYPTION_FAILED";
   }
 }

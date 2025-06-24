@@ -141,8 +141,9 @@ SmsMessage? _queryMapToSms(Map<String, String?> smsMap) {
 Future<List<SmsMessage>?> querySms({String? phoneNumber}) async {
   if (defaultTargetPlatform == TargetPlatform.android) {
     try {
+      print("phonenumber = $phoneNumber");
       final rawResult = await MAIN_SMS_CHANNEL
-          .invokeMethod('querySms');
+          .invokeMethod("querySms", {"phoneNumber": phoneNumber});
       if (rawResult == null) {
         print("sms query is null");
         return null;

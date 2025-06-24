@@ -9,6 +9,7 @@ import android.provider.Telephony.TextBasedSmsColumns
 fun querySms(context: Context, phoneNumber: String?): ArrayList<HashMap<String, String>>? {
     val sms: Cursor?
     if (phoneNumber != null) {
+        println("phoneNumber not null")
         sms = context.contentResolver.query(
             "content://sms/".toUri(),
             includedQueryData,
@@ -17,6 +18,7 @@ fun querySms(context: Context, phoneNumber: String?): ArrayList<HashMap<String, 
             null
         )
     } else {
+        println("phoneNumber null")
         sms = context.contentResolver.query(
             "content://sms/".toUri(),
             includedQueryData,
@@ -28,8 +30,7 @@ fun querySms(context: Context, phoneNumber: String?): ArrayList<HashMap<String, 
     if (sms == null || !sms.moveToFirst()) {
         return null
     }
-    val hashmap = cursorToListOfHashMap(sms);
-    return hashmap
+    return cursorToListOfHashMap(sms)
 }
 
 private val includedQueryData: Array<String> = arrayOf(

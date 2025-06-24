@@ -39,3 +39,8 @@ class MiscellaneousConfiguration {
 }
 
 
+class LoggingConfiguration {
+  /// If encryption errors should be logged/printed
+  static const bool verboseEncryptionError = false;
+}
+

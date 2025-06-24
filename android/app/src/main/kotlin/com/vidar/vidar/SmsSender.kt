@@ -5,5 +5,6 @@ import android.content.Context
 
 fun sendSms(context: Context, body: String, phoneNumber: String) {
     val smsManager: SmsManager = context.getSystemService(SmsManager::class.java)
-    smsManager.sendTextMessage(phoneNumber, null, body, null, null)
+    val bodySplit: ArrayList<String> = smsManager.divideMessage(body)
+    smsManager.sendMultipartTextMessage(phoneNumber, null, bodySplit, null, null)
 }
