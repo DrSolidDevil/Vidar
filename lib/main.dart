@@ -8,6 +8,7 @@ import 'package:vidar/save.dart';
 import 'package:vidar/shutdownhandling.dart';
 import 'pages/contacts.dart';
 import 'sms.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 /*
 Notes:
@@ -27,6 +28,7 @@ void main() async {
   print("Fetching sms constants...");
   SmsConstants(await retrieveSmsConstantsMap());
   print("Sms constants fetched");
+  await Permission.sms.request();
   runApp(App());
 }
 
@@ -56,8 +58,7 @@ class App extends StatelessWidget {
         builder: (BuildContext context, Widget? widget) {
           if (ErrorHandler.hasError && ErrorHandler.errorPopup != null) {
             ErrorHandler.hasError = false;
-            // ignore:return_of_invalid_type_from_closure
-            return ErrorHandler.errorPopup;
+            return ErrorHandler.errorPopup!;
           } else {
             return ContactListPage();
           }

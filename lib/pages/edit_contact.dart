@@ -85,7 +85,7 @@ class _EditContactPageState extends State<EditContactPage> {
                 margin: EdgeInsets.only(left: 50, right: 50, top: 30, bottom: 30),
                 child: Row(
                   children: [
-                    Container(
+                    SizedBox(
                       width: MediaQuery.of(context).size.width-160, // -100 for margins, -50 for button and -10 for button margin
                       height: 50,
                       child: Material(
@@ -123,7 +123,7 @@ class _EditContactPageState extends State<EditContactPage> {
                     Container(
                       height: 50,
                       margin: EdgeInsets.only(left: 10),
-                      child: Container(
+                      child: SizedBox(
                         width: 50,
                         child: IconButton(
                           onPressed: () async {

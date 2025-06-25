@@ -10,7 +10,7 @@ void saveData(ContactList contactList, Settings settings) async {
   try {
     print("Saving data...");
 
-    final prefs = await SharedPreferences.getInstance();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     final List<String> jsonContacts = [];
     for (final Contact contact in contactList.listOfContacts) {
@@ -40,7 +40,7 @@ void loadData(ContactList contactList, Settings settings) async {
   try {
     print("Loading data...");
 
-    final prefs = await SharedPreferences.getInstance();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     final List<String> jsonContacts = prefs.getStringList("contacts") ?? [];
     print("Contacts: $jsonContacts");
