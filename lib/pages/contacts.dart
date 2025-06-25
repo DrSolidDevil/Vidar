@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:vidar/commonobjs.dart';
 import 'chat.dart';
 import 'edit_contact.dart';
 import 'settings.dart';
 import '../configuration.dart';
 
 class ContactListPage extends StatefulWidget {
-  const ContactListPage(this.contactList, {super.key});
-  final ContactList contactList;
+  const ContactListPage({super.key});
 
   @override
   createState() => _ContactListPageState();
@@ -14,12 +14,10 @@ class ContactListPage extends StatefulWidget {
 
 class _ContactListPageState extends State<ContactListPage> {
   _ContactListPageState();
-  late ContactList contactList;
 
   @override
   void initState() {
     super.initState();
-    contactList = widget.contactList;
   }
 
   @override
@@ -40,7 +38,7 @@ class _ContactListPageState extends State<ContactListPage> {
               context,
               MaterialPageRoute(
                 builder: (context) =>
-                    EditContactPage(newContact, contactList, "newcontact"),
+                    EditContactPage(newContact, "newcontact"),
               ),
             );
           },
@@ -51,11 +49,11 @@ class _ContactListPageState extends State<ContactListPage> {
       ),
 
       body: ListenableBuilder(
-        listenable: contactList,
+        listenable: CommonObject.contactList,
         builder: (context, child) {
           return Material(
             color: Colors.transparent,
-            child: ListView(children: contactList.getContactBadges()),
+            child: ListView(children: CommonObject.contactList.getContactBadges()),
           );
         },
       ),
@@ -78,7 +76,7 @@ class _ContactListPageState extends State<ContactListPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => SettingsPage(contactList),
+                    builder: (context) => SettingsPage(),
                   ),
                 );
               },
@@ -93,9 +91,8 @@ class _ContactListPageState extends State<ContactListPage> {
 }
 
 class ContactBadge extends StatelessWidget {
-  const ContactBadge(this.contact, this.contactList, {super.key});
+  const ContactBadge(this.contact, {super.key});
   final Contact contact;
-  final ContactList contactList;
 
   @override
   Widget build(BuildContext context) {
@@ -134,7 +131,7 @@ class ContactBadge extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ChatPage(contact, contactList),
+            builder: (context) => ChatPage(contact),
           ),
         );
       },
@@ -269,13 +266,13 @@ class ContactList extends ChangeNotifier {
   List<ContactBadge> getContactBadges() {
     final List<ContactBadge> contactBadges = [];
     for (final Contact contact in listOfContacts) {
-      contactBadges.add(ContactBadge(contact, this));
+      contactBadges.add(ContactBadge(contact));
     }
     return contactBadges;
   }
 
   ContactBadge getContactBadgeAtIndex(final int index) {
-    return ContactBadge(listOfContacts[index], this);
+    return ContactBadge(listOfContacts[index]);
   }
 }
 

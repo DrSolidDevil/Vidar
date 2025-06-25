@@ -12,7 +12,9 @@ class ShutdownHandler extends WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     print('App state changed: $state');
     if (state == AppLifecycleState.detached) {
+      print("Shutdown, saving...");
       saveData(contactList, settings);
+      print("Data saved");
     }
   }
 }

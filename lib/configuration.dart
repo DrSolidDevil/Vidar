@@ -16,11 +16,16 @@ class VidarColors {
 
 class CryptographicConfiguration {
   // Length in bytes (18 bytes = 144 bits)
-  static const int keyGenerationHashLength = 18;
+  static const int keyGenerationHashLength = 15;
   static const int nonceLength = 32;
   static const String encryptionPrefix = "☍";
   // Standard is 16 bytes for the cryptography library
   static const int macLength = 16;
+}
+
+class ErrorHandlingConfiguration {
+  static const bool reportErrorOnFailedLoad = true;
+  static const bool reportErrorOnFailedSave = true;
 }
 
 class SizeConfiguration {

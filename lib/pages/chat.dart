@@ -8,9 +8,8 @@ import '../configuration.dart';
 import 'edit_contact.dart';
 
 class ChatPage extends StatefulWidget {
-  const ChatPage(this.contact, this.contactList, {super.key});
+  const ChatPage(this.contact, {super.key});
   final Contact contact;
-  final ContactList contactList;
 
   @override
   createState() => _ChatPageState();
@@ -19,14 +18,12 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   _ChatPageState();
   late Contact contact;
-  late ContactList contactList;
   final Updater updater = Updater();
 
   @override
   void initState() {
     super.initState();
     contact = widget.contact;
-    contactList = widget.contactList;
   }
 
   @override
@@ -50,7 +47,7 @@ class _ChatPageState extends State<ChatPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ContactListPage(contactList),
+                  builder: (context) => ContactListPage(),
                 ),
               );
             },
@@ -68,7 +65,7 @@ class _ChatPageState extends State<ChatPage> {
                   context,
                   MaterialPageRoute(
                     builder: (context) =>
-                        EditContactPage(contact, contactList, "chatpage"),
+                        EditContactPage(contact, "chatpage"),
                   ),
                 );
               },
@@ -297,6 +294,7 @@ class _MesssageBarState extends State<MesssageBar> {
         } else {
           return Container(
             color: VidarColors.tertiaryGold,
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom > 40 ? MediaQuery.of(context).viewInsets.bottom : 40),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [

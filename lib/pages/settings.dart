@@ -15,9 +15,7 @@ class Settings {
 }
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage(this.contactList, {super.key});
-
-  final ContactList contactList;
+  const SettingsPage({super.key});
 
   @override
   createState() => _SettingsPageState();
@@ -25,7 +23,6 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   _SettingsPageState();
-  late ContactList contactList;
 
   BooleanSetting allowUnencryptedMessages = BooleanSetting(
     Settings.allowUnencryptedMessages,
@@ -35,8 +32,6 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void initState() {
     super.initState();
-
-    contactList = widget.contactList;
   }
 
   @override
@@ -70,7 +65,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ContactListPage(contactList),
+                          builder: (context) => ContactListPage(),
                         ),
                       );
                     },
@@ -104,7 +99,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ContactListPage(contactList),
+                          builder: (context) => ContactListPage(),
                         ),
                       );
                     },

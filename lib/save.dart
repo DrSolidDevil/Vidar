@@ -1,3 +1,6 @@
+import 'package:vidar/configuration.dart';
+import 'package:vidar/error.dart';
+
 import 'pages/contacts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'pages/settings.dart';
@@ -19,6 +22,15 @@ void saveData(ContactList contactList, Settings settings) async {
 
     print("Data saved");
   } catch (error, stackTrace) {
+    if (ErrorHandlingConfiguration.reportErrorOnFailedSave) {
+      ErrorHandler.errorPopup = ErrorPopup(
+        "Failed to load data", 
+        "$error", 
+        false
+      );
+      ErrorHandler.hasError = true;
+      ErrorHandler.errorUpdater.update();
+    }
     print("Loading data failed: $error");
     print("Stacktrace:\n$stackTrace");
   }
@@ -49,6 +61,15 @@ void loadData(ContactList contactList, Settings settings) async {
 
     print("Data loaded");
   } catch (error, stackTrace) {
+    if (ErrorHandlingConfiguration.reportErrorOnFailedLoad) {
+      ErrorHandler.errorPopup = ErrorPopup(
+        "Failed to load data", 
+        "$error", 
+        false
+      );
+      ErrorHandler.hasError = true;
+      ErrorHandler.errorUpdater.update();
+    }
     print("Loading data failed: $error");
     print("Stacktrace:\n$stackTrace");
   }

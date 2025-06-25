@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:vidar/commonobjs.dart';
+import 'package:vidar/error.dart';
 import 'package:vidar/fakesms.dart';
 import 'package:vidar/pages/settings.dart';
 import 'package:vidar/save.dart';
@@ -45,7 +47,22 @@ class App extends StatelessWidget {
       print("(No implementation) Loading fake contacts...");
       contactList.listOfContacts = fakeListOfContacts;
     }
+    CommonObject.contactList = contactList;
 
-    return MaterialApp(title: 'Vidar', home: ContactListPage(contactList));
+    return MaterialApp(
+      title: 'Vidar', 
+      home: ListenableBuilder(
+        listenable: ErrorHandler.errorUpdater, 
+        builder: (BuildContext context, Widget? widget) {
+          if (ErrorHandler.hasError && ErrorHandler.errorPopup != null) {
+            ErrorHandler.hasError = false;
+            // ignore:return_of_invalid_type_from_closure
+            return ErrorHandler.errorPopup;
+          } else {
+            return ContactListPage();
+          }
+        }
+      )
+    );
   }
 }
