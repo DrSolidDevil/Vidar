@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vidar/commonobjs.dart';
+import 'package:vidar/save.dart';
 import 'chat.dart';
 import '../utils.dart';
 import '../keys.dart';
@@ -48,6 +49,7 @@ class _EditContactPageState extends State<EditContactPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.only(top: 30),
       color: VidarColors.primaryDarkSpaceCadet,
       child: Column(
         children: [
@@ -159,7 +161,7 @@ class _EditContactPageState extends State<EditContactPage> {
                     padding: EdgeInsets.only(left: 10),
                     child: TextField(
                       decoration: InputDecoration(
-                        hintText: "Phone Number",
+                        hintText: "Phone Number (international)",
                         hintStyle: const TextStyle(
                           color: Colors.white,
                         ),
@@ -248,6 +250,7 @@ class _EditContactPageState extends State<EditContactPage> {
                       contact.name = newName ?? contact.name;
                       contact.encryptionKey = newKey ?? contact.encryptionKey;
                       contact.phoneNumber = newPhoneNumber ?? contact.phoneNumber;
+                      saveData(CommonObject.contactList, CommonObject.settings);
 
                       switch (caller.toLowerCase()) {
                         case "chatpage":
@@ -262,7 +265,7 @@ class _EditContactPageState extends State<EditContactPage> {
                           );
                         case "newcontact":
                           // Remove all non-numeric characters
-                          newPhoneNumber = newPhoneNumber?.replaceAll(RegExp(r"[^\d]"), "");
+                          newPhoneNumber = newPhoneNumber?.replaceAll(RegExp(r"[^\d+]"), "");
                           if (isInvalidContactByParams(newName, newKey, newPhoneNumber)) {
                             showDialog(
                               context: context, 

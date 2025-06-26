@@ -156,8 +156,6 @@ Future<List<SmsMessage>?> querySms({String? phoneNumber}) async {
       for (final resultEntry in rawResult) {
         result.add(Map<String, String?>.from(resultEntry));
       }
-      //List<Map<String, String>>.from(rawResult as );
-      print("(quuerySms) num maps = ${rawResult.length}");
       final List<SmsMessage> smsMessages = [];
       for (final Map<String, String?> mapMessage in result) {
         smsMessages.add(_queryMapToSms(mapMessage)!);

@@ -157,7 +157,7 @@ class Contact {
     };
   }
 
-  factory Contact.fromMap(Map<String, String> map) {
+  factory Contact.fromMap(Map<String, dynamic> map) {
     return Contact(map["name"]!, map["encryptionKey"]!, map["phoneNumber"]!);
   }
 }
@@ -288,8 +288,11 @@ bool isInvalidContactByParams(
   if (name == "" || phoneNumber == "") {
     return true;
   }
+  if (phoneNumber[0] != "+") {
+    return true;
+  }
   // phone number contains non numberic characters
-  if (phoneNumber.contains(RegExp(r"[^\d]"))) {
+  if (phoneNumber.contains(RegExp(r"[^\d+]"))) {
     return true;
   }
   return false;

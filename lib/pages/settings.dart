@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:vidar/commonobjs.dart';
 import 'package:vidar/configuration.dart';
+import 'package:vidar/save.dart';
 import 'contacts.dart';
 
 class Settings {
@@ -90,6 +92,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     onTap: () {
                       Settings.allowUnencryptedMessages =
                           allowUnencryptedMessages.setting;
+                      saveData(CommonObject.contactList, CommonObject.settings);
 
                       print("=========== New Settings ===========");
                       print(

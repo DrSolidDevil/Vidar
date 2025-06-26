@@ -15,10 +15,12 @@ void saveData(ContactList contactList, Settings settings) async {
     final List<String> jsonContacts = [];
     for (final Contact contact in contactList.listOfContacts) {
       jsonContacts.add(jsonEncode(contact.toMap()));
+      print("contact:" + jsonEncode(contact.toMap()));
     }
 
     await prefs.setStringList("contacts", jsonContacts);
     await prefs.setString("settings", jsonEncode(settings.toMap()));
+    print("settings:" +jsonEncode(settings.toMap()));
 
     print("Data saved");
   } catch (error, stackTrace) {

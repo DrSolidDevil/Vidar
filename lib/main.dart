@@ -5,7 +5,6 @@ import 'package:vidar/error.dart';
 import 'package:vidar/fakesms.dart';
 import 'package:vidar/pages/settings.dart';
 import 'package:vidar/save.dart';
-import 'package:vidar/shutdownhandling.dart';
 import 'pages/contacts.dart';
 import 'sms.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -42,14 +41,12 @@ class App extends StatelessWidget {
 
     if (defaultTargetPlatform == TargetPlatform.android) {
       loadData(contactList, settings);
-      WidgetsBinding.instance.addObserver(
-        ShutdownHandler(settings, contactList),
-      );
     } else {
       print("(No implementation) Loading fake contacts...");
       contactList.listOfContacts = fakeListOfContacts;
     }
     CommonObject.contactList = contactList;
+    CommonObject.settings = settings;
 
     return MaterialApp(
       title: 'Vidar', 

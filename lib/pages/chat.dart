@@ -137,7 +137,7 @@ class _ConversationWidgetState extends State<ConversationWidget> {
             "SMS query failed, please ensure the phone number is correct.";
         print("SMS query failed, please ensure the phone number is correct.");
       } else {
-        conversation.chatLogs = queryResponse.reversed.toList();
+        conversation.chatLogs = queryResponse.toList();
         chatLoaded = true;
         print("Sms query complete");
       }
@@ -184,7 +184,10 @@ class _ConversationWidgetState extends State<ConversationWidget> {
         }
         return Container(
           color: VidarColors.primaryDarkSpaceCadet,
-          child: ListView(children: decryptedSpeechBubbles),
+          child: ListView(
+            reverse: true,
+            children: decryptedSpeechBubbles
+          ),
         );
       },
     );
@@ -204,7 +207,7 @@ class Conversation extends ChangeNotifier {
   void updateChatLogs() async {
     chatLogs = (await querySms(
       phoneNumber: contact.phoneNumber,
-    ))!.reversed.toList();
+    ))!.toList();
     print("chatlogs updated");
     notifyListeners();
   }
@@ -294,7 +297,7 @@ class _MesssageBarState extends State<MesssageBar> {
         } else {
           return Container(
             color: VidarColors.tertiaryGold,
-            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom > 40 ? MediaQuery.of(context).viewInsets.bottom : 40),
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom > 50 ? MediaQuery.of(context).viewInsets.bottom : 50),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -336,7 +339,7 @@ class _MesssageBarState extends State<MesssageBar> {
                         } else {
                           sendSms(encryptedMessage, contact.phoneNumber);
                           // On average it takes about 5 seconds for an sms to be sent
-                          await Future.delayed(Duration(seconds: 1));
+                          await Future.delayed(Duration(seconds: 5));
                           updater.update();
                           //await Future.delayed(Duration(seconds: 4));
                           //updater.update();
