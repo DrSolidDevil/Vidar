@@ -1,7 +1,8 @@
-import 'package:cryptography/cryptography.dart';
 import 'dart:convert';
-import 'configuration.dart';
-import 'pages/settings.dart';
+
+import 'package:cryptography/cryptography.dart';
+import 'package:vidar/configuration.dart';
+import 'package:vidar/pages/settings.dart';
 
 /// If key is blank then it returns the message argument
 /// Will output with an encryption prefix (i.e. a string prefix that signals that this is an encrypted message)
@@ -20,17 +21,17 @@ Future<String> encryptMessage(String message, String key) async {
       nonceLength: CryptographicConfiguration.nonceLength,
     );
 
-    final List<int> hashedKey = (await Sha256().hash(utf8.encode(key))).bytes;
-    final SecretKey secretKey = SecretKey(hashedKey);
-    final List<int> nonce = algorithm.newNonce();
+    final hashedKey = (await Sha256().hash(utf8.encode(key))).bytes;
+    final secretKey = SecretKey(hashedKey);
+    final nonce = algorithm.newNonce();
 
-    final SecretBox secretBox = await algorithm.encrypt(
+    final secretBox = await algorithm.encrypt(
       utf8.encode(message),
       secretKey: secretKey,
       nonce: nonce,
     );
 
-    final List<int> fullEncrypted = [
+    final fullEncrypted = <int>[
       ...nonce,
       ...secretBox.cipherText,
       ...secretBox.mac.bytes,
@@ -60,6 +61,7 @@ Future<String> decryptMessage(String message, String key) async {
   }
 
   try {
+    // ignore: parameter_assignments
     message = message.replaceFirst(
       CryptographicConfiguration.encryptionPrefix,
       "",
@@ -69,8 +71,8 @@ Future<String> decryptMessage(String message, String key) async {
       nonceLength: CryptographicConfiguration.nonceLength,
     );
 
-    final List<int> hashedKey = (await Sha256().hash(utf8.encode(key))).bytes;
-    final SecretKey secretKey = SecretKey(hashedKey);
+    final hashedKey = (await Sha256().hash(utf8.encode(key))).bytes;
+    final secretKey = SecretKey(hashedKey);
     final List<int> encryptedBytes = base64.decode(message);
 
     final nonce = encryptedBytes.sublist(
@@ -85,16 +87,16 @@ Future<String> decryptMessage(String message, String key) async {
       encryptedBytes.length - CryptographicConfiguration.macLength,
     );
 
-    final SecretBox secretBox = SecretBox(
+    final secretBox = SecretBox(
       cipherText,
       nonce: nonce,
       mac: Mac(mac),
     );
-    final List<int> decryptedBytes = await algorithm.decrypt(
+    final decryptedBytes = await algorithm.decrypt(
       secretBox,
       secretKey: secretKey,
     );
-    final String decryptedMessage = utf8.decode(decryptedBytes);
+    final decryptedMessage = utf8.decode(decryptedBytes);
     return decryptedMessage;
   } catch (error, stackTrace) {
     if (LoggingConfiguration.verboseEncryptionError) {

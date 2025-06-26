@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:vidar/commonobject.dart';
 import 'package:vidar/fakesms.dart';
+import 'package:vidar/pages/contacts.dart';
 import 'package:vidar/pages/settings.dart';
 import 'package:vidar/popuphandler.dart';
 import 'package:vidar/save.dart';
-import 'pages/contacts.dart';
-import 'sms.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:vidar/sms.dart';
 
 /*
 Notes:
@@ -19,8 +19,8 @@ if contact has no key then no encryption is done (i.e it sends plain text)
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final ContactList contactList = ContactList([]);
-  final Settings settings = Settings();
+  final contactList = ContactList([]);
+  final settings = Settings();
   CommonObject.contactList = contactList;
   CommonObject.settings = settings;
 
@@ -43,11 +43,6 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
-
-    
-    
-
     return MaterialApp(
       title: 'Vidar', 
       home: ListenableBuilder(
