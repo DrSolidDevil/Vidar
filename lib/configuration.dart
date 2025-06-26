@@ -31,7 +31,7 @@ class ErrorHandlingConfiguration {
 class SizeConfiguration {
   static const double sendMessageIconSize = 30.0;
   static const double messageIndent = 10.0;
-  static const double messageVerticalSeperation = 3.0;
+  static const double messageVerticalSeperation = 5.0;
   static const double settingInfoText = 12.0;
 }
 

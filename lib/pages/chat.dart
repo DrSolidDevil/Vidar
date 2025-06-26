@@ -106,26 +106,6 @@ class _ConversationWidgetState extends State<ConversationWidget> {
     super.initState();
     contact = widget.contact;
     conversation = Conversation(contact);
-    //print("Querying sms for ${contact.name}...");
-    /*querySms(phoneNumber: contact.phoneNumber).then((queryResponse) {
-      if (queryResponse == null) {
-        loadMessage =
-            "SMS query failed, please ensure the phone number is correct.";
-        print("SMS query failed, please ensure the phone number is correct.");
-      } else {
-        conversation.chatLogs = queryResponse;
-        chatLoaded = true;
-        print("Sms query complete");
-      }
-      conversation.externalNotify();
-    });*/
-    /*[
-      SmsMessage("010101", "hello", date: DateTime(2025, 2, 4, 4, 5, 12)), 
-      SmsMessage("010101", "world", date: DateTime(2025, 2, 4, 7, 1, 3)), 
-      SmsMessage("010101", "i am a text message", date: DateTime(2025, 2, 4, 7, 3, 10)), 
-      SmsMessage("010101", "ts is a linter", date: DateTime(2025, 2, 4, 7, 10, 3)), 
-      SmsMessage("010101", "flutter is weird", date: DateTime(2025, 2, 4, 8, 9, 8)), 
-    ];*/
   }
 
   @override
@@ -406,7 +386,7 @@ class SpeechBubble extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
+            /*Container(
               margin: EdgeInsets.only(top: 2, bottom: 2),
               child: Text(
                 (isMe ? "Sent at " : "Received at ") +
@@ -415,7 +395,7 @@ class SpeechBubble extends StatelessWidget {
                         : message.date!.toIso8601String().substring(11, 16)),
                 style: const TextStyle(color: Colors.white, fontSize: 8),
               ),
-            ),
+            ),*/
           ],
         ),
       ),
