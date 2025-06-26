@@ -1,6 +1,13 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'contacts.dart';
-
+import 'package:vidar/commonobjs.dart';
+import 'package:vidar/error.dart';
+import 'package:vidar/fakesms.dart';
+import 'package:vidar/pages/settings.dart';
+import 'package:vidar/save.dart';
+import 'pages/contacts.dart';
+import 'sms.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 /*
 Notes:
@@ -15,7 +22,12 @@ to format phone numbers maybe use the "phone_numbers_parser" package
 have a "generate key" button beside the key field 
 */
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  print("Fetching sms constants...");
+  SmsConstants(await retrieveSmsConstantsMap());
+  print("Sms constants fetched");
+  await Permission.sms.request();
   runApp(App());
 }
 
@@ -24,26 +36,31 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ContactList contactList = ContactList([
-      Contact("Bob", "testkey", ""),
-      Contact("John", "testkey", ""),
-      Contact("Jack", "testkey", ""),
-      Contact("Jeff", "testkey", ""),
-      Contact("Geff", "testkey", ""),
-      Contact("Garry", "testkey", ""),
-      Contact("Larry", "testkey", ""),
-      Contact("Barry", "testkey", ""),
-      Contact("Harry", "testkey", ""),
-      Contact("Gaylord", "testkey", ""),
-      Contact("Timmy", "testkey", ""),
-      Contact("Jimmy", "testkey", ""),
-      Contact("Soap", "testkey", ""),
-      Contact("Price", "testkey", ""),
-      Contact("Ghost", "testkey", ""),
-    ]);
+    final ContactList contactList = ContactList([]);
+    final Settings settings = Settings();
+
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      loadData(contactList, settings);
+    } else {
+      print("(No implementation) Loading fake contacts...");
+      contactList.listOfContacts = fakeListOfContacts;
+    }
+    CommonObject.contactList = contactList;
+    CommonObject.settings = settings;
+
     return MaterialApp(
       title: 'Vidar', 
-      home: ContactListPage(contactList),
+      home: ListenableBuilder(
+        listenable: ErrorHandler.errorUpdater, 
+        builder: (BuildContext context, Widget? widget) {
+          if (ErrorHandler.hasError && ErrorHandler.errorPopup != null) {
+            ErrorHandler.hasError = false;
+            return ErrorHandler.errorPopup!;
+          } else {
+            return ContactListPage();
+          }
+        }
+      )
     );
   }
 }

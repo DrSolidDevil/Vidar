@@ -1,6 +1,6 @@
 name: vidar
 description: "Private Communications Apllication"
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
@@ -10,7 +10,8 @@ dependencies:
   flutter:
     sdk: flutter
   cryptography: ^2.7.0
-  sms_advanced: ^1.1.0
+  shared_preferences: ^2.5.3
+  permission_handler: ^12.0.0+1
 
 dev_dependencies:
   flutter_test:

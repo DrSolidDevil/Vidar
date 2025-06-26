@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:vidar/chat.dart';
-import 'package:vidar/utils.dart';
-import 'package:vidar/keys.dart';
+import 'package:vidar/commonobjs.dart';
+import 'package:vidar/save.dart';
+import 'chat.dart';
+import '../utils.dart';
+import '../keys.dart';
 import 'contacts.dart';
-import 'configuration.dart';
+import '../configuration.dart';
 
 
 class EditContactPage extends StatefulWidget {
-  const EditContactPage(this.contact, this.contactList, this.caller, {super.key});
+  const EditContactPage(this.contact, this.caller, {super.key});
   final Contact contact;
-  final ContactList contactList;
   final String caller;
   
 
@@ -22,7 +23,6 @@ class EditContactPage extends StatefulWidget {
 class _EditContactPageState extends State<EditContactPage> {
   _EditContactPageState();
   late Contact contact;
-  late ContactList contactList;
   late String caller;
   final Updater updater = Updater();
   final TextEditingController encryptionKeyController = TextEditingController();
@@ -35,7 +35,6 @@ class _EditContactPageState extends State<EditContactPage> {
   void initState() {
     super.initState();
     contact = widget.contact;
-    contactList = widget.contactList;
     caller = widget.caller;
   }
 
@@ -50,6 +49,7 @@ class _EditContactPageState extends State<EditContactPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.only(top: 30),
       color: VidarColors.primaryDarkSpaceCadet,
       child: Column(
         children: [
@@ -87,7 +87,9 @@ class _EditContactPageState extends State<EditContactPage> {
                 margin: EdgeInsets.only(left: 50, right: 50, top: 30, bottom: 30),
                 child: Row(
                   children: [
-                    Expanded(
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width-160, // -100 for margins, -50 for button and -10 for button margin
+                      height: 50,
                       child: Material(
                         color: VidarColors.secondaryMetallicViolet,
                         child: Container(
@@ -123,7 +125,8 @@ class _EditContactPageState extends State<EditContactPage> {
                     Container(
                       height: 50,
                       margin: EdgeInsets.only(left: 10),
-                      child: Expanded(
+                      child: SizedBox(
+                        width: 50,
                         child: IconButton(
                           onPressed: () async {
                               newKey = await generateRandomKey();
@@ -139,7 +142,7 @@ class _EditContactPageState extends State<EditContactPage> {
                             Icons.change_circle_outlined,
                             color: Colors.white,
                           )
-                        )
+                        ),
                       )
                     ),
                   ],
@@ -158,7 +161,7 @@ class _EditContactPageState extends State<EditContactPage> {
                     padding: EdgeInsets.only(left: 10),
                     child: TextField(
                       decoration: InputDecoration(
-                        hintText: "Phone Number",
+                        hintText: "Phone Number (international)",
                         hintStyle: const TextStyle(
                           color: Colors.white,
                         ),
@@ -204,17 +207,17 @@ class _EditContactPageState extends State<EditContactPage> {
                         case "chatpage":
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => ChatPage(contact, contactList)),
+                            MaterialPageRoute(builder: (context) => ChatPage(contact)),
                           );
                         case "contactpage":
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => ContactListPage(contactList)),
+                            MaterialPageRoute(builder: (context) => ContactListPage()),
                           );
                         case "newcontact":
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => ContactListPage(contactList)),
+                            MaterialPageRoute(builder: (context) => ContactListPage()),
                           );
                       }
                     },
@@ -247,21 +250,22 @@ class _EditContactPageState extends State<EditContactPage> {
                       contact.name = newName ?? contact.name;
                       contact.encryptionKey = newKey ?? contact.encryptionKey;
                       contact.phoneNumber = newPhoneNumber ?? contact.phoneNumber;
+                      saveData(CommonObject.contactList, CommonObject.settings);
 
                       switch (caller.toLowerCase()) {
                         case "chatpage":
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => ChatPage(contact, contactList)),
+                            MaterialPageRoute(builder: (context) => ChatPage(contact)),
                           );
                         case "contactpage":
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => ContactListPage(contactList)),
+                            MaterialPageRoute(builder: (context) => ContactListPage()),
                           );
                         case "newcontact":
                           // Remove all non-numeric characters
-                          newPhoneNumber = newPhoneNumber?.replaceAll(RegExp(r"[^\d]"), "");
+                          newPhoneNumber = newPhoneNumber?.replaceAll(RegExp(r"[^\d+]"), "");
                           if (isInvalidContactByParams(newName, newKey, newPhoneNumber)) {
                             showDialog(
                               context: context, 
@@ -274,7 +278,7 @@ class _EditContactPageState extends State<EditContactPage> {
                                       onPressed: () {
                                         Navigator.push(
                                           context,
-                                            MaterialPageRoute(builder: (context) => ContactListPage(contactList)),
+                                            MaterialPageRoute(builder: (context) => ContactListPage()),
                                         );
                                       }, 
                                       child: const Text("OK")
@@ -284,10 +288,10 @@ class _EditContactPageState extends State<EditContactPage> {
                               }
                             );
                           } else {
-                            contactList.addContactByParams(newName!, newKey!, newPhoneNumber!);
+                            CommonObject.contactList.addContactByParams(newName!, newKey!, newPhoneNumber!);
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => ContactListPage(contactList)),
+                              MaterialPageRoute(builder: (context) => ContactListPage()),
                             );
                           }
                       }
