@@ -7,7 +7,7 @@ import 'package:vidar/pages/contacts.dart';
 import 'package:vidar/pages/settings.dart';
 import 'package:vidar/popuphandler.dart';
 
-void saveData(ContactList contactList, Settings settings) async {
+Future<void> saveData(ContactList contactList, Settings settings) async {
   try {
     print("Saving data...");
 
@@ -39,7 +39,7 @@ void saveData(ContactList contactList, Settings settings) async {
   }
 }
 
-void loadData(ContactList contactList, Settings settings) async {
+Future<void> loadData(ContactList contactList, Settings settings) async {
   try {
     print("Loading data...");
 
