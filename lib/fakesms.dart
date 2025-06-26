@@ -1,6 +1,6 @@
 import 'package:vidar/pages/contacts.dart';
 
-import 'sms.dart';
+import 'package:vidar/sms.dart';
 
 List<SmsMessage> fakesms = [
   SmsMessage(
