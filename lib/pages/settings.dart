@@ -1,34 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:vidar/commonobject.dart';
 import 'package:vidar/configuration.dart';
+import 'package:vidar/pages/contacts.dart';
 import 'package:vidar/save.dart';
-import 'contacts.dart';
 
+/// Static class for storing the active user settings of the program.
 class Settings {
+  /// Send unencrypted messages when contact has no key.
   static bool allowUnencryptedMessages = false;
 
+  /// Get map of the state of all instance variable of Settings.
   Map<String, dynamic> toMap() {
     return {"allowUnencryptedMessages": allowUnencryptedMessages};
   }
 
+  /// Set state of all instance variables of Settings from map.
   void fromMap(Map<String, dynamic> map) {
-    allowUnencryptedMessages = map["allowUnencryptedMessages"]!;
+    allowUnencryptedMessages = map["allowUnencryptedMessages"]! as bool;
   }
 }
 
+// ignore: public_member_api_docs
 class SettingsPage extends StatefulWidget {
+  // ignore: public_member_api_docs
   const SettingsPage({super.key});
 
   @override
-  createState() => _SettingsPageState();
+  _SettingsPageState createState() => _SettingsPageState();
 }
 
 class _SettingsPageState extends State<SettingsPage> {
   _SettingsPageState();
 
   BooleanSetting allowUnencryptedMessages = BooleanSetting(
-    Settings.allowUnencryptedMessages,
-    "Send unencrypted messages when contact has no key",
+    setting: Settings.allowUnencryptedMessages,
+    settingText: "Send unencrypted messages when contact has no key",
   );
 
   @override
@@ -38,13 +44,13 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return ColoredBox(
       color: VidarColors.primaryDarkSpaceCadet,
       child: Column(
         children: [
           Column(children: [allowUnencryptedMessages]),
           Container(
-            margin: EdgeInsets.only(top: 60),
+            margin: const EdgeInsets.only(top: 60),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -57,7 +63,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       child: Container(
                         alignment: Alignment.center,
                         color: VidarColors.secondaryMetallicViolet,
-                        child: Text(
+                        child: const Text(
                           "Discard",
                           style: TextStyle(fontSize: 24, color: Colors.white),
                         ),
@@ -67,7 +73,8 @@ class _SettingsPageState extends State<SettingsPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ContactListPage(),
+                          builder: (BuildContext context) =>
+                              const ContactListPage(),
                         ),
                       );
                     },
@@ -83,7 +90,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       child: Container(
                         alignment: Alignment.center,
                         color: VidarColors.tertiaryGold,
-                        child: Text(
+                        child: const Text(
                           "Save",
                           style: TextStyle(fontSize: 24, color: Colors.white),
                         ),
@@ -102,7 +109,8 @@ class _SettingsPageState extends State<SettingsPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ContactListPage(),
+                          builder: (BuildContext context) =>
+                              const ContactListPage(),
                         ),
                       );
                     },
@@ -119,12 +127,15 @@ class _SettingsPageState extends State<SettingsPage> {
 
 // ignore: must_be_immutable
 class BooleanSetting extends StatefulWidget {
-  BooleanSetting(this.setting, this.settingText, {super.key});
+  BooleanSetting({required this.setting, required this.settingText, super.key});
+  /// The initial state of the setting, 
+  /// will be updated to reflect changes in the setting.
   bool setting;
+  /// The text shown to the user explaining the setting.
   final String settingText;
 
   @override
-  createState() => _BooleanSettingState();
+  _BooleanSettingState createState() => _BooleanSettingState();
 }
 
 class _BooleanSettingState extends State<BooleanSetting> {
@@ -141,7 +152,7 @@ class _BooleanSettingState extends State<BooleanSetting> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 40),
+      margin: const EdgeInsets.only(top: 40),
       color: VidarColors.primaryDarkSpaceCadet,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -157,7 +168,7 @@ class _BooleanSettingState extends State<BooleanSetting> {
                 inactiveThumbColor: VidarColors.secondaryMetallicViolet,
                 inactiveTrackColor: VidarColors.extraMidnightPurple,
                 trackOutlineColor: WidgetStateProperty.resolveWith(
-                  (final Set<WidgetState> states) =>
+                  (Set<WidgetState> states) =>
                       states.contains(WidgetState.selected)
                       ? null
                       : VidarColors.secondaryMetallicViolet,
@@ -176,7 +187,7 @@ class _BooleanSettingState extends State<BooleanSetting> {
             width: MediaQuery.of(context).size.width * 0.6,
             child: Text(
               settingText,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: SizeConfiguration.settingInfoText,
                 decoration: TextDecoration.none,

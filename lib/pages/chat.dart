@@ -1,18 +1,17 @@
-import '../sms.dart';
-
-import '../encrypt.dart';
 import 'package:flutter/material.dart';
-import '../utils.dart';
-import 'contacts.dart';
-import '../configuration.dart';
-import 'edit_contact.dart';
+import 'package:vidar/configuration.dart';
+import 'package:vidar/encrypt.dart';
+import 'package:vidar/pages/contacts.dart';
+import 'package:vidar/pages/edit_contact.dart';
+import 'package:vidar/sms.dart';
+import 'package:vidar/utils.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage(this.contact, {super.key});
   final Contact contact;
 
   @override
-  createState() => _ChatPageState();
+  _ChatPageState createState() => _ChatPageState();
 }
 
 class _ChatPageState extends State<ChatPage> {
@@ -47,7 +46,7 @@ class _ChatPageState extends State<ChatPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => ContactListPage(),
+                  builder: (context) => const ContactListPage(),
                 ),
               );
             },
@@ -64,8 +63,7 @@ class _ChatPageState extends State<ChatPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) =>
-                        EditContactPage(contact, "chatpage"),
+                    builder: (context) => EditContactPage(contact, "chatpage"),
                   ),
                 );
               },
@@ -91,7 +89,7 @@ class ConversationWidget extends StatefulWidget {
   final Contact contact;
 
   @override
-  createState() => _ConversationWidgetState();
+  _ConversationWidgetState createState() => _ConversationWidgetState();
 }
 
 class _ConversationWidgetState extends State<ConversationWidget> {
@@ -129,7 +127,7 @@ class _ConversationWidgetState extends State<ConversationWidget> {
       builder: (BuildContext context, Widget? child) {
         if (!chatLoaded) {
           print("Chat not loaded");
-          return Container(
+          return ColoredBox(
             color: VidarColors.primaryDarkSpaceCadet,
             child: Center(
               child: SizedBox(
@@ -137,7 +135,7 @@ class _ConversationWidgetState extends State<ConversationWidget> {
                 child: Center(
                   child: Text(
                     loadMessage,
-                    style: TextStyle(fontSize: 20.0, color: Colors.white),
+                    style: const TextStyle(fontSize: 20, color: Colors.white),
                   ),
                 ),
               ),
@@ -145,13 +143,13 @@ class _ConversationWidgetState extends State<ConversationWidget> {
           );
         }
         print("Chat loaded");
-        List<SmsMessage> messages = conversation.chatLogs;
-        List<Widget> decryptedSpeechBubbles = [];
+        final messages = conversation.chatLogs;
+        final decryptedSpeechBubbles = <Widget>[];
         for (final message in messages) {
           decryptedSpeechBubbles.add(
             FutureBuilder(
               future: decryptMessage(message.body, contact.encryptionKey),
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
+              builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
                 if (snapshot.hasData) {
                   return SpeechBubble(message.clone(newBody: snapshot.data));
                 } else {
@@ -162,12 +160,9 @@ class _ConversationWidgetState extends State<ConversationWidget> {
             ),
           );
         }
-        return Container(
+        return ColoredBox(
           color: VidarColors.primaryDarkSpaceCadet,
-          child: ListView(
-            reverse: true,
-            children: decryptedSpeechBubbles
-          ),
+          child: ListView(reverse: true, children: decryptedSpeechBubbles),
         );
       },
     );
@@ -208,7 +203,7 @@ class MesssageBar extends StatefulWidget {
   final Updater updater;
 
   @override
-  createState() => _MesssageBarState();
+  _MesssageBarState createState() => _MesssageBarState();
 }
 
 class _MesssageBarState extends State<MesssageBar> {
@@ -228,14 +223,14 @@ class _MesssageBarState extends State<MesssageBar> {
   }
 
   Widget buildErrorMessageWidget(BuildContext context, String text) {
-    return Container(
+    return ColoredBox(
       color: VidarColors.secondaryMetallicViolet,
       child: Row(
         children: [
           Text(text, style: TextStyle(color: Colors.white)),
           IconButton(
             onPressed: () => failUpdater.update,
-            icon: Icon(Icons.sms, color: Colors.white),
+            icon: const Icon(Icons.sms, color: Colors.white),
           ),
         ],
       ),
@@ -250,7 +245,7 @@ class _MesssageBarState extends State<MesssageBar> {
         if (error) {
           error = false;
           Future.delayed(
-            Duration(seconds: TimeConfiguration.messageWidgetErrorDisplayTime),
+            const Duration(seconds: TimeConfiguration.messageWidgetErrorDisplayTime),
           ).then((value) => failUpdater.update());
           switch (errorMessage) {
             case "MESSAGE_FAILED":
@@ -277,22 +272,26 @@ class _MesssageBarState extends State<MesssageBar> {
         } else {
           return Container(
             color: VidarColors.tertiaryGold,
-            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom > 50 ? MediaQuery.of(context).viewInsets.bottom : 50),
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom > 50
+                  ? MediaQuery.of(context).viewInsets.bottom
+                  : 50,
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Container(
                   decoration: BoxDecoration(
                     color: VidarColors.secondaryMetallicViolet,
-                    borderRadius: BorderRadius.circular(4.0),
+                    borderRadius: BorderRadius.circular(4),
                   ),
-                  padding: EdgeInsets.only(left: 10),
+                  padding: const EdgeInsets.only(left: 10),
                   width:
                       MediaQuery.sizeOf(context).width -
                       SizeConfiguration.sendMessageIconSize * 2.5,
                   child: TextField(
-                    style: TextStyle(color: Colors.white),
-                    decoration: InputDecoration(border: InputBorder.none),
+                    style: const TextStyle(color: Colors.white),
+                    decoration: const InputDecoration(border: InputBorder.none),
                     onChanged: (value) => message = value,
                   ),
                 ),
@@ -303,7 +302,7 @@ class _MesssageBarState extends State<MesssageBar> {
                     child: IconButton(
                       onPressed: () async {
                         print("Sending message: $message");
-                        final String encryptedMessage = await encryptMessage(
+                        final encryptedMessage = await encryptMessage(
                           message!,
                           contact.encryptionKey,
                         );
@@ -319,13 +318,13 @@ class _MesssageBarState extends State<MesssageBar> {
                         } else {
                           sendSms(encryptedMessage, contact.phoneNumber);
                           // On average it takes about 5 seconds for an sms to be sent
-                          await Future.delayed(Duration(seconds: 5));
+                          await Future.delayed(const Duration(seconds: 5));
                           updater.update();
                           //await Future.delayed(Duration(seconds: 4));
                           //updater.update();
                         }
                       },
-                      icon: Icon(
+                      icon: const Icon(
                         size: SizeConfiguration.sendMessageIconSize,
                         Icons.send,
                         color: VidarColors.secondaryMetallicViolet,
@@ -368,14 +367,17 @@ class SpeechBubble extends StatelessWidget {
                 maxWidth: MediaQuery.of(context).size.width * 0.75,
               ),
               child: Container(
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 10,
+                  horizontal: 10,
+                ),
                 decoration: BoxDecoration(
                   color: isMe
                       ? VidarColors.secondaryMetallicViolet
                       : VidarColors.tertiaryGold,
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(10),
-                    topRight: Radius.circular(10),
+                    topLeft: const Radius.circular(10),
+                    topRight: const Radius.circular(10),
                     bottomLeft: Radius.circular(isMe ? 10 : 0),
                     bottomRight: Radius.circular(isMe ? 0 : 10),
                   ),

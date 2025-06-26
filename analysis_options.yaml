@@ -1,1 +1,7 @@
-include: package:flutter_lints/flutter.yaml
+
+include: package:very_good_analysis/analysis_options.yaml
+analyzer:
+  errors:
+    prefer_single_quotes: ignore
+    document_ignores: ignore
+    library_private_types_in_public_api: ignore

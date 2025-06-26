@@ -21,6 +21,7 @@ class CryptographicConfiguration {
   static const String encryptionPrefix = "☍";
   // Standard is 16 bytes for the cryptography library
   static const int macLength = 16;
+  static const bool allowNoKey = true;
 }
 
 class ErrorHandlingConfiguration {

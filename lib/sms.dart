@@ -1,11 +1,12 @@
 // ignore_for_file: non_constant_identifier_names, constant_identifier_names
 
 import 'dart:core';
-import 'package:flutter/services.dart';
+
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 
 // Only for testing
-import 'fakesms.dart';
+import 'package:vidar/fakesms.dart';
 
 const MAIN_SMS_CHANNEL = MethodChannel("flutter.native/helper");
 
@@ -152,12 +153,12 @@ Future<List<SmsMessage>?> querySms({String? phoneNumber}) async {
         return null;
       }
       print(rawResult.toString());
-      final List<Map<String, String?>> result = [];
-      for (final resultEntry in rawResult) {
-        result.add(Map<String, String?>.from(resultEntry));
+      final result = <Map<String, String?>>[];
+      for (final resultEntry in rawResult as Iterable) {
+        result.add(Map<String, String?>.from(resultEntry as Map<dynamic, dynamic>));
       }
-      final List<SmsMessage> smsMessages = [];
-      for (final Map<String, String?> mapMessage in result) {
+      final smsMessages = <SmsMessage>[];
+      for (final mapMessage in result) {
         smsMessages.add(_queryMapToSms(mapMessage)!);
       }
       if (smsMessages.isEmpty) {
@@ -171,7 +172,7 @@ Future<List<SmsMessage>?> querySms({String? phoneNumber}) async {
   } else {
     print("(No implementation) Querying sms...");
     print("========SMS========");
-    for (final SmsMessage sms in fakesms) {
+    for (final sms in fakesms) {
       print(
         "Body: ${sms.body} | Phone Number: ${sms.phoneNumber} | Date: ${sms.date} | Date Sent: ${sms.dateSent} | Type:${sms.type}",
       );
@@ -210,7 +211,7 @@ Future<Map<String, dynamic>> retrieveSmsConstantsMap() async {
   final Map<String, dynamic> smsConstants;
   if (defaultTargetPlatform == TargetPlatform.android) {
     final rawConstants = await MAIN_SMS_CHANNEL.invokeMethod('smsConstants');
-    smsConstants = Map<String, dynamic>.from(rawConstants);
+    smsConstants = Map<String, dynamic>.from(rawConstants as Map<dynamic, dynamic>);
   } else {
     smsConstants = {
       "MESSAGE_TYPE_ALL": 0,
@@ -277,31 +278,31 @@ class SmsConstants {
     if (mapConstantsParam != null) {
       mapConstants = mapConstantsParam;
     }
-    MESSAGE_TYPE_ALL = int.parse(mapConstants!["MESSAGE_TYPE_ALL"]);
-    MESSAGE_TYPE_DRAFT = int.parse(mapConstants!["MESSAGE_TYPE_DRAFT"]);
-    MESSAGE_TYPE_SENT = int.parse(mapConstants!["MESSAGE_TYPE_SENT"]);
-    MESSAGE_TYPE_INBOX = int.parse(mapConstants!["MESSAGE_TYPE_INBOX"]);
-    MESSAGE_TYPE_FAILED = int.parse(mapConstants!["MESSAGE_TYPE_FAILED"]);
-    MESSAGE_TYPE_OUTBOX = int.parse(mapConstants!["MESSAGE_TYPE_OUTBOX"]);
-    MESSAGE_TYPE_QUEUED = int.parse(mapConstants!["MESSAGE_TYPE_QUEUED"]);
+    MESSAGE_TYPE_ALL = int.parse(mapConstants!["MESSAGE_TYPE_ALL"] as String);
+    MESSAGE_TYPE_DRAFT = int.parse(mapConstants!["MESSAGE_TYPE_DRAFT"] as String);
+    MESSAGE_TYPE_SENT = int.parse(mapConstants!["MESSAGE_TYPE_SENT"] as String);
+    MESSAGE_TYPE_INBOX = int.parse(mapConstants!["MESSAGE_TYPE_INBOX"] as String);
+    MESSAGE_TYPE_FAILED = int.parse(mapConstants!["MESSAGE_TYPE_FAILED"] as String);
+    MESSAGE_TYPE_OUTBOX = int.parse(mapConstants!["MESSAGE_TYPE_OUTBOX"] as String);
+    MESSAGE_TYPE_QUEUED = int.parse(mapConstants!["MESSAGE_TYPE_QUEUED"] as String);
 
-    STATUS_NONE = int.parse(mapConstants!["STATUS_NONE"]);
-    STATUS_FAILED = int.parse(mapConstants!["STATUS_FAILED"]);
-    STATUS_PENDING = int.parse(mapConstants!["STATUS_PENDING"]);
-    STATUS_COMPLETE = int.parse(mapConstants!["STATUS_COMPLETE"]);
+    STATUS_NONE = int.parse(mapConstants!["STATUS_NONE"] as String);
+    STATUS_FAILED = int.parse(mapConstants!["STATUS_FAILED"] as String);
+    STATUS_PENDING = int.parse(mapConstants!["STATUS_PENDING"] as String);
+    STATUS_COMPLETE = int.parse(mapConstants!["STATUS_COMPLETE"] as String);
 
-    COLUMN_NAME_THREAD_ID = mapConstants!["THREAD_ID"];
-    COLUMN_NAME_TYPE = mapConstants!["TYPE"];
-    COLUMN_NAME_ADDRESS = mapConstants!["ADDRESS"];
-    COLUMN_NAME_DATE = mapConstants!["DATE"];
-    COLUMN_NAME_DATE_SENT = mapConstants!["DATE_SENT"];
-    COLUMN_NAME_READ = mapConstants!["READ"];
-    COLUMN_NAME_SEEN = mapConstants!["SEEN"];
-    COLUMN_NAME_PROTOCOL = mapConstants!["PROTOCOL"];
-    COLUMN_NAME_STATUS = mapConstants!["STATUS"];
-    COLUMN_NAME_SUBSCRIPTION_ID = mapConstants!["SUBSCRIPTION_ID"];
-    COLUMN_NAME_SUBJECT = mapConstants!["SUBJECT"];
-    COLUMN_NAME_BODY = mapConstants!["BODY"];
+    COLUMN_NAME_THREAD_ID = mapConstants!["THREAD_ID"] as String;
+    COLUMN_NAME_TYPE = mapConstants!["TYPE"] as String;
+    COLUMN_NAME_ADDRESS = mapConstants!["ADDRESS"] as String;
+    COLUMN_NAME_DATE = mapConstants!["DATE"] as String;
+    COLUMN_NAME_DATE_SENT = mapConstants!["DATE_SENT"] as String;
+    COLUMN_NAME_READ = mapConstants!["READ"] as String;
+    COLUMN_NAME_SEEN = mapConstants!["SEEN"] as String;
+    COLUMN_NAME_PROTOCOL = mapConstants!["PROTOCOL"] as String;
+    COLUMN_NAME_STATUS = mapConstants!["STATUS"] as String;
+    COLUMN_NAME_SUBSCRIPTION_ID = mapConstants!["SUBSCRIPTION_ID"] as String;
+    COLUMN_NAME_SUBJECT = mapConstants!["SUBJECT"] as String;
+    COLUMN_NAME_BODY = mapConstants!["BODY"] as String;
   }
 }
 
@@ -312,6 +313,7 @@ class SmsNotifier extends ChangeNotifier {
     "flutter.native/smsnotifier",
   );
   SmsNotifier() {
+    // ignore: inference_failure_on_untyped_parameter
     SMS_NOTIFIER_CHANNEL.receiveBroadcastStream((event) {
       if (event is String && event == "smsreceived") {
         notifyListeners();
