@@ -5,3 +5,4 @@ analyzer:
     prefer_single_quotes: ignore
     document_ignores: ignore
     library_private_types_in_public_api: ignore
+    avoid_print: ignore
