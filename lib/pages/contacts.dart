@@ -37,8 +37,7 @@ class _ContactListPageState extends State<ContactListPage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) =>
-                    EditContactPage(newContact, "newcontact"),
+                builder: (context) => EditContactPage(newContact, "newcontact"),
               ),
             );
           },
@@ -53,7 +52,9 @@ class _ContactListPageState extends State<ContactListPage> {
         builder: (context, child) {
           return Material(
             color: Colors.transparent,
-            child: ListView(children: CommonObject.contactList.getContactBadges()),
+            child: ListView(
+              children: CommonObject.contactList.getContactBadges(),
+            ),
           );
         },
       ),
@@ -75,9 +76,7 @@ class _ContactListPageState extends State<ContactListPage> {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => SettingsPage(),
-                  ),
+                  MaterialPageRoute(builder: (context) => SettingsPage()),
                 );
               },
               icon: const Icon(Icons.settings, color: Colors.white),
@@ -130,9 +129,7 @@ class ContactBadge extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => ChatPage(contact),
-          ),
+          MaterialPageRoute(builder: (context) => ChatPage(contact)),
         );
       },
       onLongPress: () {

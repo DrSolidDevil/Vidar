@@ -4,13 +4,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:vidar/pages/contacts.dart';
-import 'package:vidar/utils.dart';
-
-class ErrorHandler {
-  static Updater errorUpdater = Updater();
-  static ErrorPopup? errorPopup;
-  static bool hasError = false;
-}
 
 
 class ErrorPopup extends StatefulWidget {

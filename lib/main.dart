@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:vidar/commonobjs.dart';
-import 'package:vidar/error.dart';
 import 'package:vidar/fakesms.dart';
 import 'package:vidar/pages/settings.dart';
+import 'package:vidar/popuphandler.dart';
 import 'package:vidar/save.dart';
 import 'pages/contacts.dart';
 import 'sms.dart';
@@ -12,18 +12,25 @@ import 'package:permission_handler/permission_handler.dart';
 /*
 Notes:
 You can't have multiple people with the same name
-Use the edit contact page to create new ones by just entering a blank contact
-If a part is missing then do an alert
 
 if contact has no key then no encryption is done (i.e it sends plain text)
-
-to format phone numbers maybe use the "phone_numbers_parser" package
-
-have a "generate key" button beside the key field 
 */
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  final ContactList contactList = ContactList([]);
+  final Settings settings = Settings();
+  CommonObject.contactList = contactList;
+  CommonObject.settings = settings;
+
+  if (defaultTargetPlatform == TargetPlatform.android) {
+      loadData(contactList, settings);
+    } else {
+      print("(No implementation) Loading fake contacts...");
+      contactList.listOfContacts = fakeListOfContacts;
+    }
+
   print("Fetching sms constants...");
   SmsConstants(await retrieveSmsConstantsMap());
   print("Sms constants fetched");
@@ -36,26 +43,19 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ContactList contactList = ContactList([]);
-    final Settings settings = Settings();
+    
 
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      loadData(contactList, settings);
-    } else {
-      print("(No implementation) Loading fake contacts...");
-      contactList.listOfContacts = fakeListOfContacts;
-    }
-    CommonObject.contactList = contactList;
-    CommonObject.settings = settings;
+    
+    
 
     return MaterialApp(
       title: 'Vidar', 
       home: ListenableBuilder(
-        listenable: ErrorHandler.errorUpdater, 
+        listenable: PopupHandler.popupUpdater, 
         builder: (BuildContext context, Widget? widget) {
-          if (ErrorHandler.hasError && ErrorHandler.errorPopup != null) {
-            ErrorHandler.hasError = false;
-            return ErrorHandler.errorPopup!;
+          if (PopupHandler.showPopup && PopupHandler.popup != null) {
+            PopupHandler.showPopup = false;
+            return PopupHandler.popup!;
           } else {
             return ContactListPage();
           }
