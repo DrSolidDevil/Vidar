@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vidar/commonobjs.dart';
+import 'package:vidar/commonobject.dart';
 import 'chat.dart';
 import 'edit_contact.dart';
 import 'settings.dart';
