@@ -179,7 +179,7 @@ class Conversation extends ChangeNotifier {
     smsNotifier.addListener(notifyListeners);
   }
 
-  void updateChatLogs() async {
+  Future<void> updateChatLogs() async {
     chatLogs = (await querySms(
       phoneNumber: contact.phoneNumber,
     ))!.toList();
@@ -187,7 +187,7 @@ class Conversation extends ChangeNotifier {
     notifyListeners();
   }
 
-  void closeConversation() async {
+  Future<void> closeConversation() async {
     smsNotifier.removeListener(notifyListeners);
   }
 

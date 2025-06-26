@@ -99,30 +99,30 @@ SmsMessage? _queryMapToSms(Map<String, String?> smsMap) {
   if (SmsConstants.mapConstants == null) {
     return null;
   }
-  final int? threadId = int.tryParse(
+  final threadId = int.tryParse(
     smsMap[SmsConstants.COLUMN_NAME_THREAD_ID]!,
   );
-  final int? type = int.tryParse(smsMap[SmsConstants.COLUMN_NAME_TYPE]!);
-  final String phoneNumber = smsMap[SmsConstants.COLUMN_NAME_ADDRESS]!;
-  final DateTime date = DateTime.fromMicrosecondsSinceEpoch(
+  final type = int.tryParse(smsMap[SmsConstants.COLUMN_NAME_TYPE]!);
+  final phoneNumber = smsMap[SmsConstants.COLUMN_NAME_ADDRESS]!;
+  final date = DateTime.fromMicrosecondsSinceEpoch(
     int.parse(smsMap[SmsConstants.COLUMN_NAME_DATE]!),
   );
-  final DateTime dateSent = DateTime.fromMicrosecondsSinceEpoch(
+  final dateSent = DateTime.fromMicrosecondsSinceEpoch(
     int.parse(smsMap[SmsConstants.COLUMN_NAME_DATE_SENT]!),
   );
-  final bool seen = int.parse(smsMap[SmsConstants.COLUMN_NAME_SEEN]!) != 0;
-  final bool read = int.parse(smsMap[SmsConstants.COLUMN_NAME_READ]!) != 0;
-  final int? protocol = smsMap[SmsConstants.COLUMN_NAME_PROTOCOL] == null
+  final seen = int.parse(smsMap[SmsConstants.COLUMN_NAME_SEEN]!) != 0;
+  final read = int.parse(smsMap[SmsConstants.COLUMN_NAME_READ]!) != 0;
+  final protocol = smsMap[SmsConstants.COLUMN_NAME_PROTOCOL] == null
       ? null
       : int.parse(smsMap[SmsConstants.COLUMN_NAME_PROTOCOL]!);
-  final int status = int.parse(smsMap[SmsConstants.COLUMN_NAME_STATUS]!);
-  final int subscriptionId = int.parse(
+  final status = int.parse(smsMap[SmsConstants.COLUMN_NAME_STATUS]!);
+  final subscriptionId = int.parse(
     smsMap[SmsConstants.COLUMN_NAME_SUBSCRIPTION_ID]!,
   );
-  final String? subject = smsMap[SmsConstants.COLUMN_NAME_SUBJECT];
-  final String body = smsMap[SmsConstants.COLUMN_NAME_BODY]!;
+  final subject = smsMap[SmsConstants.COLUMN_NAME_SUBJECT];
+  final body = smsMap[SmsConstants.COLUMN_NAME_BODY]!;
 
-  final SmsMessage smsMessage = SmsMessage(
+  final smsMessage = SmsMessage(
     body,
     phoneNumber,
     threadId: threadId,
@@ -182,11 +182,11 @@ Future<List<SmsMessage>?> querySms({String? phoneNumber}) async {
 }
 
 /// The phone number is that of the other party
-void sendSms(String body, String phoneNumber) async {
+Future<void> sendSms(String body, String phoneNumber) async {
   if (defaultTargetPlatform == TargetPlatform.android) {
     /// 0 = success, for now not used
     // ignore: unused_local_variable
-    final int? result = await MAIN_SMS_CHANNEL.invokeMethod('sendSms', {
+    final result = await MAIN_SMS_CHANNEL.invokeMethod('sendSms', {
       "body": body,
       "phoneNumber": phoneNumber,
     });
@@ -245,36 +245,7 @@ Future<Map<String, dynamic>> retrieveSmsConstantsMap() async {
 
 /// To use you need to initialize it
 class SmsConstants {
-  static late final Map<String, dynamic>? mapConstants;
-
-  static late final int MESSAGE_TYPE_ALL;
-  static late final int MESSAGE_TYPE_DRAFT;
-  static late final int MESSAGE_TYPE_SENT;
-  static late final int MESSAGE_TYPE_INBOX;
-  static late final int MESSAGE_TYPE_FAILED;
-  static late final int MESSAGE_TYPE_OUTBOX;
-  static late final int MESSAGE_TYPE_QUEUED;
-
-  static late final int STATUS_NONE;
-  static late final int STATUS_FAILED;
-  static late final int STATUS_PENDING;
-  static late final int STATUS_COMPLETE;
-
-  static late final String COLUMN_NAME_THREAD_ID;
-  static late final String COLUMN_NAME_TYPE;
-  static late final String COLUMN_NAME_ADDRESS;
-  static late final String COLUMN_NAME_DATE;
-  static late final String COLUMN_NAME_DATE_SENT;
-  static late final String COLUMN_NAME_READ;
-  static late final String COLUMN_NAME_SEEN;
-  static late final String COLUMN_NAME_PROTOCOL;
-  static late final String COLUMN_NAME_STATUS;
-  static late final String COLUMN_NAME_SUBSCRIPTION_ID;
-  static late final String COLUMN_NAME_SUBSCRIPT;
-  static late final String COLUMN_NAME_SUBJECT;
-  static late final String COLUMN_NAME_BODY;
-
-  SmsConstants(final Map<String, dynamic>? mapConstantsParam) {
+  SmsConstants(Map<String, dynamic>? mapConstantsParam) {
     if (mapConstantsParam != null) {
       mapConstants = mapConstantsParam;
     }
@@ -304,14 +275,39 @@ class SmsConstants {
     COLUMN_NAME_SUBJECT = mapConstants!["SUBJECT"] as String;
     COLUMN_NAME_BODY = mapConstants!["BODY"] as String;
   }
+
+  static late final Map<String, dynamic>? mapConstants;
+
+  static late final int MESSAGE_TYPE_ALL;
+  static late final int MESSAGE_TYPE_DRAFT;
+  static late final int MESSAGE_TYPE_SENT;
+  static late final int MESSAGE_TYPE_INBOX;
+  static late final int MESSAGE_TYPE_FAILED;
+  static late final int MESSAGE_TYPE_OUTBOX;
+  static late final int MESSAGE_TYPE_QUEUED;
+
+  static late final int STATUS_NONE;
+  static late final int STATUS_FAILED;
+  static late final int STATUS_PENDING;
+  static late final int STATUS_COMPLETE;
+
+  static late final String COLUMN_NAME_THREAD_ID;
+  static late final String COLUMN_NAME_TYPE;
+  static late final String COLUMN_NAME_ADDRESS;
+  static late final String COLUMN_NAME_DATE;
+  static late final String COLUMN_NAME_DATE_SENT;
+  static late final String COLUMN_NAME_READ;
+  static late final String COLUMN_NAME_SEEN;
+  static late final String COLUMN_NAME_PROTOCOL;
+  static late final String COLUMN_NAME_STATUS;
+  static late final String COLUMN_NAME_SUBSCRIPTION_ID;
+  static late final String COLUMN_NAME_SUBSCRIPT;
+  static late final String COLUMN_NAME_SUBJECT;
+  static late final String COLUMN_NAME_BODY;
 }
 
 /// Notifies when (any) sms is recieved
 class SmsNotifier extends ChangeNotifier {
-  // if later you can choose the specific phone number then this can't be static
-  static const SMS_NOTIFIER_CHANNEL = EventChannel(
-    "flutter.native/smsnotifier",
-  );
   SmsNotifier() {
     // ignore: inference_failure_on_untyped_parameter
     SMS_NOTIFIER_CHANNEL.receiveBroadcastStream((event) {
@@ -320,4 +316,8 @@ class SmsNotifier extends ChangeNotifier {
       }
     });
   }
+  // if later you can choose the specific phone number then this can't be static
+  static const SMS_NOTIFIER_CHANNEL = EventChannel(
+    "flutter.native/smsnotifier",
+  );
 }

@@ -198,7 +198,7 @@ class ContactList extends ChangeNotifier {
   /// Expects that you know that the contact does indeed exist
   /// Returns true if it was found in the list and thus removed
   bool removeContactByName(String name) {
-    final int index = findContactIndexByName(name);
+    final index = findContactIndexByName(name);
     if (index != -1) {
       listOfContacts.removeAt(index);
       notifyListeners();
@@ -221,7 +221,7 @@ class ContactList extends ChangeNotifier {
   /// Expects that you know that the contact does indeed exist
   /// Returns true if it was found in the list and thus removed
   bool removeContactByContact(Contact contact) {
-    final bool wasSuccess = listOfContacts.remove(contact);
+    final wasSuccess = listOfContacts.remove(contact);
     notifyListeners();
     return wasSuccess;
   }
@@ -234,7 +234,7 @@ class ContactList extends ChangeNotifier {
     String changeType,
     String newValue,
   ) {
-    final int index = findContactIndexByName(contactName);
+    final index = findContactIndexByName(contactName);
     if (index == -1) {
       return false;
     }
@@ -253,7 +253,7 @@ class ContactList extends ChangeNotifier {
     String changeType,
     String newValue,
   ) {
-    final int index = listOfContacts.indexOf(contact);
+    final index = listOfContacts.indexOf(contact);
     if (index == -1) {
       return false;
     }

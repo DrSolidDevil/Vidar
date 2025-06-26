@@ -1,24 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:vidar/commonobject.dart';
+import 'package:vidar/configuration.dart';
+import 'package:vidar/keys.dart';
+import 'package:vidar/pages/chat.dart';
+import 'package:vidar/pages/contacts.dart';
 import 'package:vidar/save.dart';
-import 'chat.dart';
-import '../utils.dart';
-import '../keys.dart';
-import 'contacts.dart';
-import '../configuration.dart';
-
+import 'package:vidar/utils.dart';
 
 class EditContactPage extends StatefulWidget {
   const EditContactPage(this.contact, this.caller, {super.key});
   final Contact contact;
   final String caller;
-  
 
   @override
-  createState() => _EditContactPageState();
+  _EditContactPageState createState() => _EditContactPageState();
 }
-
-
 
 class _EditContactPageState extends State<EditContactPage> {
   _EditContactPageState();
@@ -49,26 +45,31 @@ class _EditContactPageState extends State<EditContactPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 30),
+      margin: const EdgeInsets.only(top: 30),
       color: VidarColors.primaryDarkSpaceCadet,
       child: Column(
         children: [
           Column(
             children: [
               Container(
-                margin: EdgeInsets.only(left: 50, right: 50, top: 30, bottom: 30),
+                margin: const EdgeInsets.only(
+                  left: 50,
+                  right: 50,
+                  top: 30,
+                  bottom: 30,
+                ),
                 child: Material(
                   color: VidarColors.secondaryMetallicViolet,
                   child: Container(
                     height: 50,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: VidarColors.secondaryMetallicViolet,
                     ),
-                    padding: EdgeInsets.only(left: 10),
+                    padding: const EdgeInsets.only(left: 10),
                     child: TextField(
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: "Name",
-                        hintStyle: const TextStyle(
+                        hintStyle: TextStyle(
                           color: Colors.white,
                         ),
                         border: InputBorder.none,
@@ -77,35 +78,42 @@ class _EditContactPageState extends State<EditContactPage> {
                         color: Colors.white,
                       ),
                       onChanged: (String value) {
-                            newName = value;
+                        newName = value;
                       },
                     ),
                   ),
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(left: 50, right: 50, top: 30, bottom: 30),
+                margin: const EdgeInsets.only(
+                  left: 50,
+                  right: 50,
+                  top: 30,
+                  bottom: 30,
+                ),
                 child: Row(
                   children: [
                     SizedBox(
-                      width: MediaQuery.of(context).size.width-160, // -100 for margins, -50 for button and -10 for button margin
+                      width:
+                          MediaQuery.of(context).size.width -
+                          160, // -100 for margins, -50 for button and -10 for button margin
                       height: 50,
                       child: Material(
                         color: VidarColors.secondaryMetallicViolet,
                         child: Container(
                           height: 50,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             color: VidarColors.secondaryMetallicViolet,
                           ),
-                          padding: EdgeInsets.only(left: 10),
+                          padding: const EdgeInsets.only(left: 10),
                           child: ListenableBuilder(
                             listenable: updater,
-                            builder: (BuildContext context, Widget? child) { 
+                            builder: (BuildContext context, Widget? child) {
                               return TextField(
                                 controller: encryptionKeyController,
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   hintText: "Encryption Key",
-                                  hintStyle: const TextStyle(
+                                  hintStyle: TextStyle(
                                     color: Colors.white,
                                   ),
                                   border: InputBorder.none,
@@ -124,50 +132,56 @@ class _EditContactPageState extends State<EditContactPage> {
                     ),
                     Container(
                       height: 50,
-                      margin: EdgeInsets.only(left: 10),
+                      margin: const EdgeInsets.only(left: 10),
                       child: SizedBox(
                         width: 50,
                         child: IconButton(
                           onPressed: () async {
-                              newKey = await generateRandomKey();
-                              encryptionKeyController.text = newKey ?? "";
-                          }, 
+                            newKey = await generateRandomKey();
+                            encryptionKeyController.text = newKey ?? "";
+                          },
                           style: IconButton.styleFrom(
-                            backgroundColor: VidarColors.secondaryMetallicViolet,
+                            backgroundColor:
+                                VidarColors.secondaryMetallicViolet,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadiusGeometry.circular(10)
-                            )
+                              borderRadius: BorderRadiusGeometry.circular(10),
+                            ),
                           ),
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.change_circle_outlined,
                             color: Colors.white,
-                          )
+                          ),
                         ),
-                      )
+                      ),
                     ),
                   ],
                 ),
               ),
-              
+
               Container(
-                margin: EdgeInsets.only(left: 50, right: 50, top: 30, bottom: 30),
+                margin: const EdgeInsets.only(
+                  left: 50,
+                  right: 50,
+                  top: 30,
+                  bottom: 30,
+                ),
                 child: Material(
                   color: VidarColors.secondaryMetallicViolet,
                   child: Container(
                     height: 50,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: VidarColors.secondaryMetallicViolet,
                     ),
-                    padding: EdgeInsets.only(left: 10),
+                    padding: const EdgeInsets.only(left: 10),
                     child: TextField(
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: "Phone Number (international)",
-                        hintStyle: const TextStyle(
+                        hintStyle: TextStyle(
                           color: Colors.white,
                         ),
                         border: InputBorder.none,
                       ),
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                       ),
                       onChanged: (String value) {
@@ -176,11 +190,11 @@ class _EditContactPageState extends State<EditContactPage> {
                     ),
                   ),
                 ),
-              )
+              ),
             ],
           ),
           Container(
-            margin: EdgeInsets.only(top: 20),
+            margin: const EdgeInsets.only(top: 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -193,12 +207,9 @@ class _EditContactPageState extends State<EditContactPage> {
                       child: Container(
                         alignment: Alignment.center,
                         color: VidarColors.secondaryMetallicViolet,
-                        child: Text(
+                        child: const Text(
                           "Discard",
-                          style: TextStyle(
-                            fontSize: 24,
-                            color: Colors.white
-                          ),
+                          style: TextStyle(fontSize: 24, color: Colors.white),
                         ),
                       ),
                     ),
@@ -207,17 +218,23 @@ class _EditContactPageState extends State<EditContactPage> {
                         case "chatpage":
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => ChatPage(contact)),
+                            MaterialPageRoute(
+                              builder: (context) => ChatPage(contact),
+                            ),
                           );
                         case "contactpage":
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => ContactListPage()),
+                            MaterialPageRoute(
+                              builder: (context) => const ContactListPage(),
+                            ),
                           );
                         case "newcontact":
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => ContactListPage()),
+                            MaterialPageRoute(
+                              builder: (context) => const ContactListPage(),
+                            ),
                           );
                       }
                     },
@@ -233,76 +250,103 @@ class _EditContactPageState extends State<EditContactPage> {
                       child: Container(
                         alignment: Alignment.center,
                         color: VidarColors.tertiaryGold,
-                        child: Text(
+                        child: const Text(
                           "Save",
-                          style: TextStyle(
-                            fontSize: 24,
-                            color: Colors.white
-                          ),
+                          style: TextStyle(fontSize: 24, color: Colors.white),
                         ),
                       ),
                     ),
                     onTap: () {
-                      if (newName == "") {newName = null;}
-                      if (newKey == "") {newKey = null;}
-                      if (newPhoneNumber == "") {newPhoneNumber = null;}
+                      if (newName == "") {
+                        newName = null;
+                      }
+                      if (newKey == "") {
+                        newKey = null;
+                      }
+                      if (newPhoneNumber == "") {
+                        newPhoneNumber = null;
+                      }
 
                       contact.name = newName ?? contact.name;
                       contact.encryptionKey = newKey ?? contact.encryptionKey;
-                      contact.phoneNumber = newPhoneNumber ?? contact.phoneNumber;
+                      contact.phoneNumber =
+                          newPhoneNumber ?? contact.phoneNumber;
                       saveData(CommonObject.contactList, CommonObject.settings);
 
                       switch (caller.toLowerCase()) {
                         case "chatpage":
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => ChatPage(contact)),
+                            MaterialPageRoute(
+                              builder: (context) => ChatPage(contact),
+                            ),
                           );
                         case "contactpage":
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => ContactListPage()),
+                            MaterialPageRoute(
+                              builder: (context) => const ContactListPage(),
+                            ),
                           );
                         case "newcontact":
                           // Remove all non-numeric characters
-                          newPhoneNumber = newPhoneNumber?.replaceAll(RegExp(r"[^\d+]"), "");
-                          if (isInvalidContactByParams(newName, newKey, newPhoneNumber)) {
+                          newPhoneNumber = newPhoneNumber?.replaceAll(
+                            RegExp(r"[^\d+]"),
+                            "",
+                          );
+                          if (isInvalidContactByParams(
+                            newName,
+                            newKey,
+                            newPhoneNumber,
+                          )) {
+                            // ignore: inference_failure_on_function_invocation
                             showDialog(
-                              context: context, 
+                              context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
                                   title: const Text("Missing details"),
-                                  content: const Text("Please enter all details to create a new contact"),
+                                  content: const Text(
+                                    "Please enter all details to create a new contact",
+                                  ),
                                   actions: [
                                     TextButton(
                                       onPressed: () {
                                         Navigator.push(
                                           context,
-                                            MaterialPageRoute(builder: (context) => ContactListPage()),
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const ContactListPage(),
+                                          ),
                                         );
-                                      }, 
-                                      child: const Text("OK")
-                                    )
+                                      },
+                                      child: const Text("OK"),
+                                    ),
                                   ],
                                 );
-                              }
+                              },
                             );
                           } else {
-                            CommonObject.contactList.addContactByParams(newName!, newKey!, newPhoneNumber!);
+                            CommonObject.contactList.addContactByParams(
+                              newName!,
+                              newKey!,
+                              newPhoneNumber!,
+                            );
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => ContactListPage()),
+                              MaterialPageRoute(
+                                builder: (context) => const ContactListPage(),
+                              ),
                             );
                           }
                       }
                     },
                   ),
-                )
+                ),
               ],
             ),
-          )
-        ]          
-      )
+          ),
+        ],
+      ),
     );
   }
 }

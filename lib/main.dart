@@ -25,7 +25,7 @@ void main() async {
   CommonObject.settings = settings;
 
   if (defaultTargetPlatform == TargetPlatform.android) {
-      loadData(contactList, settings);
+      await loadData(contactList, settings);
     } else {
       print("(No implementation) Loading fake contacts...");
       contactList.listOfContacts = fakeListOfContacts;
@@ -35,7 +35,7 @@ void main() async {
   SmsConstants(await retrieveSmsConstantsMap());
   print("Sms constants fetched");
   await Permission.sms.request();
-  runApp(App());
+  runApp(const App());
 }
 
 class App extends StatelessWidget {
@@ -52,7 +52,7 @@ class App extends StatelessWidget {
             PopupHandler.showPopup = false;
             return PopupHandler.popup!;
           } else {
-            return ContactListPage();
+            return const ContactListPage();
           }
         }
       )
