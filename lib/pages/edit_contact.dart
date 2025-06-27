@@ -262,6 +262,12 @@ class _EditContactPageState extends State<EditContactPage> {
                         contact.encryptionKey = newKey ?? contact.encryptionKey;
                       }
 
+                      // Remove all non-numeric characters
+                      newPhoneNumber = newPhoneNumber?.replaceAll(
+                        RegExp(r"[^\d+]"),
+                        "",
+                      );
+
                       contact.phoneNumber =
                           newPhoneNumber ?? contact.phoneNumber;
                       saveData(CommonObject.contactList, CommonObject.settings);
@@ -275,11 +281,6 @@ class _EditContactPageState extends State<EditContactPage> {
                             const ContactListPage(),
                           );
                         case "newcontact":
-                          // Remove all non-numeric characters
-                          newPhoneNumber = newPhoneNumber?.replaceAll(
-                            RegExp(r"[^\d+]"),
-                            "",
-                          );
                           if (isInvalidContactByParams(
                             newName,
                             newKey,
