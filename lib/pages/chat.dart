@@ -42,13 +42,7 @@ class _ChatPageState extends State<ChatPage> {
         margin: const EdgeInsets.only(left: 10),
         child: IconButton(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (final BuildContext context) =>
-                    const ContactListPage(),
-              ),
-            );
+            clearNavigatorAndPush(context, const ContactListPage());
           },
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           tooltip: "Go back",
@@ -60,12 +54,9 @@ class _ChatPageState extends State<ChatPage> {
           margin: const EdgeInsets.only(right: 10),
           child: IconButton(
             onPressed: () {
-              Navigator.push(
+              clearNavigatorAndPush(
                 context,
-                MaterialPageRoute(
-                  builder: (final BuildContext context) =>
-                      EditContactPage(contact, "chatpage"),
-                ),
+                EditContactPage(contact, "chatpage"),
               );
             },
             icon: const Icon(Icons.edit, color: Colors.white),
@@ -116,7 +107,9 @@ class _ConversationWidgetState extends State<ConversationWidget> {
       if (queryResponse == null) {
         loadMessage =
             "SMS query failed, please ensure the phone number is correct.";
-        debugPrint("SMS query failed, please ensure the phone number is correct.");
+        debugPrint(
+          "SMS query failed, please ensure the phone number is correct.",
+        );
       } else {
         conversation.chatLogs = queryResponse.toList();
         chatLoaded = true;

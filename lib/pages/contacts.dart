@@ -4,6 +4,7 @@ import "package:vidar/configuration.dart";
 import "package:vidar/pages/chat.dart";
 import "package:vidar/pages/edit_contact.dart";
 import "package:vidar/pages/settings.dart";
+import "package:vidar/utils.dart";
 
 // ignore: public_member_api_docs
 class ContactListPage extends StatefulWidget {
@@ -36,12 +37,9 @@ class _ContactListPageState extends State<ContactListPage> {
         child: FloatingActionButton(
           onPressed: () {
             final Contact newContact = Contact("", "", "");
-            Navigator.push(
+            clearNavigatorAndPush(
               context,
-              MaterialPageRoute(
-                builder: (final BuildContext context) =>
-                    EditContactPage(newContact, "newcontact"),
-              ),
+              EditContactPage(newContact, "newcontact"),
             );
           },
           backgroundColor: Colors.transparent,
@@ -77,13 +75,7 @@ class _ContactListPageState extends State<ContactListPage> {
             margin: const EdgeInsets.only(right: 10),
             child: IconButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (final BuildContext context) =>
-                        const SettingsPage(),
-                  ),
-                );
+                clearNavigatorAndPush(context, const SettingsPage());
               },
               icon: const Icon(Icons.settings, color: Colors.white),
               tooltip: "Settings",
@@ -134,12 +126,7 @@ class ContactBadge extends StatelessWidget {
         ),
       ),
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (final BuildContext context) => ChatPage(contact),
-          ),
-        );
+        clearNavigatorAndPush(context, ChatPage(contact));
       },
       onLongPress: () {
         debugPrint('Long hold on contact "${contact.name}"');

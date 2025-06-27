@@ -4,6 +4,7 @@ import "package:vidar/configuration.dart";
 import "package:vidar/keys.dart";
 import "package:vidar/pages/chat.dart";
 import "package:vidar/pages/contacts.dart";
+import "package:vidar/pages/settings.dart";
 import "package:vidar/save.dart";
 import "package:vidar/utils.dart";
 
@@ -111,9 +112,12 @@ class _EditContactPageState extends State<EditContactPage> {
                                 ) {
                                   return TextField(
                                     controller: encryptionKeyController,
-                                    decoration: const InputDecoration(
-                                      hintText: "Encryption Key",
-                                      hintStyle: TextStyle(color: Colors.white),
+                                    decoration: InputDecoration(
+                                      hintText:
+                                          "Encryption Key${Settings.allowUnencryptedMessages ? ", 0=No Key" : ""}",
+                                      hintStyle: const TextStyle(
+                                        color: Colors.white,
+                                      ),
                                       border: InputBorder.none,
                                     ),
                                     style: const TextStyle(color: Colors.white),
@@ -208,28 +212,16 @@ class _EditContactPageState extends State<EditContactPage> {
                     onTap: () {
                       switch (caller.toLowerCase()) {
                         case "chatpage":
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (final BuildContext context) =>
-                                  ChatPage(contact),
-                            ),
-                          );
+                          clearNavigatorAndPush(context, ChatPage(contact));
                         case "contactpage":
-                          Navigator.push(
+                          clearNavigatorAndPush(
                             context,
-                            MaterialPageRoute(
-                              builder: (final BuildContext context) =>
-                                  const ContactListPage(),
-                            ),
+                            const ContactListPage(),
                           );
                         case "newcontact":
-                          Navigator.push(
+                          clearNavigatorAndPush(
                             context,
-                            MaterialPageRoute(
-                              builder: (final BuildContext context) =>
-                                  const ContactListPage(),
-                            ),
+                            const ContactListPage(),
                           );
                       }
                     },
@@ -263,27 +255,24 @@ class _EditContactPageState extends State<EditContactPage> {
                       }
 
                       contact.name = newName ?? contact.name;
-                      contact.encryptionKey = newKey ?? contact.encryptionKey;
+
+                      if (Settings.allowUnencryptedMessages && newKey == "0") {
+                        contact.encryptionKey = "";
+                      } else {
+                        contact.encryptionKey = newKey ?? contact.encryptionKey;
+                      }
+
                       contact.phoneNumber =
                           newPhoneNumber ?? contact.phoneNumber;
                       saveData(CommonObject.contactList, CommonObject.settings);
 
                       switch (caller.toLowerCase()) {
                         case "chatpage":
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (final BuildContext context) =>
-                                  ChatPage(contact),
-                            ),
-                          );
+                          clearNavigatorAndPush(context, ChatPage(contact));
                         case "contactpage":
-                          Navigator.push(
+                          clearNavigatorAndPush(
                             context,
-                            MaterialPageRoute(
-                              builder: (final BuildContext context) =>
-                                  const ContactListPage(),
-                            ),
+                            const ContactListPage(),
                           );
                         case "newcontact":
                           // Remove all non-numeric characters
@@ -308,13 +297,9 @@ class _EditContactPageState extends State<EditContactPage> {
                                   actions: <Widget>[
                                     TextButton(
                                       onPressed: () {
-                                        Navigator.push(
+                                        clearNavigatorAndPush(
                                           context,
-                                          MaterialPageRoute(
-                                            builder:
-                                                (final BuildContext context) =>
-                                                    const ContactListPage(),
-                                          ),
+                                          const ContactListPage(),
                                         );
                                       },
                                       child: const Text("OK"),
@@ -329,12 +314,9 @@ class _EditContactPageState extends State<EditContactPage> {
                               newKey!,
                               newPhoneNumber!,
                             );
-                            Navigator.push(
+                            clearNavigatorAndPush(
                               context,
-                              MaterialPageRoute(
-                                builder: (final BuildContext context) =>
-                                    const ContactListPage(),
-                              ),
+                              const ContactListPage(),
                             );
                           }
                       }
