@@ -4,7 +4,11 @@ Why? Because privacy is a human right and it should be respected.
 
 If you have any questions feel free to ask!
 
-<br><br>
+<br>
+
+**Please be aware that the encrypted messages can be long and can eat away at your phone plan if you don't have unlimited texting**
+
+<br>
 
 ## Screenshots
 <img src="screenshots/chat_bob.png" width="200px">
