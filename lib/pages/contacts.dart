@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:vidar/commonobject.dart';
-import 'package:vidar/configuration.dart';
-import 'package:vidar/pages/chat.dart';
-import 'package:vidar/pages/edit_contact.dart';
-import 'package:vidar/pages/settings.dart';
+import "package:flutter/material.dart";
+import "package:vidar/commonobject.dart";
+import "package:vidar/configuration.dart";
+import "package:vidar/pages/chat.dart";
+import "package:vidar/pages/edit_contact.dart";
+import "package:vidar/pages/settings.dart";
 
 // ignore: public_member_api_docs
 class ContactListPage extends StatefulWidget {
@@ -23,11 +23,11 @@ class _ContactListPageState extends State<ContactListPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Scaffold(
       backgroundColor: VidarColors.secondaryMetallicViolet,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: Container(
+      floatingActionButton: DecoratedBox(
         decoration: BoxDecoration(
           color: VidarColors.secondaryMetallicViolet,
           border: Border.all(color: Colors.white, width: 2),
@@ -35,11 +35,12 @@ class _ContactListPageState extends State<ContactListPage> {
         ),
         child: FloatingActionButton(
           onPressed: () {
-            final newContact = Contact("", "", "");
+            final Contact newContact = Contact("", "", "");
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => EditContactPage(newContact, "newcontact"),
+                builder: (final BuildContext context) =>
+                    EditContactPage(newContact, "newcontact"),
               ),
             );
           },
@@ -51,7 +52,7 @@ class _ContactListPageState extends State<ContactListPage> {
 
       body: ListenableBuilder(
         listenable: CommonObject.contactList,
-        builder: (context, child) {
+        builder: (final BuildContext context, final Widget? child) {
           return Material(
             color: Colors.transparent,
             child: ListView(
@@ -71,14 +72,17 @@ class _ContactListPageState extends State<ContactListPage> {
             decoration: TextDecoration.none,
           ),
         ),
-        actions: [
+        actions: <Widget>[
           Container(
             margin: const EdgeInsets.only(right: 10),
             child: IconButton(
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SettingsPage()),
+                  MaterialPageRoute(
+                    builder: (final BuildContext context) =>
+                        const SettingsPage(),
+                  ),
                 );
               },
               icon: const Icon(Icons.settings, color: Colors.white),
@@ -97,7 +101,7 @@ class ContactBadge extends StatelessWidget {
   final Contact contact;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return InkWell(
       child: Container(
         alignment: Alignment.center,
@@ -109,7 +113,7 @@ class ContactBadge extends StatelessWidget {
         ),
 
         child: Column(
-          children: [
+          children: <Widget>[
             Text(
               contact.name,
               style: const TextStyle(
@@ -132,7 +136,9 @@ class ContactBadge extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ChatPage(contact)),
+          MaterialPageRoute(
+            builder: (final BuildContext context) => ChatPage(contact),
+          ),
         );
       },
       onLongPress: () {
@@ -145,24 +151,25 @@ class ContactBadge extends StatelessWidget {
 
 class Contact {
   Contact(this.name, this.encryptionKey, this.phoneNumber);
-  String name;
-  String encryptionKey;
-  String phoneNumber;
 
-  Map<String, String> toMap() {
-    return {
-      "name": name,
-      "encryptionKey": encryptionKey,
-      "phoneNumber": phoneNumber,
-    };
-  }
-
-  factory Contact.fromMap(Map<String, dynamic> map) {
+  factory Contact.fromMap(final Map<String, dynamic> map) {
     return Contact(
       map["name"]! as String,
       map["encryptionKey"]! as String,
       map["phoneNumber"]! as String,
     );
+  }
+
+  String name;
+  String encryptionKey;
+  String phoneNumber;
+
+  Map<String, String> toMap() {
+    return <String, String>{
+      "name": name,
+      "encryptionKey": encryptionKey,
+      "phoneNumber": phoneNumber,
+    };
   }
 }
 
@@ -172,7 +179,7 @@ class ContactList extends ChangeNotifier {
   List<Contact> listOfContacts;
 
   /// Returns true upon success
-  bool addContact(Contact contact) {
+  bool addContact(final Contact contact) {
     if (findContactIndexByName(contact.name) != -1) {
       return false;
     }
@@ -183,9 +190,9 @@ class ContactList extends ChangeNotifier {
 
   /// Returns true upon success
   bool addContactByParams(
-    String name,
-    String encryptionKey,
-    String phoneNumber,
+    final String name,
+    final String encryptionKey,
+    final String phoneNumber,
   ) {
     if (findContactIndexByName(name) != -1) {
       return false;
@@ -197,8 +204,8 @@ class ContactList extends ChangeNotifier {
 
   /// Expects that you know that the contact does indeed exist
   /// Returns true if it was found in the list and thus removed
-  bool removeContactByName(String name) {
-    final index = findContactIndexByName(name);
+  bool removeContactByName(final String name) {
+    final int index = findContactIndexByName(name);
     if (index != -1) {
       listOfContacts.removeAt(index);
       notifyListeners();
@@ -209,8 +216,8 @@ class ContactList extends ChangeNotifier {
   }
 
   /// Returns -1 if not found
-  int findContactIndexByName(String name) {
-    for (final (index, contact) in listOfContacts.indexed) {
+  int findContactIndexByName(final String name) {
+    for (final (int index, Contact contact) in listOfContacts.indexed) {
       if (contact.name == name) {
         return index;
       }
@@ -220,8 +227,8 @@ class ContactList extends ChangeNotifier {
 
   /// Expects that you know that the contact does indeed exist
   /// Returns true if it was found in the list and thus removed
-  bool removeContactByContact(Contact contact) {
-    final wasSuccess = listOfContacts.remove(contact);
+  bool removeContactByContact(final Contact contact) {
+    final bool wasSuccess = listOfContacts.remove(contact);
     notifyListeners();
     return wasSuccess;
   }
@@ -230,11 +237,11 @@ class ContactList extends ChangeNotifier {
   /// Change types: "name", "encryptionKey"
   /// Returns true on success
   bool modifyContactByName(
-    String contactName,
-    String changeType,
-    String newValue,
+    final String contactName,
+    final String changeType,
+    final String newValue,
   ) {
-    final index = findContactIndexByName(contactName);
+    final int index = findContactIndexByName(contactName);
     if (index == -1) {
       return false;
     }
@@ -249,11 +256,11 @@ class ContactList extends ChangeNotifier {
   }
 
   bool modifyContactByContact(
-    Contact contact,
-    String changeType,
-    String newValue,
+    final Contact contact,
+    final String changeType,
+    final String newValue,
   ) {
-    final index = listOfContacts.indexOf(contact);
+    final int index = listOfContacts.indexOf(contact);
     if (index == -1) {
       return false;
     }
@@ -268,23 +275,23 @@ class ContactList extends ChangeNotifier {
   }
 
   List<ContactBadge> getContactBadges() {
-    final contactBadges = <ContactBadge>[];
-    for (final contact in listOfContacts) {
+    final List<ContactBadge> contactBadges = <ContactBadge>[];
+    for (final Contact contact in listOfContacts) {
       contactBadges.add(ContactBadge(contact));
     }
     return contactBadges;
   }
 
-  ContactBadge getContactBadgeAtIndex(int index) {
+  ContactBadge getContactBadgeAtIndex(final int index) {
     return ContactBadge(listOfContacts[index]);
   }
 }
 
 /// True if it is invalid
 bool isInvalidContactByParams(
-  String? name,
-  String? encryptionKey,
-  String? phoneNumber,
+  final String? name,
+  final String? encryptionKey,
+  final String? phoneNumber,
 ) {
   if (name == null || phoneNumber == null) {
     return true;
@@ -302,7 +309,7 @@ bool isInvalidContactByParams(
   return false;
 }
 
-bool isInvalidContact(Contact contact) {
+bool isInvalidContact(final Contact contact) {
   return isInvalidContactByParams(
     contact.name,
     contact.encryptionKey,

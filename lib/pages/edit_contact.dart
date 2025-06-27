@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:vidar/commonobject.dart';
-import 'package:vidar/configuration.dart';
-import 'package:vidar/keys.dart';
-import 'package:vidar/pages/chat.dart';
-import 'package:vidar/pages/contacts.dart';
-import 'package:vidar/save.dart';
-import 'package:vidar/utils.dart';
+import "package:flutter/material.dart";
+import "package:vidar/commonobject.dart";
+import "package:vidar/configuration.dart";
+import "package:vidar/keys.dart";
+import "package:vidar/pages/chat.dart";
+import "package:vidar/pages/contacts.dart";
+import "package:vidar/save.dart";
+import "package:vidar/utils.dart";
 
 class EditContactPage extends StatefulWidget {
   const EditContactPage(this.contact, this.caller, {super.key});
@@ -43,14 +43,14 @@ class _EditContactPageState extends State<EditContactPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 30),
       color: VidarColors.primaryDarkSpaceCadet,
       child: Column(
-        children: [
+        children: <Widget>[
           Column(
-            children: [
+            children: <Widget>[
               Container(
                 margin: const EdgeInsets.only(
                   left: 50,
@@ -69,15 +69,11 @@ class _EditContactPageState extends State<EditContactPage> {
                     child: TextField(
                       decoration: const InputDecoration(
                         hintText: "Name",
-                        hintStyle: TextStyle(
-                          color: Colors.white,
-                        ),
+                        hintStyle: TextStyle(color: Colors.white),
                         border: InputBorder.none,
                       ),
-                      style: const TextStyle(
-                        color: Colors.white,
-                      ),
-                      onChanged: (String value) {
+                      style: const TextStyle(color: Colors.white),
+                      onChanged: (final String value) {
                         newName = value;
                       },
                     ),
@@ -92,7 +88,7 @@ class _EditContactPageState extends State<EditContactPage> {
                   bottom: 30,
                 ),
                 child: Row(
-                  children: [
+                  children: <Widget>[
                     SizedBox(
                       width:
                           MediaQuery.of(context).size.width -
@@ -108,24 +104,24 @@ class _EditContactPageState extends State<EditContactPage> {
                           padding: const EdgeInsets.only(left: 10),
                           child: ListenableBuilder(
                             listenable: updater,
-                            builder: (BuildContext context, Widget? child) {
-                              return TextField(
-                                controller: encryptionKeyController,
-                                decoration: const InputDecoration(
-                                  hintText: "Encryption Key",
-                                  hintStyle: TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                  border: InputBorder.none,
-                                ),
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                ),
-                                onChanged: (String value) {
-                                  newKey = value;
+                            builder:
+                                (
+                                  final BuildContext context,
+                                  final Widget? child,
+                                ) {
+                                  return TextField(
+                                    controller: encryptionKeyController,
+                                    decoration: const InputDecoration(
+                                      hintText: "Encryption Key",
+                                      hintStyle: TextStyle(color: Colors.white),
+                                      border: InputBorder.none,
+                                    ),
+                                    style: const TextStyle(color: Colors.white),
+                                    onChanged: (final String value) {
+                                      newKey = value;
+                                    },
+                                  );
                                 },
-                              );
-                            },
                           ),
                         ),
                       ),
@@ -176,15 +172,11 @@ class _EditContactPageState extends State<EditContactPage> {
                     child: TextField(
                       decoration: const InputDecoration(
                         hintText: "Phone Number (international)",
-                        hintStyle: TextStyle(
-                          color: Colors.white,
-                        ),
+                        hintStyle: TextStyle(color: Colors.white),
                         border: InputBorder.none,
                       ),
-                      style: const TextStyle(
-                        color: Colors.white,
-                      ),
-                      onChanged: (String value) {
+                      style: const TextStyle(color: Colors.white),
+                      onChanged: (final String value) {
                         newPhoneNumber = value;
                       },
                     ),
@@ -197,7 +189,7 @@ class _EditContactPageState extends State<EditContactPage> {
             margin: const EdgeInsets.only(top: 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
+              children: <Widget>[
                 Material(
                   color: VidarColors.secondaryMetallicViolet,
                   child: InkWell(
@@ -219,21 +211,24 @@ class _EditContactPageState extends State<EditContactPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ChatPage(contact),
+                              builder: (final BuildContext context) =>
+                                  ChatPage(contact),
                             ),
                           );
                         case "contactpage":
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const ContactListPage(),
+                              builder: (final BuildContext context) =>
+                                  const ContactListPage(),
                             ),
                           );
                         case "newcontact":
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const ContactListPage(),
+                              builder: (final BuildContext context) =>
+                                  const ContactListPage(),
                             ),
                           );
                       }
@@ -278,14 +273,16 @@ class _EditContactPageState extends State<EditContactPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ChatPage(contact),
+                              builder: (final BuildContext context) =>
+                                  ChatPage(contact),
                             ),
                           );
                         case "contactpage":
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const ContactListPage(),
+                              builder: (final BuildContext context) =>
+                                  const ContactListPage(),
                             ),
                           );
                         case "newcontact":
@@ -302,20 +299,21 @@ class _EditContactPageState extends State<EditContactPage> {
                             // ignore: inference_failure_on_function_invocation
                             showDialog(
                               context: context,
-                              builder: (BuildContext context) {
+                              builder: (final BuildContext context) {
                                 return AlertDialog(
                                   title: const Text("Missing details"),
                                   content: const Text(
                                     "Please enter all details to create a new contact",
                                   ),
-                                  actions: [
+                                  actions: <Widget>[
                                     TextButton(
                                       onPressed: () {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) =>
-                                                const ContactListPage(),
+                                            builder:
+                                                (final BuildContext context) =>
+                                                    const ContactListPage(),
                                           ),
                                         );
                                       },
@@ -334,7 +332,8 @@ class _EditContactPageState extends State<EditContactPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const ContactListPage(),
+                                builder: (final BuildContext context) =>
+                                    const ContactListPage(),
                               ),
                             );
                           }

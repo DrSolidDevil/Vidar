@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:vidar/configuration.dart';
-import 'package:vidar/encrypt.dart';
-import 'package:vidar/pages/contacts.dart';
-import 'package:vidar/pages/edit_contact.dart';
-import 'package:vidar/sms.dart';
-import 'package:vidar/utils.dart';
+import "package:flutter/material.dart";
+import "package:vidar/configuration.dart";
+import "package:vidar/encrypt.dart";
+import "package:vidar/pages/contacts.dart";
+import "package:vidar/pages/edit_contact.dart";
+import "package:vidar/sms.dart";
+import "package:vidar/utils.dart";
 
 class ChatPage extends StatefulWidget {
   const ChatPage(this.contact, {super.key});
@@ -26,62 +26,62 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: VidarColors.secondaryMetallicViolet,
-        title: Text(
-          contact.name,
-          style: const TextStyle(
-            fontSize: 18,
-            color: Colors.white,
-            decoration: TextDecoration.none,
-          ),
+  Widget build(final BuildContext context) => Scaffold(
+    appBar: AppBar(
+      backgroundColor: VidarColors.secondaryMetallicViolet,
+      title: Text(
+        contact.name,
+        style: const TextStyle(
+          fontSize: 18,
+          color: Colors.white,
+          decoration: TextDecoration.none,
         ),
+      ),
 
-        leading: Container(
-          margin: const EdgeInsets.only(left: 10),
+      leading: Container(
+        margin: const EdgeInsets.only(left: 10),
+        child: IconButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (final BuildContext context) =>
+                    const ContactListPage(),
+              ),
+            );
+          },
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          tooltip: "Go back",
+        ),
+      ),
+
+      actions: <Widget>[
+        Container(
+          margin: const EdgeInsets.only(right: 10),
           child: IconButton(
             onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const ContactListPage(),
+                  builder: (final BuildContext context) =>
+                      EditContactPage(contact, "chatpage"),
                 ),
               );
             },
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
-            tooltip: "Go back",
+            icon: const Icon(Icons.edit, color: Colors.white),
+            tooltip: "Edit",
           ),
         ),
-
-        actions: [
-          Container(
-            margin: const EdgeInsets.only(right: 10),
-            child: IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EditContactPage(contact, "chatpage"),
-                  ),
-                );
-              },
-              icon: const Icon(Icons.edit, color: Colors.white),
-              tooltip: "Edit",
-            ),
-          ),
-        ],
-      ),
-      body: ListenableBuilder(
-        listenable: updater,
-        builder: (BuildContext context, Widget? child) {
-          return ConversationWidget(contact);
-        },
-      ),
-      bottomNavigationBar: MesssageBar(contact, updater),
-    );
-  }
+      ],
+    ),
+    body: ListenableBuilder(
+      listenable: updater,
+      builder: (final BuildContext context, final Widget? child) {
+        return ConversationWidget(contact);
+      },
+    ),
+    bottomNavigationBar: MesssageBar(contact, updater),
+  );
 }
 
 class ConversationWidget extends StatefulWidget {
@@ -107,9 +107,12 @@ class _ConversationWidgetState extends State<ConversationWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     print("Querying sms for ${contact.name}...");
-    querySms(phoneNumber: contact.phoneNumber).then((queryResponse) {
+    // ignore: discarded_futures
+    querySms(phoneNumber: contact.phoneNumber).then((
+      final List<SmsMessage>? queryResponse,
+    ) {
       if (queryResponse == null) {
         loadMessage =
             "SMS query failed, please ensure the phone number is correct.";
@@ -124,7 +127,7 @@ class _ConversationWidgetState extends State<ConversationWidget> {
 
     return ListenableBuilder(
       listenable: conversation,
-      builder: (BuildContext context, Widget? child) {
+      builder: (final BuildContext context, final Widget? child) {
         if (!chatLoaded) {
           print("Chat not loaded");
           return ColoredBox(
@@ -143,20 +146,26 @@ class _ConversationWidgetState extends State<ConversationWidget> {
           );
         }
         print("Chat loaded");
-        final messages = conversation.chatLogs;
-        final decryptedSpeechBubbles = <Widget>[];
-        for (final message in messages) {
+        final List<SmsMessage> messages = conversation.chatLogs;
+        final List<Widget> decryptedSpeechBubbles = <Widget>[];
+        for (final SmsMessage message in messages) {
           decryptedSpeechBubbles.add(
             FutureBuilder(
               future: decryptMessage(message.body, contact.encryptionKey),
-              builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
-                if (snapshot.hasData) {
-                  return SpeechBubble(message.clone(newBody: snapshot.data));
-                } else {
-                  print("Snapshot has no data, body: ${message.body}");
-                }
-                return SizedBox.shrink();
-              },
+              builder:
+                  (
+                    final BuildContext context,
+                    final AsyncSnapshot<String?> snapshot,
+                  ) {
+                    if (snapshot.hasData) {
+                      return SpeechBubble(
+                        message.clone(newBody: snapshot.data),
+                      );
+                    } else {
+                      print("Snapshot has no data, body: ${message.body}");
+                    }
+                    return const SizedBox.shrink();
+                  },
             ),
           );
         }
@@ -170,19 +179,17 @@ class _ConversationWidgetState extends State<ConversationWidget> {
 }
 
 class Conversation extends ChangeNotifier {
-  final Contact contact;
-  late List<SmsMessage> chatLogs;
-  late final SmsNotifier smsNotifier;
-
   Conversation(this.contact) {
     smsNotifier = SmsNotifier();
     smsNotifier.addListener(notifyListeners);
   }
 
+  final Contact contact;
+  late List<SmsMessage> chatLogs;
+  late final SmsNotifier smsNotifier;
+
   Future<void> updateChatLogs() async {
-    chatLogs = (await querySms(
-      phoneNumber: contact.phoneNumber,
-    ))!.toList();
+    chatLogs = (await querySms(phoneNumber: contact.phoneNumber))!.toList();
     print("chatlogs updated");
     notifyListeners();
   }
@@ -222,12 +229,15 @@ class _MesssageBarState extends State<MesssageBar> {
     updater = widget.updater;
   }
 
-  Widget buildErrorMessageWidget(BuildContext context, String text) {
+  Widget buildErrorMessageWidget(
+    final BuildContext context,
+    final String text,
+  ) {
     return ColoredBox(
       color: VidarColors.secondaryMetallicViolet,
       child: Row(
-        children: [
-          Text(text, style: TextStyle(color: Colors.white)),
+        children: <Widget>[
+          Text(text, style: const TextStyle(color: Colors.white)),
           IconButton(
             onPressed: () => failUpdater.update,
             icon: const Icon(Icons.sms, color: Colors.white),
@@ -238,15 +248,17 @@ class _MesssageBarState extends State<MesssageBar> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return ListenableBuilder(
       listenable: failUpdater,
-      builder: (BuildContext context, Widget? child) {
+      builder: (final BuildContext context, final Widget? child) {
         if (error) {
           error = false;
           Future.delayed(
-            const Duration(seconds: TimeConfiguration.messageWidgetErrorDisplayTime),
-          ).then((value) => failUpdater.update());
+            const Duration(
+              seconds: TimeConfiguration.messageWidgetErrorDisplayTime,
+            ),
+          ).then((_) => failUpdater.update());
           switch (errorMessage) {
             case "MESSAGE_FAILED":
               print("MESSAGE_FAILED");
@@ -279,7 +291,7 @@ class _MesssageBarState extends State<MesssageBar> {
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
+              children: <Widget>[
                 Container(
                   decoration: BoxDecoration(
                     color: VidarColors.secondaryMetallicViolet,
@@ -292,7 +304,7 @@ class _MesssageBarState extends State<MesssageBar> {
                   child: TextField(
                     style: const TextStyle(color: Colors.white),
                     decoration: const InputDecoration(border: InputBorder.none),
-                    onChanged: (value) => message = value,
+                    onChanged: (final String value) => message = value,
                   ),
                 ),
                 SizedBox(
@@ -302,7 +314,7 @@ class _MesssageBarState extends State<MesssageBar> {
                     child: IconButton(
                       onPressed: () async {
                         print("Sending message: $message");
-                        final encryptedMessage = await encryptMessage(
+                        final String encryptedMessage = await encryptMessage(
                           message!,
                           contact.encryptionKey,
                         );
@@ -346,7 +358,7 @@ class SpeechBubble extends StatelessWidget {
   final SmsMessage message;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final bool isMe = (message.type == SmsConstants.MESSAGE_TYPE_SENT);
     return Align(
       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
@@ -361,7 +373,7 @@ class SpeechBubble extends StatelessWidget {
           crossAxisAlignment: isMe
               ? CrossAxisAlignment.end
               : CrossAxisAlignment.start,
-          children: [
+          children: <Widget>[
             ConstrainedBox(
               constraints: BoxConstraints(
                 maxWidth: MediaQuery.of(context).size.width * 0.75,

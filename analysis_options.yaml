@@ -1,8 +1,199 @@
-
-include: package:very_good_analysis/analysis_options.yaml
 analyzer:
   errors:
-    prefer_single_quotes: ignore
-    document_ignores: ignore
-    library_private_types_in_public_api: ignore
     avoid_print: ignore
+    avoid_types_as_parameter_names: error
+
+  language:
+    strict-casts: true
+    strict-inference: true
+    strict-raw-types: true
+
+formatter:
+  trailing_commas: automate
+
+
+linter:
+  rules:
+    - always_declare_return_types
+    - always_put_control_body_on_new_line
+    - always_put_required_named_parameters_first
+    - always_specify_types
+    - always_use_package_imports
+    - annotate_overrides
+    - annotate_redeclares
+    - avoid_bool_literals_in_conditional_expressions
+    - avoid_catches_without_on_clauses
+    - avoid_catching_errors
+    - avoid_empty_else
+    - avoid_escaping_inner_quotes
+    - avoid_field_initializers_in_const_classes
+    - avoid_function_literals_in_foreach_calls
+    - avoid_futureor_void
+    - avoid_init_to_null
+    - avoid_multiple_declarations_per_line
+    - avoid_positional_boolean_parameters
+    - avoid_print
+    - avoid_private_typedef_functions
+    - avoid_renaming_method_parameters
+    - avoid_returning_null_for_void
+    - avoid_return_types_on_setters
+    - avoid_returning_this
+    - avoid_setters_without_getters
+    - avoid_slow_async_io
+    - avoid_types_as_parameter_names
+    - avoid_unnecessary_containers
+    - avoid_unused_constructor_parameters
+    - avoid_void_async
+    - avoid_web_libraries_in_flutter
+    - await_only_futures
+    - camel_case_extensions
+    - camel_case_types
+    - cancel_subscriptions
+    - cascade_invocations
+    - close_sinks
+    - cast_nullable_to_non_nullable
+    - collection_methods_unrelated_type
+    - combinators_ordering
+    - conditional_uri_does_not_exist
+    - curly_braces_in_flow_control_structures
+    - dangling_library_doc_comments
+    - deprecated_consistency
+    - depend_on_referenced_packages
+    - directives_ordering
+    - empty_constructor_bodies
+    - empty_catches
+    - empty_statements
+    - eol_at_end_of_file
+    - file_names
+    - flutter_style_todos
+    - implementation_imports
+    - invalid_case_patterns
+    - join_return_with_assignment
+    - leading_newlines_in_multiline_strings
+    - library_annotations
+    - library_names
+    - library_prefixes
+    - literal_only_boolean_expressions
+    - matching_super_parameters
+    - missing_code_block_language_in_doc_comment
+    - no_adjacent_strings_in_list
+    - no_duplicate_case_values
+    - no_leading_underscores_for_library_prefixes
+    - no_leading_underscores_for_local_identifiers
+    - no_literal_bool_comparisons
+    - no_logic_in_create_state
+    - no_runtimeType_toString
+    - no_self_assignments
+    - no_wildcard_variable_uses
+    - non_constant_identifier_names
+    - noop_primitive_operations
+    - null_check_on_nullable_type_parameter
+    - null_closures
+    - one_member_abstracts
+    - only_throw_errors
+    - package_prefixed_library_names
+    - parameter_assignments
+    - package_names
+    - prefer_adjacent_string_concatenation
+    - prefer_asserts_with_message
+    - prefer_conditional_assignment
+    - prefer_const_constructors
+    - prefer_const_constructors_in_immutables
+    - prefer_const_declarations
+    - prefer_const_literals_to_create_immutables
+    - prefer_constructors_over_static_methods
+    - prefer_contains
+    - prefer_double_quotes
+    - prefer_final_fields
+    - prefer_final_in_for_each
+    - prefer_final_locals
+    - prefer_for_elements_to_map_fromIterable
+    - prefer_final_parameters
+    - prefer_function_declarations_over_variables
+    - prefer_if_null_operators
+    - prefer_initializing_formals
+    - prefer_inlined_adds
+    - prefer_interpolation_to_compose_strings
+    - prefer_is_empty
+    - prefer_is_not_empty
+    - prefer_is_not_operator
+    - prefer_iterable_whereType
+    - prefer_mixin
+    - prefer_null_aware_method_calls
+    - prefer_null_aware_operators
+    - prefer_spread_collections
+    - prefer_typing_uninitialized_variables
+    - provide_deprecation_message
+    - prefer_void_to_null
+    - recursive_getters
+    - require_trailing_commas
+    - secure_pubspec_urls
+    - sized_box_for_whitespace
+    - sized_box_shrink_expand
+    - slash_for_doc_comments
+    - sort_child_properties_last
+    - sort_constructors_first
+    - sort_unnamed_constructors_first
+    - specify_nonobvious_local_variable_types
+    - specify_nonobvious_property_types
+    - strict_top_level_inference
+    - throw_in_finally
+    - tighten_type_of_initializing_formals
+    - type_annotate_public_apis
+    - type_literal_in_constant_pattern
+    - unintended_html_in_doc_comment
+    - unnecessary_async
+    - unnecessary_await_in_return
+    - unnecessary_brace_in_string_interps
+    - unnecessary_constructor_name
+    - unnecessary_getters_setters
+    - unnecessary_lambdas
+    - unnecessary_late
+    - unnecessary_library_directive
+    - unnecessary_new
+    - unnecessary_null_aware_assignments
+    - unnecessary_null_aware_operator_on_extension_on_nullable
+    - unnecessary_null_checks
+    - unnecessary_null_in_if_null_operators
+    - unnecessary_nullable_for_final_variable_declarations
+    - unnecessary_overrides
+    - unnecessary_parenthesis
+    - unnecessary_raw_strings
+    - unnecessary_statements
+    - unnecessary_string_escapes
+    - unnecessary_string_interpolations
+    - unnecessary_this
+    - unnecessary_to_list_in_spreads
+    - unnecessary_underscores
+    - unreachable_from_main
+    - unrelated_type_equality_checks
+    - unsafe_variance
+    - use_build_context_synchronously
+    - use_colored_box
+    - use_decorated_box
+    - use_enums
+    - use_if_null_to_convert_nulls_to_bools
+    - use_is_even_rather_than_modulo
+    - use_key_in_widget_constructors
+    - use_late_for_private_fields_and_variables
+    - use_named_constants
+    - use_null_aware_elements
+    - use_raw_strings
+    - use_rethrow_when_possible
+    - use_setters_to_change_properties
+    - use_string_buffers
+    - use_string_in_part_of_directives
+    - use_super_parameters
+    - use_to_and_as_if_applicable
+    - use_truncating_division
+    - valid_regexps
+    
+
+
+
+
+
+
+
+#make error:
+# 

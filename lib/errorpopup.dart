@@ -1,20 +1,22 @@
-import 'package:flutter/material.dart';
-import 'package:vidar/pages/contacts.dart';
+import "package:flutter/material.dart";
+import "package:vidar/pages/contacts.dart";
 
 /// Alert dialog template for errors
 class ErrorPopup extends StatefulWidget {
   const ErrorPopup({
     required this.title,
-    required this.body, 
+    required this.body,
     required this.enableReturn,
     super.key,
   });
 
   /// Title of the error popup, try to keep it short and simple.
   final String title;
+
   /// Text body of the error popup, explains the error that occured.
   final String body;
-  /// Enable return button for the error popup 
+
+  /// Enable return button for the error popup
   /// (i.e return to page where error occured)
   final bool enableReturn;
 
@@ -37,22 +39,23 @@ class _ErrorPopupState extends State<ErrorPopup> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Stack(
-      children: [
+      children: <Widget>[
         // Be aware of error infinite loops if the error comes from ContactListPage
         const ContactListPage(),
         Center(
           child: AlertDialog(
             title: Text(title),
             content: Text(body),
-            actions: [
+            actions: <Widget>[
               TextButton(
                 onPressed: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (BuildContext context) => const ContactListPage(),
+                      builder: (final BuildContext context) =>
+                          const ContactListPage(),
                     ),
                   );
                 },

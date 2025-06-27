@@ -1,14 +1,14 @@
-import 'dart:convert';
-import 'dart:math';
+import "dart:convert";
+import "dart:math";
 
-import 'package:cryptography/cryptography.dart';
-import 'package:vidar/configuration.dart';
+import "package:cryptography/cryptography.dart";
+import "package:vidar/configuration.dart";
 
 Future<String> generateRandomKey() async {
-  final randomNumber = Random.secure().nextInt(4294967296);
-  final hash = await Blake2b(
+  final int randomNumber = Random.secure().nextInt(4294967296);
+  final Hash hash = await Blake2b(
     hashLengthInBytes: CryptographicConfiguration.keyGenerationHashLength,
-  ).hash([randomNumber]);
-  final key = base64Encode(hash.bytes);
+  ).hash(<int>[randomNumber]);
+  final String key = base64Encode(hash.bytes);
   return key;
 }

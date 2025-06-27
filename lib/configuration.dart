@@ -1,17 +1,17 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
 
 class VidarColors {
   /// #1a1c28
-  static const primaryDarkSpaceCadet = Color.fromARGB(255, 26, 28, 40);
+  static const Color primaryDarkSpaceCadet = Color.fromARGB(255, 26, 28, 40);
 
   /// #64007b
-  static const secondaryMetallicViolet = Color.fromARGB(255, 53, 22, 100);
+  static const Color secondaryMetallicViolet = Color.fromARGB(255, 53, 22, 100);
 
   /// #b18c19
-  static const tertiaryGold = Color.fromARGB(255, 177, 140, 25);
+  static const Color tertiaryGold = Color.fromARGB(255, 177, 140, 25);
 
   /// #140627
-  static const extraMidnightPurple = Color.fromARGB(255, 20, 6, 39);
+  static const Color extraMidnightPurple = Color.fromARGB(255, 20, 6, 39);
 }
 
 class CryptographicConfiguration {

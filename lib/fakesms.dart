@@ -1,8 +1,8 @@
-import 'package:vidar/pages/contacts.dart';
+import "package:vidar/pages/contacts.dart";
 
-import 'package:vidar/sms.dart';
+import "package:vidar/sms.dart";
 
-List<SmsMessage> fakesms = [
+List<SmsMessage> fakesms = <SmsMessage>[
   SmsMessage(
     "Hello",
     "123456789",
@@ -40,7 +40,7 @@ List<SmsMessage> fakesms = [
   ),
 ];
 
-List<Contact> fakeListOfContacts = [
+List<Contact> fakeListOfContacts = <Contact>[
   Contact("Bob", "testkey", ""),
   Contact("John", "testkey", ""),
   Contact("Jack", "testkey", ""),

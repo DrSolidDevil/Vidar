@@ -1,6 +1,5 @@
-
-import 'package:flutter/widgets.dart';
-import 'package:vidar/utils.dart';
+import "package:flutter/widgets.dart";
+import "package:vidar/utils.dart";
 
 class PopupHandler {
   static Updater popupUpdater = Updater();

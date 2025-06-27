@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:vidar/commonobject.dart';
-import 'package:vidar/configuration.dart';
-import 'package:vidar/pages/contacts.dart';
-import 'package:vidar/save.dart';
+import "package:flutter/material.dart";
+import "package:vidar/commonobject.dart";
+import "package:vidar/configuration.dart";
+import "package:vidar/pages/contacts.dart";
+import "package:vidar/save.dart";
 
 /// Static class for storing the active user settings of the program.
 class Settings {
@@ -11,11 +11,13 @@ class Settings {
 
   /// Get map of the state of all instance variable of Settings.
   Map<String, dynamic> toMap() {
-    return {"allowUnencryptedMessages": allowUnencryptedMessages};
+    return <String, dynamic>{
+      "allowUnencryptedMessages": allowUnencryptedMessages,
+    };
   }
 
   /// Set state of all instance variables of Settings from map.
-  void fromMap(Map<String, dynamic> map) {
+  void fromMap(final Map<String, dynamic> map) {
     allowUnencryptedMessages = map["allowUnencryptedMessages"]! as bool;
   }
 }
@@ -43,17 +45,17 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return ColoredBox(
       color: VidarColors.primaryDarkSpaceCadet,
       child: Column(
-        children: [
-          Column(children: [allowUnencryptedMessages]),
+        children: <Widget>[
+          Column(children: <Widget>[allowUnencryptedMessages]),
           Container(
             margin: const EdgeInsets.only(top: 60),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
+              children: <Widget>[
                 Material(
                   color: VidarColors.secondaryMetallicViolet,
                   child: InkWell(
@@ -73,7 +75,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (BuildContext context) =>
+                          builder: (final BuildContext context) =>
                               const ContactListPage(),
                         ),
                       );
@@ -109,7 +111,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (BuildContext context) =>
+                          builder: (final BuildContext context) =>
                               const ContactListPage(),
                         ),
                       );
@@ -128,9 +130,11 @@ class _SettingsPageState extends State<SettingsPage> {
 // ignore: must_be_immutable
 class BooleanSetting extends StatefulWidget {
   BooleanSetting({required this.setting, required this.settingText, super.key});
-  /// The initial state of the setting, 
+
+  /// The initial state of the setting,
   /// will be updated to reflect changes in the setting.
   bool setting;
+
   /// The text shown to the user explaining the setting.
   final String settingText;
 
@@ -150,13 +154,13 @@ class _BooleanSettingState extends State<BooleanSetting> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 40),
       color: VidarColors.primaryDarkSpaceCadet,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [
+        children: <Widget>[
           Container(
             margin: EdgeInsets.only(
               right: MediaQuery.of(context).size.width * 0.1,
@@ -168,13 +172,13 @@ class _BooleanSettingState extends State<BooleanSetting> {
                 inactiveThumbColor: VidarColors.secondaryMetallicViolet,
                 inactiveTrackColor: VidarColors.extraMidnightPurple,
                 trackOutlineColor: WidgetStateProperty.resolveWith(
-                  (Set<WidgetState> states) =>
+                  (final Set<WidgetState> states) =>
                       states.contains(WidgetState.selected)
                       ? null
                       : VidarColors.secondaryMetallicViolet,
                 ),
                 value: widget.setting,
-                onChanged: (bool value) {
+                onChanged: (final bool value) {
                   setState(() {
                     widget.setting = value;
                   });

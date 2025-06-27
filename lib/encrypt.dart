@@ -1,12 +1,12 @@
-import 'dart:convert';
+import "dart:convert";
 
-import 'package:cryptography/cryptography.dart';
-import 'package:vidar/configuration.dart';
-import 'package:vidar/pages/settings.dart';
+import "package:cryptography/cryptography.dart";
+import "package:vidar/configuration.dart";
+import "package:vidar/pages/settings.dart";
 
 /// If key is blank then it returns the message argument
 /// Will output with an encryption prefix (i.e. a string prefix that signals that this is an encrypted message)
-Future<String> encryptMessage(String message, String key) async {
+Future<String> encryptMessage(final String message, final String key) async {
   if (key == "") {
     print("No key");
     if (Settings.allowUnencryptedMessages) {
@@ -17,21 +17,21 @@ Future<String> encryptMessage(String message, String key) async {
   }
 
   try {
-    final algorithm = AesGcm.with256bits(
+    final AesGcm algorithm = AesGcm.with256bits(
       nonceLength: CryptographicConfiguration.nonceLength,
     );
 
-    final hashedKey = (await Sha256().hash(utf8.encode(key))).bytes;
-    final secretKey = SecretKey(hashedKey);
-    final nonce = algorithm.newNonce();
+    final List<int> hashedKey = (await Sha256().hash(utf8.encode(key))).bytes;
+    final SecretKey secretKey = SecretKey(hashedKey);
+    final List<int> nonce = algorithm.newNonce();
 
-    final secretBox = await algorithm.encrypt(
+    final SecretBox secretBox = await algorithm.encrypt(
       utf8.encode(message),
       secretKey: secretKey,
       nonce: nonce,
     );
 
-    final fullEncrypted = <int>[
+    final List<int> fullEncrypted = <int>[
       ...nonce,
       ...secretBox.cipherText,
       ...secretBox.mac.bytes,
@@ -39,7 +39,7 @@ Future<String> encryptMessage(String message, String key) async {
 
     return CryptographicConfiguration.encryptionPrefix +
         base64.encode(fullEncrypted);
-  } catch (error, stackTrace) {
+  } on Exception catch (error, stackTrace) {
     if (LoggingConfiguration.verboseEncryptionError) {
       print("Encryption Failed: $error");
       print("Stacktrace:\n$stackTrace");
@@ -50,7 +50,7 @@ Future<String> encryptMessage(String message, String key) async {
 
 /// If key is blank or encryption prefix is missing then it returns the message argument
 /// If decryption fails then it returns "DECRYPTION_FAILED"
-Future<String> decryptMessage(String message, String key) async {
+Future<String> decryptMessage(String message, final String key) async {
   if (key == "") {
     print("No key");
     return message;
@@ -67,38 +67,38 @@ Future<String> decryptMessage(String message, String key) async {
       "",
     );
 
-    final algorithm = AesGcm.with256bits(
+    final AesGcm algorithm = AesGcm.with256bits(
       nonceLength: CryptographicConfiguration.nonceLength,
     );
 
-    final hashedKey = (await Sha256().hash(utf8.encode(key))).bytes;
-    final secretKey = SecretKey(hashedKey);
+    final List<int> hashedKey = (await Sha256().hash(utf8.encode(key))).bytes;
+    final SecretKey secretKey = SecretKey(hashedKey);
     final List<int> encryptedBytes = base64.decode(message);
 
-    final nonce = encryptedBytes.sublist(
+    final List<int> nonce = encryptedBytes.sublist(
       0,
       CryptographicConfiguration.nonceLength,
     );
-    final cipherText = encryptedBytes.sublist(
+    final List<int> cipherText = encryptedBytes.sublist(
       CryptographicConfiguration.nonceLength,
       encryptedBytes.length - CryptographicConfiguration.macLength,
     );
-    final mac = encryptedBytes.sublist(
+    final List<int> mac = encryptedBytes.sublist(
       encryptedBytes.length - CryptographicConfiguration.macLength,
     );
 
-    final secretBox = SecretBox(
+    final SecretBox secretBox = SecretBox(
       cipherText,
       nonce: nonce,
       mac: Mac(mac),
     );
-    final decryptedBytes = await algorithm.decrypt(
+    final List<int> decryptedBytes = await algorithm.decrypt(
       secretBox,
       secretKey: secretKey,
     );
-    final decryptedMessage = utf8.decode(decryptedBytes);
+    final String decryptedMessage = utf8.decode(decryptedBytes);
     return decryptedMessage;
-  } catch (error, stackTrace) {
+  } on Exception catch (error, stackTrace) {
     if (LoggingConfiguration.verboseEncryptionError) {
       print("Decryption Failed: $error");
       print("Stacktrace:\n$stackTrace");
