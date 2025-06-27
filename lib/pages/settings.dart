@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "package:vidar/commonobject.dart";
+import "package:vidar/common_object.dart";
 import "package:vidar/configuration.dart";
 import "package:vidar/pages/contacts.dart";
 import "package:vidar/save.dart";

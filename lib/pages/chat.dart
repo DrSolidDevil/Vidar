@@ -111,7 +111,15 @@ class _ConversationWidgetState extends State<ConversationWidget> {
           "SMS query failed, please ensure the phone number is correct.",
         );
       } else {
-        conversation.chatLogs = queryResponse.toList();
+        final List<SmsMessage> chatLogs = queryResponse.toList();
+        conversation.chatLogs = <SmsMessage>[];
+        for (final SmsMessage chat in chatLogs) {
+          if (chat.status == SmsConstants.STATUS_FAILED) {
+            conversation.chatLogs.add(chat.clone(newBody: "MESSAGE_FAILED"));
+          } else {
+            conversation.chatLogs.add(chat);
+          }
+        }
         chatLoaded = true;
         debugPrint("Sms query complete");
       }

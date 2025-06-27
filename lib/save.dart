@@ -3,10 +3,10 @@ import "dart:convert";
 import "package:flutter/foundation.dart" show debugPrint;
 import "package:shared_preferences/shared_preferences.dart";
 import "package:vidar/configuration.dart";
-import "package:vidar/errorpopup.dart";
+import "package:vidar/error_popup.dart";
 import "package:vidar/pages/contacts.dart";
 import "package:vidar/pages/settings.dart";
-import "package:vidar/popuphandler.dart";
+import "package:vidar/popup_handler.dart";
 
 Future<void> saveData(
   final ContactList contactList,

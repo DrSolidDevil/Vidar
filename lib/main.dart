@@ -1,9 +1,9 @@
 import "package:flutter/material.dart";
 import "package:permission_handler/permission_handler.dart";
-import "package:vidar/commonobject.dart";
+import "package:vidar/common_object.dart";
 import "package:vidar/pages/contacts.dart";
 import "package:vidar/pages/settings.dart";
-import "package:vidar/popuphandler.dart";
+import "package:vidar/popup_handler.dart";
 import "package:vidar/save.dart";
 import "package:vidar/sms.dart";
 
