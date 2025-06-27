@@ -103,8 +103,8 @@ class _SettingsPageState extends State<SettingsPage> {
                           allowUnencryptedMessages.setting;
                       saveData(CommonObject.contactList, CommonObject.settings);
 
-                      print("=========== New Settings ===========");
-                      print(
+                      debugPrint("=========== New Settings ===========");
+                      debugPrint(
                         "allowUnencryptedMessages: ${Settings.allowUnencryptedMessages}",
                       );
 

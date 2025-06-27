@@ -1,12 +1,9 @@
-// ignore_for_file: non_constant_identifier_names, constant_identifier_names
+// ignore_for_file: non_constant_identifier_names
 
 import "dart:core";
 
 import "package:flutter/foundation.dart";
 import "package:flutter/services.dart";
-
-// Only for testing
-import "package:vidar/fakesms.dart";
 
 const MethodChannel MAIN_SMS_CHANNEL = MethodChannel("flutter.native/helper");
 
@@ -142,112 +139,54 @@ SmsMessage? _queryMapToSms(final Map<String, String?> smsMap) {
 /// Requires an initialization of SmsConstants beforehand
 /// SMS are returned oldest to newest
 Future<List<SmsMessage>?> querySms({final String? phoneNumber}) async {
-  if (defaultTargetPlatform == TargetPlatform.android) {
-    try {
-      print("phonenumber = $phoneNumber");
-      final dynamic rawResult = await MAIN_SMS_CHANNEL.invokeMethod(
-        "querySms",
-        <String, String?>{"phoneNumber": phoneNumber},
-      );
-      if (rawResult == null) {
-        print("sms query is null");
-        return null;
-      }
-      print(rawResult);
-      final List<Map<String, String?>> result = <Map<String, String?>>[];
-      for (final dynamic resultEntry in rawResult as Iterable<dynamic>) {
-        result.add(
-          Map<String, String?>.from(resultEntry as Map<dynamic, dynamic>),
-        );
-      }
-      final List<SmsMessage> smsMessages = <SmsMessage>[];
-      for (final Map<String, String?> mapMessage in result) {
-        smsMessages.add(_queryMapToSms(mapMessage)!);
-      }
-      if (smsMessages.isEmpty) {
-        print("(querySms) smsMessages is empty");
-      }
-      return smsMessages;
-    } on PlatformException catch (e) {
-      print(e.message);
+  try {
+    print("phonenumber = $phoneNumber");
+    final dynamic rawResult = await MAIN_SMS_CHANNEL.invokeMethod(
+      "querySms",
+      <String, String?>{"phoneNumber": phoneNumber},
+    );
+    if (rawResult == null) {
+      print("sms query is null");
       return null;
     }
-  } else {
-    print("(No implementation) Querying sms...");
-    print("========SMS========");
-    for (final SmsMessage sms in fakesms) {
-      print(
-        "Body: ${sms.body} | Phone Number: ${sms.phoneNumber} | Date: ${sms.date} | Date Sent: ${sms.dateSent} | Type:${sms.type}",
+    print(rawResult);
+    final List<Map<String, String?>> result = <Map<String, String?>>[];
+    for (final dynamic resultEntry in rawResult as Iterable<dynamic>) {
+      result.add(
+        Map<String, String?>.from(resultEntry as Map<dynamic, dynamic>),
       );
     }
-    return fakesms;
+    final List<SmsMessage> smsMessages = <SmsMessage>[];
+    for (final Map<String, String?> mapMessage in result) {
+      smsMessages.add(_queryMapToSms(mapMessage)!);
+    }
+    if (smsMessages.isEmpty) {
+      print("(querySms) smsMessages is empty");
+    }
+    return smsMessages;
+  } on PlatformException catch (e) {
+    print(e.message);
+    return null;
   }
 }
 
 /// The phone number is that of the other party
 Future<void> sendSms(final String body, final String phoneNumber) async {
-  if (defaultTargetPlatform == TargetPlatform.android) {
-    /// 0 = success, for now not used
-    // ignore: unused_local_variable
-    final dynamic result = await MAIN_SMS_CHANNEL.invokeMethod(
-      "sendSms",
-      <String, String>{"body": body, "phoneNumber": phoneNumber},
-    );
-    print("Sending result: $result");
-  } else {
-    print(
-      "(No implementation) Sending sms... body:$body  phoneNumber:$phoneNumber",
-    );
-    fakesms.add(
-      SmsMessage(
-        body,
-        phoneNumber,
-        dateSent: DateTime.now(),
-        type: SmsConstants.MESSAGE_TYPE_SENT,
-        status: SmsConstants.STATUS_COMPLETE,
-      ),
-    );
-  }
+  /// 0 = success, for now not used
+  final dynamic result = await MAIN_SMS_CHANNEL.invokeMethod(
+    "sendSms",
+    <String, String>{"body": body, "phoneNumber": phoneNumber},
+  );
+  print("Sending result: $result");
 }
 
 Future<Map<String, dynamic>> retrieveSmsConstantsMap() async {
-  final Map<String, dynamic> smsConstants;
-  if (defaultTargetPlatform == TargetPlatform.android) {
-    final dynamic rawConstants = await MAIN_SMS_CHANNEL.invokeMethod(
-      "smsConstants",
-    );
-    smsConstants = Map<String, dynamic>.from(
-      rawConstants as Map<dynamic, dynamic>,
-    );
-  } else {
-    smsConstants = <String, dynamic>{
-      "MESSAGE_TYPE_ALL": 0,
-      "MESSAGE_TYPE_DRAFT": 3,
-      "MESSAGE_TYPE_SENT": 2,
-      "MESSAGE_TYPE_INBOX": 1,
-      "MESSAGE_TYPE_FAILED": 5,
-      "MESSAGE_TYPE_OUTBOX": 4,
-      "MESSAGE_TYPE_QUEUED": 6,
-      "STATUS_NONE": -1,
-      "STATUS_FAILED": 64,
-      "STATUS_PENDING": 32,
-      "STATUS_COMPLETE": 0,
-      "THREAD_ID": "thread_id",
-      "TYPE": "type",
-      "ADDRESS": "address",
-      "DATE": "date",
-      "DATE_SENT": "date_sent",
-      "READ": "read",
-      "SEEN": "seen",
-      "PROTOCOL": "protocol",
-      "STATUS": "status",
-      "SUBSCRIPTION_ID": "sub_id",
-      "SUBJECT": "subject",
-      "BODY": "body",
-    };
-    print("(No implementation) Fetching sms constants... $smsConstants");
-  }
-  return smsConstants;
+  final dynamic rawConstants = await MAIN_SMS_CHANNEL.invokeMethod(
+    "smsConstants",
+  );
+  return  Map<String, dynamic>.from(
+    rawConstants as Map<dynamic, dynamic>,
+  );
 }
 
 /// To use you need to initialize it
@@ -326,7 +265,6 @@ class SmsConstants {
 /// Notifies when (any) sms is recieved
 class SmsNotifier extends ChangeNotifier {
   SmsNotifier() {
-    // ignore: inference_failure_on_untyped_parameter
     SMS_NOTIFIER_CHANNEL.receiveBroadcastStream((final dynamic event) {
       if (event is String && event == "smsreceived") {
         notifyListeners();

@@ -1,6 +1,5 @@
 analyzer:
   errors:
-    avoid_print: ignore
     avoid_types_as_parameter_names: error
 
   language:

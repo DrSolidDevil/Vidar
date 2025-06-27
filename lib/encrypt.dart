@@ -1,6 +1,7 @@
 import "dart:convert";
 
 import "package:cryptography/cryptography.dart";
+import "package:flutter/foundation.dart" show debugPrint;
 import "package:vidar/configuration.dart";
 import "package:vidar/pages/settings.dart";
 
@@ -8,7 +9,7 @@ import "package:vidar/pages/settings.dart";
 /// Will output with an encryption prefix (i.e. a string prefix that signals that this is an encrypted message)
 Future<String> encryptMessage(final String message, final String key) async {
   if (key == "") {
-    print("No key");
+    debugPrint("No key");
     if (Settings.allowUnencryptedMessages) {
       return message;
     } else {
@@ -41,8 +42,8 @@ Future<String> encryptMessage(final String message, final String key) async {
         base64.encode(fullEncrypted);
   } on Exception catch (error, stackTrace) {
     if (LoggingConfiguration.verboseEncryptionError) {
-      print("Encryption Failed: $error");
-      print("Stacktrace:\n$stackTrace");
+      debugPrint("Encryption Failed: $error");
+      debugPrint("Stacktrace:\n$stackTrace");
     }
     return "ENCRYPTION_FAILED";
   }
@@ -52,11 +53,11 @@ Future<String> encryptMessage(final String message, final String key) async {
 /// If decryption fails then it returns "DECRYPTION_FAILED"
 Future<String> decryptMessage(String message, final String key) async {
   if (key == "") {
-    print("No key");
+    debugPrint("No key");
     return message;
   }
   if (!message.startsWith(CryptographicConfiguration.encryptionPrefix)) {
-    print("No encryption prefix");
+    debugPrint("No encryption prefix");
     return message;
   }
 
@@ -100,8 +101,8 @@ Future<String> decryptMessage(String message, final String key) async {
     return decryptedMessage;
   } on Exception catch (error, stackTrace) {
     if (LoggingConfiguration.verboseEncryptionError) {
-      print("Decryption Failed: $error");
-      print("Stacktrace:\n$stackTrace");
+      debugPrint("Decryption Failed: $error");
+      debugPrint("Stacktrace:\n$stackTrace");
     }
     return "${MiscellaneousConfiguration.errorPrefix}DECRYPTION_FAILED";
   }

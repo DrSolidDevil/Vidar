@@ -1,5 +1,6 @@
 import "dart:convert";
 
+import "package:flutter/foundation.dart" show debugPrint;
 import "package:shared_preferences/shared_preferences.dart";
 import "package:vidar/configuration.dart";
 import "package:vidar/errorpopup.dart";
@@ -12,21 +13,21 @@ Future<void> saveData(
   final Settings settings,
 ) async {
   try {
-    print("Saving data...");
+    debugPrint("Saving data...");
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     final List<String> jsonContacts = <String>[];
     for (final Contact contact in contactList.listOfContacts) {
       jsonContacts.add(jsonEncode(contact.toMap()));
-      print("contact:${jsonEncode(contact.toMap())}");
+      debugPrint("contact:${jsonEncode(contact.toMap())}");
     }
 
     await prefs.setStringList("contacts", jsonContacts);
     await prefs.setString("settings", jsonEncode(settings.toMap()));
-    print("settings:${jsonEncode(settings.toMap())}");
+    debugPrint("settings:${jsonEncode(settings.toMap())}");
 
-    print("Data saved");
+    debugPrint("Data saved");
   } on Exception catch (error, stackTrace) {
     if (ErrorHandlingConfiguration.reportErrorOnFailedSave) {
       PopupHandler.popup = ErrorPopup(
@@ -37,8 +38,8 @@ Future<void> saveData(
       PopupHandler.showPopup = true;
       PopupHandler.popupUpdater.update();
     }
-    print("Loading data failed: $error");
-    print("Stacktrace:\n$stackTrace");
+    debugPrint("Loading data failed: $error");
+    debugPrint("Stacktrace:\n$stackTrace");
   }
 }
 
@@ -47,15 +48,15 @@ Future<void> loadData(
   final Settings settings,
 ) async {
   try {
-    print("Loading data...");
+    debugPrint("Loading data...");
 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     final List<String> jsonContacts =
         prefs.getStringList("contacts") ?? <String>[];
-    print("Contacts: $jsonContacts");
+    debugPrint("Contacts: $jsonContacts");
     final String? jsonSettings = prefs.getString("settings");
-    print("Settings: $jsonSettings");
+    debugPrint("Settings: $jsonSettings");
     final List<Contact> listOfContacts = <Contact>[];
 
     for (final String jsonContact in jsonContacts) {
@@ -68,10 +69,10 @@ Future<void> loadData(
     if (jsonSettings != null) {
       settings.fromMap(jsonDecode(jsonSettings) as Map<String, dynamic>);
     } else {
-      print("Could not fetch settings");
+      debugPrint("Could not fetch settings");
     }
 
-    print("Data loaded");
+    debugPrint("Data loaded");
   } on Exception catch (error, stackTrace) {
     if (ErrorHandlingConfiguration.reportErrorOnFailedLoad) {
       PopupHandler.popup = ErrorPopup(
@@ -82,7 +83,7 @@ Future<void> loadData(
       PopupHandler.showPopup = true;
       PopupHandler.popupUpdater.update();
     }
-    print("Loading data failed: $error");
-    print("Stacktrace:\n$stackTrace");
+    debugPrint("Loading data failed: $error");
+    debugPrint("Stacktrace:\n$stackTrace");
   }
 }

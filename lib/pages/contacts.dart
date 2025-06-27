@@ -142,7 +142,7 @@ class ContactBadge extends StatelessWidget {
         );
       },
       onLongPress: () {
-        print('Long hold on contact "${contact.name}"');
+        debugPrint('Long hold on contact "${contact.name}"');
         // alert dialog
       },
     );

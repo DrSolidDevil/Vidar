@@ -108,7 +108,7 @@ class _ConversationWidgetState extends State<ConversationWidget> {
 
   @override
   Widget build(final BuildContext context) {
-    print("Querying sms for ${contact.name}...");
+    debugPrint("Querying sms for ${contact.name}...");
     // ignore: discarded_futures
     querySms(phoneNumber: contact.phoneNumber).then((
       final List<SmsMessage>? queryResponse,
@@ -116,11 +116,11 @@ class _ConversationWidgetState extends State<ConversationWidget> {
       if (queryResponse == null) {
         loadMessage =
             "SMS query failed, please ensure the phone number is correct.";
-        print("SMS query failed, please ensure the phone number is correct.");
+        debugPrint("SMS query failed, please ensure the phone number is correct.");
       } else {
         conversation.chatLogs = queryResponse.toList();
         chatLoaded = true;
-        print("Sms query complete");
+        debugPrint("Sms query complete");
       }
       conversation.externalNotify();
     });
@@ -129,7 +129,7 @@ class _ConversationWidgetState extends State<ConversationWidget> {
       listenable: conversation,
       builder: (final BuildContext context, final Widget? child) {
         if (!chatLoaded) {
-          print("Chat not loaded");
+          debugPrint("Chat not loaded");
           return ColoredBox(
             color: VidarColors.primaryDarkSpaceCadet,
             child: Center(
@@ -145,7 +145,7 @@ class _ConversationWidgetState extends State<ConversationWidget> {
             ),
           );
         }
-        print("Chat loaded");
+        debugPrint("Chat loaded");
         final List<SmsMessage> messages = conversation.chatLogs;
         final List<Widget> decryptedSpeechBubbles = <Widget>[];
         for (final SmsMessage message in messages) {
@@ -162,7 +162,7 @@ class _ConversationWidgetState extends State<ConversationWidget> {
                         message.clone(newBody: snapshot.data),
                       );
                     } else {
-                      print("Snapshot has no data, body: ${message.body}");
+                      debugPrint("Snapshot has no data, body: ${message.body}");
                     }
                     return const SizedBox.shrink();
                   },
@@ -190,7 +190,7 @@ class Conversation extends ChangeNotifier {
 
   Future<void> updateChatLogs() async {
     chatLogs = (await querySms(phoneNumber: contact.phoneNumber))!.toList();
-    print("chatlogs updated");
+    debugPrint("chatlogs updated");
     notifyListeners();
   }
 
@@ -199,7 +199,7 @@ class Conversation extends ChangeNotifier {
   }
 
   void externalNotify() {
-    print("External notify");
+    debugPrint("External notify");
     notifyListeners();
   }
 }
@@ -261,7 +261,7 @@ class _MesssageBarState extends State<MesssageBar> {
           ).then((_) => failUpdater.update());
           switch (errorMessage) {
             case "MESSAGE_FAILED":
-              print("MESSAGE_FAILED");
+              debugPrint("MESSAGE_FAILED");
               return buildErrorMessageWidget(context, "Failed to send message");
             case "NO_KEY":
               return buildErrorMessageWidget(
@@ -313,7 +313,7 @@ class _MesssageBarState extends State<MesssageBar> {
                   child: Center(
                     child: IconButton(
                       onPressed: () async {
-                        print("Sending message: $message");
+                        debugPrint("Sending message: $message");
                         final String encryptedMessage = await encryptMessage(
                           message!,
                           contact.encryptionKey,

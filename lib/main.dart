@@ -1,8 +1,6 @@
-import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 import "package:permission_handler/permission_handler.dart";
 import "package:vidar/commonobject.dart";
-import "package:vidar/fakesms.dart";
 import "package:vidar/pages/contacts.dart";
 import "package:vidar/pages/settings.dart";
 import "package:vidar/popuphandler.dart";
@@ -24,16 +22,11 @@ void main() async {
   CommonObject.contactList = contactList;
   CommonObject.settings = settings;
 
-  if (defaultTargetPlatform == TargetPlatform.android) {
-    await loadData(contactList, settings);
-  } else {
-    print("(No implementation) Loading fake contacts...");
-    contactList.listOfContacts = fakeListOfContacts;
-  }
+  await loadData(contactList, settings);
 
-  print("Fetching sms constants...");
+  debugPrint("Fetching sms constants...");
   SmsConstants(await retrieveSmsConstantsMap());
-  print("Sms constants fetched");
+  debugPrint("Sms constants fetched");
   await Permission.sms.request();
   runApp(const App());
 }
