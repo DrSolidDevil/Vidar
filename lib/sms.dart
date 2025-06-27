@@ -140,16 +140,16 @@ SmsMessage? _queryMapToSms(final Map<String, String?> smsMap) {
 /// SMS are returned oldest to newest
 Future<List<SmsMessage>?> querySms({final String? phoneNumber}) async {
   try {
-    print("phonenumber = $phoneNumber");
+    debugPrint("phonenumber = $phoneNumber");
     final dynamic rawResult = await MAIN_SMS_CHANNEL.invokeMethod(
       "querySms",
       <String, String?>{"phoneNumber": phoneNumber},
     );
     if (rawResult == null) {
-      print("sms query is null");
+      debugPrint("sms query is null");
       return null;
     }
-    print(rawResult);
+    debugPrint(rawResult.toString());
     final List<Map<String, String?>> result = <Map<String, String?>>[];
     for (final dynamic resultEntry in rawResult as Iterable<dynamic>) {
       result.add(
@@ -161,11 +161,11 @@ Future<List<SmsMessage>?> querySms({final String? phoneNumber}) async {
       smsMessages.add(_queryMapToSms(mapMessage)!);
     }
     if (smsMessages.isEmpty) {
-      print("(querySms) smsMessages is empty");
+      debugPrint("(querySms) smsMessages is empty");
     }
     return smsMessages;
   } on PlatformException catch (e) {
-    print(e.message);
+    debugPrint(e.message);
     return null;
   }
 }
@@ -177,7 +177,7 @@ Future<void> sendSms(final String body, final String phoneNumber) async {
     "sendSms",
     <String, String>{"body": body, "phoneNumber": phoneNumber},
   );
-  print("Sending result: $result");
+  debugPrint("Sending result: $result");
 }
 
 Future<Map<String, dynamic>> retrieveSmsConstantsMap() async {
