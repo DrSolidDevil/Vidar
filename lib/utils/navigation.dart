@@ -1,11 +1,5 @@
 import "package:flutter/material.dart";
 
-class Updater extends ChangeNotifier {
-  void update() {
-    notifyListeners();
-  }
-}
-
 void clearNavigatorAndPush(
   final BuildContext currentContext,
   final Widget child,

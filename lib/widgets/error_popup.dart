@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "package:vidar/pages/contacts.dart";
+import "package:vidar/pages/contact_list.dart";
 
 /// Alert dialog template for errors
 class ErrorPopup extends StatefulWidget {

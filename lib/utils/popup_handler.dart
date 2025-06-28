@@ -1,5 +1,5 @@
 import "package:flutter/widgets.dart";
-import "package:vidar/utils.dart";
+import "package:vidar/utils/updater.dart";
 
 class PopupHandler {
   static Updater popupUpdater = Updater();

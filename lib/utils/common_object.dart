@@ -1,5 +1,5 @@
-import "package:vidar/pages/contacts.dart" show Contact, ContactList;
-import "package:vidar/pages/settings.dart";
+import "package:vidar/utils/contact.dart";
+import "package:vidar/utils/settings.dart";
 
 class CommonObject {
   static ContactList contactList = ContactList(<Contact>[]);

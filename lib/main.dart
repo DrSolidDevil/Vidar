@@ -1,11 +1,12 @@
 import "package:flutter/material.dart";
 import "package:permission_handler/permission_handler.dart";
-import "package:vidar/common_object.dart";
-import "package:vidar/pages/contacts.dart";
-import "package:vidar/pages/settings.dart";
-import "package:vidar/popup_handler.dart";
-import "package:vidar/save.dart";
-import "package:vidar/sms.dart";
+import "package:vidar/pages/contact_list.dart";
+import "package:vidar/utils/common_object.dart";
+import "package:vidar/utils/contact.dart";
+import "package:vidar/utils/popup_handler.dart";
+import "package:vidar/utils/settings.dart";
+import "package:vidar/utils/sms.dart";
+import "package:vidar/utils/storage.dart";
 
 /*
 Notes:

@@ -1,12 +1,14 @@
 import "package:flutter/material.dart";
-import "package:vidar/common_object.dart";
 import "package:vidar/configuration.dart";
-import "package:vidar/keys.dart";
 import "package:vidar/pages/chat.dart";
-import "package:vidar/pages/contacts.dart";
-import "package:vidar/pages/settings.dart";
-import "package:vidar/save.dart";
-import "package:vidar/utils.dart";
+import "package:vidar/pages/contact_list.dart";
+import "package:vidar/utils/common_object.dart";
+import "package:vidar/utils/contact.dart";
+import "package:vidar/utils/navigation.dart";
+import "package:vidar/utils/random_key.dart";
+import "package:vidar/utils/settings.dart";
+import "package:vidar/utils/storage.dart";
+import "package:vidar/utils/updater.dart";
 
 class EditContactPage extends StatefulWidget {
   const EditContactPage(this.contact, this.caller, {super.key});
