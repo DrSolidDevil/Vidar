@@ -6,10 +6,13 @@ class Updater extends ChangeNotifier {
   }
 }
 
-void clearNavigatorAndPush(final BuildContext currentContext, final Widget child) {
+void clearNavigatorAndPush(
+  final BuildContext currentContext,
+  final Widget child,
+) {
   Navigator.pushAndRemoveUntil(
     currentContext,
-    MaterialPageRoute(builder: (final BuildContext context) => child),
+    MaterialPageRoute<void>(builder: (final BuildContext context) => child),
     (final Route<dynamic> route) => false,
   );
 }

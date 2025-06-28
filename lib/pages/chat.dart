@@ -151,7 +151,7 @@ class _ConversationWidgetState extends State<ConversationWidget> {
         final List<Widget> decryptedSpeechBubbles = <Widget>[];
         for (final SmsMessage message in messages) {
           decryptedSpeechBubbles.add(
-            FutureBuilder(
+            FutureBuilder<String>(
               future: decryptMessage(message.body, contact.encryptionKey),
               builder:
                   (
@@ -255,7 +255,7 @@ class _MesssageBarState extends State<MesssageBar> {
       builder: (final BuildContext context, final Widget? child) {
         if (error) {
           error = false;
-          Future.delayed(
+          Future<void>.delayed(
             const Duration(
               seconds: TimeConfiguration.messageWidgetErrorDisplayTime,
             ),
@@ -330,11 +330,12 @@ class _MesssageBarState extends State<MesssageBar> {
                           failUpdater.update();
                         } else {
                           sendSms(encryptedMessage, contact.phoneNumber);
-                          // On average it takes about 5 seconds for an sms to be sent
-                          await Future.delayed(const Duration(seconds: 5));
+                          await Future<void>.delayed(
+                            const Duration(
+                              seconds: TimeConfiguration.smsUpdateDelay,
+                            ),
+                          );
                           updater.update();
-                          //await Future.delayed(Duration(seconds: 4));
-                          //updater.update();
                         }
                       },
                       icon: const Icon(
@@ -401,6 +402,7 @@ class SpeechBubble extends StatelessWidget {
                 ),
               ),
             ),
+            // Temporarily disabled until fix
             /*Container(
               margin: EdgeInsets.only(top: 2, bottom: 2),
               child: Text(

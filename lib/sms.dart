@@ -184,9 +184,7 @@ Future<Map<String, dynamic>> retrieveSmsConstantsMap() async {
   final dynamic rawConstants = await MAIN_SMS_CHANNEL.invokeMethod(
     "smsConstants",
   );
-  return  Map<String, dynamic>.from(
-    rawConstants as Map<dynamic, dynamic>,
-  );
+  return Map<String, dynamic>.from(rawConstants as Map<dynamic, dynamic>);
 }
 
 /// To use you need to initialize it

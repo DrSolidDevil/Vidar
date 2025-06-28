@@ -4,6 +4,7 @@ import "package:vidar/configuration.dart";
 import "package:vidar/pages/chat.dart";
 import "package:vidar/pages/edit_contact.dart";
 import "package:vidar/pages/settings.dart";
+import "package:vidar/save.dart";
 import "package:vidar/utils.dart";
 
 // ignore: public_member_api_docs
@@ -129,8 +130,52 @@ class ContactBadge extends StatelessWidget {
         clearNavigatorAndPush(context, ChatPage(contact));
       },
       onLongPress: () {
-        debugPrint('Long hold on contact "${contact.name}"');
-        // alert dialog
+        showDialog<void>(
+          context: context,
+          builder: (final BuildContext dialogContext) {
+            return Stack(
+              children: <Widget>[
+                const ContactListPage(),
+                Center(
+                  child: AlertDialog(
+                    title: const Text("Delete contact"),
+                    content: Text(
+                      'Are you sure you want to delete "${contact.name}?"',
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text("Back"),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          final bool success = CommonObject.contactList
+                              .removeContactByContact(contact);
+                          saveData(
+                            CommonObject.contactList,
+                            CommonObject.settings,
+                          );
+                          debugPrint(
+                            success
+                                ? "Contact deleted"
+                                : "Contact failed to delete",
+                          );
+                          clearNavigatorAndPush(
+                            context,
+                            const ContactListPage(),
+                          );
+                        },
+                        child: const Text("Delete"),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
+        );
       },
     );
   }

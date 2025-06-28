@@ -74,7 +74,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
+                        MaterialPageRoute<void>(
                           builder: (final BuildContext context) =>
                               const ContactListPage(),
                         ),
@@ -110,7 +110,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
+                        MaterialPageRoute<void>(
                           builder: (final BuildContext context) =>
                               const ContactListPage(),
                         ),

@@ -53,7 +53,7 @@ class _ErrorPopupState extends State<ErrorPopup> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
+                    MaterialPageRoute<void>(
                       builder: (final BuildContext context) =>
                           const ContactListPage(),
                     ),
