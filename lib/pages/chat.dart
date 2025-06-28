@@ -71,7 +71,7 @@ class _ChatPageState extends State<ChatPage> {
         return ConversationWidget(contact);
       },
     ),
-    bottomNavigationBar: MesssageBar(contact, updater),
+    bottomNavigationBar: MessageBar(contact, updater),
   );
 }
 
@@ -205,17 +205,17 @@ class Conversation extends ChangeNotifier {
   }
 }
 
-class MesssageBar extends StatefulWidget {
-  const MesssageBar(this.contact, this.updater, {super.key});
+class MessageBar extends StatefulWidget {
+  const MessageBar(this.contact, this.updater, {super.key});
   final Contact contact;
   final Updater updater;
 
   @override
-  _MesssageBarState createState() => _MesssageBarState();
+  _MessageBarState createState() => _MessageBarState();
 }
 
-class _MesssageBarState extends State<MesssageBar> {
-  _MesssageBarState();
+class _MessageBarState extends State<MessageBar> {
+  _MessageBarState();
   late Contact contact;
   late Updater updater;
   String? message;
