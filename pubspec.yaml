@@ -2,6 +2,8 @@ name: vidar
 description: "Private Communications Apllication"
 publish_to: "none"
 version: 0.2.0
+repository: "https://github.com/DrSolidDevil/Vidar"
+issue_tracker: "https://github.com/DrSolidDevil/Vidar/issues"
 
 environment:
   sdk: ^3.8.1
