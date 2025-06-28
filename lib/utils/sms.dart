@@ -138,7 +138,8 @@ SmsMessage? _queryMapToSms(final Map<String, String?> smsMap) {
 
 /// Requires an initialization of SmsConstants beforehand
 /// SMS are returned oldest to newest
-Future<List<SmsMessage>?> querySms({final String? phoneNumber}) async {
+/// Returns [null] upon failure (this is to ensure compatibility with FutureBuilder)
+Future<List<SmsMessage?>> querySms({final String? phoneNumber}) async {
   try {
     debugPrint("phonenumber = $phoneNumber");
     final dynamic rawResult = await MAIN_SMS_CHANNEL.invokeMethod(
@@ -147,7 +148,7 @@ Future<List<SmsMessage>?> querySms({final String? phoneNumber}) async {
     );
     if (rawResult == null) {
       debugPrint("sms query is null");
-      return null;
+      return <SmsMessage?>[null];
     }
     debugPrint(rawResult.toString());
     final List<Map<String, String?>> result = <Map<String, String?>>[];
@@ -163,11 +164,13 @@ Future<List<SmsMessage>?> querySms({final String? phoneNumber}) async {
     if (smsMessages.isEmpty) {
       debugPrint("(querySms) smsMessages is empty");
     }
+    await Future<void>.delayed(const Duration(seconds: 10));
     return smsMessages;
   } on PlatformException catch (e) {
     debugPrint(e.message);
-    return null;
+    return <SmsMessage?>[null];
   }
+ 
 }
 
 /// The phone number is that of the other party

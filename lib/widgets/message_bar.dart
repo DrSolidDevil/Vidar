@@ -21,7 +21,7 @@ class _MessageBarState extends State<MessageBar> {
   String? message;
   bool error = false;
   String errorMessage = "";
-  Updater failUpdater = Updater();
+  Updater errorUpdater = Updater();
 
   @override
   void initState() {
@@ -40,7 +40,7 @@ class _MessageBarState extends State<MessageBar> {
         children: <Widget>[
           Text(text, style: const TextStyle(color: Colors.white)),
           IconButton(
-            onPressed: () => failUpdater.update,
+            onPressed: () => errorUpdater.update,
             icon: const Icon(Icons.sms, color: Colors.white),
           ),
         ],
@@ -51,7 +51,7 @@ class _MessageBarState extends State<MessageBar> {
   @override
   Widget build(final BuildContext context) {
     return ListenableBuilder(
-      listenable: failUpdater,
+      listenable: errorUpdater,
       builder: (final BuildContext context, final Widget? child) {
         if (error) {
           error = false;
@@ -59,7 +59,7 @@ class _MessageBarState extends State<MessageBar> {
             const Duration(
               seconds: TimeConfiguration.messageWidgetErrorDisplayTime,
             ),
-          ).then((_) => failUpdater.update());
+          ).then((_) => errorUpdater.update());
           switch (errorMessage) {
             case "MESSAGE_FAILED":
               debugPrint("MESSAGE_FAILED");
@@ -127,7 +127,7 @@ class _MessageBarState extends State<MessageBar> {
                             "",
                           );
                           error = true;
-                          failUpdater.update();
+                          errorUpdater.update();
                         } else {
                           sendSms(encryptedMessage, contact.phoneNumber);
                           await Future<void>.delayed(

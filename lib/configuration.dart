@@ -34,12 +34,17 @@ class SizeConfiguration {
   static const double messageIndent = 10;
   static const double messageVerticalSeperation = 5;
   static const double settingInfoText = 12;
+  static const double loadingFontSize = 32;
 }
 
 class TimeConfiguration {
   // Seconds
   static const int messageWidgetErrorDisplayTime = 5;
   static const int smsUpdateDelay = 3;
+  // Milliseconds
+  static const int decryptingLoadingText = 200;
+  // Seconds to delay before going to next "decryption" with DecryptingText loader
+  static const int delayOnCompletedDecryptedLoading = 2;
 }
 
 class MiscellaneousConfiguration {
