@@ -6,12 +6,16 @@ class BasicButton extends StatefulWidget {
     required this.textColor,
     required this.buttonColor,
     required this.onPressed,
+    this.width = 100,
+    this.height = 50,
     super.key,
   });
   final Color textColor;
   final Color buttonColor;
   final String buttonText;
   final Function onPressed;
+  final double width;
+  final double height;
 
   @override
   _BasicButtonState createState() => _BasicButtonState();
@@ -24,6 +28,9 @@ class _BasicButtonState extends State<BasicButton> {
   late final Color buttonColor;
   late final String buttonText;
   late final Function onPressed;
+  late final double width;
+  late final double heigth;
+  
   @override
   void initState() {
     super.initState();
@@ -31,6 +38,8 @@ class _BasicButtonState extends State<BasicButton> {
     buttonColor = widget.buttonColor;
     buttonText = widget.buttonText;
     onPressed = widget.onPressed;
+    width = widget.width;
+    heigth = widget.height;
   }
 
   @override
@@ -38,8 +47,8 @@ class _BasicButtonState extends State<BasicButton> {
     return TextButton(
       onPressed: () => onPressed(),
       child: Container(
-        width: 100,
-        height: 50,
+        width: width,
+        height: heigth,
         alignment: Alignment.center,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),

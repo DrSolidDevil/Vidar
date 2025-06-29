@@ -117,6 +117,19 @@ Future<void> saveSettings(
   }
 }
 
+void wipeSecureStorage() => const FlutterSecureStorage().deleteAll();
+
+// Only keys are stored encrypted because storing the rest of the information is pretty much worthless to an intruder.
+Future<void> _saveKeys(final ContactList contactList) async {
+  const FlutterSecureStorage storage = FlutterSecureStorage();
+  debugPrint("Saving keys...");
+  await storage.deleteAll(); // prevents keys of removed contacts being there
+  for (final Contact contact in contactList.listOfContacts) {
+    storage.write(key: contact.name, value: contact.encryptionKey);
+  }
+  debugPrint("Keys saved");
+}
+
 Future<void> _loadKeys(final ContactList contactList) async {
   final Map<String, String> allEncryptionKeys =
       await const FlutterSecureStorage().readAll();
@@ -135,15 +148,4 @@ Future<void> _loadKeys(final ContactList contactList) async {
     }
   }
   debugPrint("Keys loaded");
-}
-
-// Only keys are stored encrypted because storing the rest of the information is pretty much worthless to an intruder.
-Future<void> _saveKeys(final ContactList contactList) async {
-  const FlutterSecureStorage storage = FlutterSecureStorage();
-  debugPrint("Saving keys...");
-  await storage.deleteAll(); // prevents keys of removed contacts being there
-  for (final Contact contact in contactList.listOfContacts) {
-    storage.write(key: contact.name, value: contact.encryptionKey);
-  }
-  debugPrint("Keys saved");
 }

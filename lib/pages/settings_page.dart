@@ -29,7 +29,7 @@ class _SettingsPageState extends State<SettingsPage> {
     super.initState();
   }
 
-  void save() {
+  void _save() {
     Settings.allowUnencryptedMessages = allowUnencryptedMessages.setting;
     saveSettings(CommonObject.settings);
     debugPrint(
@@ -43,7 +43,7 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  void discard() {
+  void _discard() {
     Navigator.push(
       context,
       MaterialPageRoute<void>(
@@ -57,26 +57,76 @@ class _SettingsPageState extends State<SettingsPage> {
     return ColoredBox(
       color: VidarColors.primaryDarkSpaceCadet,
       child: Column(
-        children: <Widget>[
-          Column(children: <Widget>[allowUnencryptedMessages]),
-          Container(
-            margin: const EdgeInsets.only(top: 60),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                BasicButton(
-                  buttonText: "Discard",
-                  textColor: Colors.white,
-                  buttonColor: VidarColors.secondaryMetallicViolet,
-                  onPressed: discard,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            spacing: 60,
+            children: <Widget>[
+              Column(children: <Widget>[allowUnencryptedMessages]),
+              Container(
+                margin: const EdgeInsets.only(top: 60),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    BasicButton(
+                      buttonText: "Discard",
+                      textColor: Colors.white,
+                      buttonColor: VidarColors.secondaryMetallicViolet,
+                      onPressed: _discard,
+                    ),
+                    BasicButton(
+                      buttonText: "Save",
+                      textColor: Colors.white,
+                      buttonColor: VidarColors.tertiaryGold,
+                      onPressed: _save,
+                    ),
+                  ],
                 ),
-                BasicButton(
-                  buttonText: "Save",
-                  textColor: Colors.white,
-                  buttonColor: VidarColors.tertiaryGold,
-                  onPressed: save,
-                ),
-              ],
+              ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 150),
+            child: BasicButton(
+              buttonText: "Wipe Keys",
+              textColor: Colors.white,
+              buttonColor: VidarColors.extraFireBrick,
+              width: 200,
+              onPressed: () {
+                showDialog<void>(
+                  context: context,
+                  builder: (final BuildContext context) {
+                    return AlertDialog(
+                      title: const Text("Wipe all keys"),
+                      content: const Text(
+                        "Are you sure you want to wipe all keys? This is a permanent action which can not be undone.",
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text("Cancel"),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            CommonObject.contactList.wipeKeys();
+                            wipeSecureStorage();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute<void>(
+                                builder: (final BuildContext context) =>
+                                    const ContactListPage(),
+                              ),
+                            );
+                          },
+                          child: const Text("Wipe Keys"),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
             ),
           ),
         ],

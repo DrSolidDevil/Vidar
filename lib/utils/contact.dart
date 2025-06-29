@@ -145,6 +145,12 @@ class ContactList extends ChangeNotifier {
   ContactBadge getContactBadgeAtIndex(final int index) {
     return ContactBadge(listOfContacts[index]);
   }
+
+  void wipeKeys() {
+    for (final Contact contact in listOfContacts) {
+      contact.encryptionKey = "";
+    }
+  }
 }
 
 enum ContactListChangeType {

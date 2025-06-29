@@ -12,6 +12,9 @@ class VidarColors {
 
   /// #140627
   static const Color extraMidnightPurple = Color.fromARGB(255, 20, 6, 39);
+
+  /// #b22222
+  static const Color extraFireBrick = Color.fromARGB(255, 178, 34, 34);
 }
 
 class CryptographicConfiguration {
