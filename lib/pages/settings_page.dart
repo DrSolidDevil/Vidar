@@ -5,6 +5,7 @@ import "package:vidar/utils/common_object.dart";
 import "package:vidar/utils/settings.dart";
 import "package:vidar/utils/storage.dart";
 import "package:vidar/widgets/boolean_setting.dart";
+import "package:vidar/widgets/buttons.dart";
 
 // ignore: public_member_api_docs
 class SettingsPage extends StatefulWidget {
@@ -28,6 +29,29 @@ class _SettingsPageState extends State<SettingsPage> {
     super.initState();
   }
 
+  void save() {
+    Settings.allowUnencryptedMessages = allowUnencryptedMessages.setting;
+    saveSettings(CommonObject.settings);
+    debugPrint(
+      "allowUnencryptedMessages: ${Settings.allowUnencryptedMessages}",
+    );
+    Navigator.push(
+      context,
+      MaterialPageRoute<void>(
+        builder: (final BuildContext context) => const ContactListPage(),
+      ),
+    );
+  }
+
+  void discard() {
+    Navigator.push(
+      context,
+      MaterialPageRoute<void>(
+        builder: (final BuildContext context) => const ContactListPage(),
+      ),
+    );
+  }
+
   @override
   Widget build(final BuildContext context) {
     return ColoredBox(
@@ -40,67 +64,17 @@ class _SettingsPageState extends State<SettingsPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Material(
-                  color: VidarColors.secondaryMetallicViolet,
-                  child: InkWell(
-                    child: SizedBox(
-                      width: 100,
-                      height: 50,
-                      child: Container(
-                        alignment: Alignment.center,
-                        color: VidarColors.secondaryMetallicViolet,
-                        child: const Text(
-                          "Discard",
-                          style: TextStyle(fontSize: 24, color: Colors.white),
-                        ),
-                      ),
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (final BuildContext context) =>
-                              const ContactListPage(),
-                        ),
-                      );
-                    },
-                  ),
+                BasicButton(
+                  buttonText: "Discard",
+                  textColor: Colors.white,
+                  buttonColor: VidarColors.secondaryMetallicViolet,
+                  onPressed: discard,
                 ),
-
-                Material(
-                  color: VidarColors.tertiaryGold,
-                  child: InkWell(
-                    child: SizedBox(
-                      width: 100,
-                      height: 50,
-                      child: Container(
-                        alignment: Alignment.center,
-                        color: VidarColors.tertiaryGold,
-                        child: const Text(
-                          "Save",
-                          style: TextStyle(fontSize: 24, color: Colors.white),
-                        ),
-                      ),
-                    ),
-                    onTap: () {
-                      Settings.allowUnencryptedMessages =
-                          allowUnencryptedMessages.setting;
-                      saveData(CommonObject.contactList, CommonObject.settings);
-
-                      debugPrint("=========== New Settings ===========");
-                      debugPrint(
-                        "allowUnencryptedMessages: ${Settings.allowUnencryptedMessages}",
-                      );
-
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (final BuildContext context) =>
-                              const ContactListPage(),
-                        ),
-                      );
-                    },
-                  ),
+                BasicButton(
+                  buttonText: "Save",
+                  textColor: Colors.white,
+                  buttonColor: VidarColors.tertiaryGold,
+                  onPressed: save,
                 ),
               ],
             ),

@@ -9,6 +9,7 @@ import "package:vidar/utils/random_key.dart";
 import "package:vidar/utils/settings.dart";
 import "package:vidar/utils/storage.dart";
 import "package:vidar/utils/updater.dart";
+import "package:vidar/widgets/buttons.dart";
 
 class EditContactPage extends StatefulWidget {
   const EditContactPage(this.contact, this.caller, {super.key});
@@ -45,6 +46,80 @@ class _EditContactPageState extends State<EditContactPage> {
     super.dispose();
   }
 
+  void discard() {
+    switch (caller.toLowerCase()) {
+      case "chatpage":
+        clearNavigatorAndPush(context, ChatPage(contact));
+      case "contactpage":
+        clearNavigatorAndPush(context, const ContactListPage());
+      case "newcontact":
+        clearNavigatorAndPush(context, const ContactListPage());
+    }
+  }
+
+  void save() {
+    if (newName == "") {
+      newName = null;
+    }
+    if (newKey == "") {
+      newKey = null;
+    }
+    if (newPhoneNumber == "") {
+      newPhoneNumber = null;
+    }
+
+    contact.name = newName ?? contact.name;
+
+    if (Settings.allowUnencryptedMessages && newKey == "0") {
+      contact.encryptionKey = "";
+    } else {
+      contact.encryptionKey = newKey ?? contact.encryptionKey;
+    }
+
+    // Remove all non-numeric characters
+    newPhoneNumber = newPhoneNumber?.replaceAll(RegExp(r"[^\d+]"), "");
+
+    contact.phoneNumber = newPhoneNumber ?? contact.phoneNumber;
+    saveData(CommonObject.contactList, CommonObject.settings);
+
+    switch (caller.toLowerCase()) {
+      case "chatpage":
+        clearNavigatorAndPush(context, ChatPage(contact));
+      case "contactpage":
+        clearNavigatorAndPush(context, const ContactListPage());
+      case "newcontact":
+        if (isInvalidContactByParams(newName, newKey, newPhoneNumber)) {
+          // ignore: inference_failure_on_function_invocation
+          showDialog(
+            context: context,
+            builder: (final BuildContext context) {
+              return AlertDialog(
+                title: const Text("Missing details"),
+                content: const Text(
+                  "Please enter all details to create a new contact",
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      clearNavigatorAndPush(context, const ContactListPage());
+                    },
+                    child: const Text("OK"),
+                  ),
+                ],
+              );
+            },
+          );
+        } else {
+          CommonObject.contactList.addContactByParams(
+            newName!,
+            newKey!,
+            newPhoneNumber!,
+          );
+          clearNavigatorAndPush(context, const ContactListPage());
+        }
+    }
+  }
+
   @override
   Widget build(final BuildContext context) {
     return Container(
@@ -62,18 +137,23 @@ class _EditContactPageState extends State<EditContactPage> {
                   bottom: 30,
                 ),
                 child: Material(
-                  color: VidarColors.secondaryMetallicViolet,
+                  color: VidarColors.primaryDarkSpaceCadet,
                   child: Container(
                     height: 50,
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       color: VidarColors.secondaryMetallicViolet,
+                      borderRadius: BorderRadius.circular(7),
+                      border: Border.all(color: Colors.transparent),
                     ),
                     padding: const EdgeInsets.only(left: 10),
                     child: TextField(
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         hintText: "Name",
-                        hintStyle: TextStyle(color: Colors.white),
-                        border: InputBorder.none,
+                        hintStyle: const TextStyle(color: Colors.white),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(7),
+                          borderSide: BorderSide.none,
+                        ),
                       ),
                       style: const TextStyle(color: Colors.white),
                       onChanged: (final String value) {
@@ -98,11 +178,13 @@ class _EditContactPageState extends State<EditContactPage> {
                           160, // -100 for margins, -50 for button and -10 for button margin
                       height: 50,
                       child: Material(
-                        color: VidarColors.secondaryMetallicViolet,
+                        color: VidarColors.primaryDarkSpaceCadet,
                         child: Container(
                           height: 50,
-                          decoration: const BoxDecoration(
+                          decoration: BoxDecoration(
                             color: VidarColors.secondaryMetallicViolet,
+                            borderRadius: BorderRadius.circular(7),
+                            border: Border.all(color: Colors.transparent),
                           ),
                           padding: const EdgeInsets.only(left: 10),
                           child: ListenableBuilder(
@@ -120,7 +202,10 @@ class _EditContactPageState extends State<EditContactPage> {
                                       hintStyle: const TextStyle(
                                         color: Colors.white,
                                       ),
-                                      border: InputBorder.none,
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(7),
+                                        borderSide: BorderSide.none,
+                                      ),
                                     ),
                                     style: const TextStyle(color: Colors.white),
                                     onChanged: (final String value) {
@@ -146,7 +231,7 @@ class _EditContactPageState extends State<EditContactPage> {
                             backgroundColor:
                                 VidarColors.secondaryMetallicViolet,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadiusGeometry.circular(10),
+                              borderRadius: BorderRadiusGeometry.circular(7),
                             ),
                           ),
                           icon: const Icon(
@@ -168,18 +253,23 @@ class _EditContactPageState extends State<EditContactPage> {
                   bottom: 30,
                 ),
                 child: Material(
-                  color: VidarColors.secondaryMetallicViolet,
+                  color: VidarColors.primaryDarkSpaceCadet,
                   child: Container(
                     height: 50,
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       color: VidarColors.secondaryMetallicViolet,
+                      borderRadius: BorderRadius.circular(7),
+                      border: Border.all(color: Colors.transparent),
                     ),
                     padding: const EdgeInsets.only(left: 10),
                     child: TextField(
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         hintText: "Phone Number (international)",
-                        hintStyle: TextStyle(color: Colors.white),
-                        border: InputBorder.none,
+                        hintStyle: const TextStyle(color: Colors.white),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(7),
+                          borderSide: BorderSide.none,
+                        ),
                       ),
                       style: const TextStyle(color: Colors.white),
                       onChanged: (final String value) {
@@ -196,135 +286,17 @@ class _EditContactPageState extends State<EditContactPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Material(
-                  color: VidarColors.secondaryMetallicViolet,
-                  child: InkWell(
-                    child: SizedBox(
-                      width: 100,
-                      height: 50,
-                      child: Container(
-                        alignment: Alignment.center,
-                        color: VidarColors.secondaryMetallicViolet,
-                        child: const Text(
-                          "Discard",
-                          style: TextStyle(fontSize: 24, color: Colors.white),
-                        ),
-                      ),
-                    ),
-                    onTap: () {
-                      switch (caller.toLowerCase()) {
-                        case "chatpage":
-                          clearNavigatorAndPush(context, ChatPage(contact));
-                        case "contactpage":
-                          clearNavigatorAndPush(
-                            context,
-                            const ContactListPage(),
-                          );
-                        case "newcontact":
-                          clearNavigatorAndPush(
-                            context,
-                            const ContactListPage(),
-                          );
-                      }
-                    },
-                  ),
+                BasicButton(
+                  buttonText: "Discard",
+                  textColor: Colors.white,
+                  buttonColor: VidarColors.secondaryMetallicViolet,
+                  onPressed: discard,
                 ),
-
-                Material(
-                  color: VidarColors.tertiaryGold,
-                  child: InkWell(
-                    child: SizedBox(
-                      width: 100,
-                      height: 50,
-                      child: Container(
-                        alignment: Alignment.center,
-                        color: VidarColors.tertiaryGold,
-                        child: const Text(
-                          "Save",
-                          style: TextStyle(fontSize: 24, color: Colors.white),
-                        ),
-                      ),
-                    ),
-                    onTap: () {
-                      if (newName == "") {
-                        newName = null;
-                      }
-                      if (newKey == "") {
-                        newKey = null;
-                      }
-                      if (newPhoneNumber == "") {
-                        newPhoneNumber = null;
-                      }
-
-                      contact.name = newName ?? contact.name;
-
-                      if (Settings.allowUnencryptedMessages && newKey == "0") {
-                        contact.encryptionKey = "";
-                      } else {
-                        contact.encryptionKey = newKey ?? contact.encryptionKey;
-                      }
-
-                      // Remove all non-numeric characters
-                      newPhoneNumber = newPhoneNumber?.replaceAll(
-                        RegExp(r"[^\d+]"),
-                        "",
-                      );
-
-                      contact.phoneNumber =
-                          newPhoneNumber ?? contact.phoneNumber;
-                      saveData(CommonObject.contactList, CommonObject.settings);
-
-                      switch (caller.toLowerCase()) {
-                        case "chatpage":
-                          clearNavigatorAndPush(context, ChatPage(contact));
-                        case "contactpage":
-                          clearNavigatorAndPush(
-                            context,
-                            const ContactListPage(),
-                          );
-                        case "newcontact":
-                          if (isInvalidContactByParams(
-                            newName,
-                            newKey,
-                            newPhoneNumber,
-                          )) {
-                            // ignore: inference_failure_on_function_invocation
-                            showDialog(
-                              context: context,
-                              builder: (final BuildContext context) {
-                                return AlertDialog(
-                                  title: const Text("Missing details"),
-                                  content: const Text(
-                                    "Please enter all details to create a new contact",
-                                  ),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {
-                                        clearNavigatorAndPush(
-                                          context,
-                                          const ContactListPage(),
-                                        );
-                                      },
-                                      child: const Text("OK"),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          } else {
-                            CommonObject.contactList.addContactByParams(
-                              newName!,
-                              newKey!,
-                              newPhoneNumber!,
-                            );
-                            clearNavigatorAndPush(
-                              context,
-                              const ContactListPage(),
-                            );
-                          }
-                      }
-                    },
-                  ),
+                BasicButton(
+                  buttonText: "Save",
+                  textColor: Colors.white,
+                  buttonColor: VidarColors.tertiaryGold,
+                  onPressed: save,
                 ),
               ],
             ),

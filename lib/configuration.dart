@@ -27,6 +27,7 @@ class CryptographicConfiguration {
 class ErrorHandlingConfiguration {
   static const bool reportErrorOnFailedLoad = true;
   static const bool reportErrorOnFailedSave = true;
+  static const bool reportErrorOnFailedSaveSettings = true;
 }
 
 class SizeConfiguration {
