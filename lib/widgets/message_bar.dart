@@ -104,7 +104,12 @@ class _MessageBarState extends State<MessageBar> {
                       SizeConfiguration.sendMessageIconSize * 2.5,
                   child: TextField(
                     style: const TextStyle(color: Colors.white),
-                    decoration: const InputDecoration(border: InputBorder.none),
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
                     onChanged: (final String value) => message = value,
                   ),
                 ),
