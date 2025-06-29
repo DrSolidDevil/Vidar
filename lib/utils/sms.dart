@@ -164,7 +164,6 @@ Future<List<SmsMessage?>> querySms({final String? phoneNumber}) async {
     if (smsMessages.isEmpty) {
       debugPrint("(querySms) smsMessages is empty");
     }
-    await Future<void>.delayed(const Duration(seconds: 10));
     return smsMessages;
   } on PlatformException catch (e) {
     debugPrint(e.message);
