@@ -4,10 +4,10 @@ import "package:vidar/widgets/contact_badge.dart";
 class Contact {
   Contact(this.name, this.encryptionKey, this.phoneNumber);
 
-  factory Contact.fromMap(final Map<String, dynamic> map) {
+  factory Contact.fromMap(final Map<String, dynamic> map, {final bool withKey = false}) {
     return Contact(
       map["name"]! as String,
-      map["encryptionKey"]! as String,
+      withKey ? map["encryptionKey"]! as String : "",
       map["phoneNumber"]! as String,
     );
   }
@@ -16,12 +16,15 @@ class Contact {
   String encryptionKey;
   String phoneNumber;
 
-  Map<String, String> toMap() {
-    return <String, String>{
+  Map<String, String> toMap({final bool withKey = false}) {
+    final Map<String, String> map = <String, String>{
       "name": name,
-      "encryptionKey": encryptionKey,
       "phoneNumber": phoneNumber,
     };
+    if (withKey) {
+      map.addEntries(<String, String>{"encryptionKey": encryptionKey}.entries);
+    }
+    return map;
   }
 }
 
@@ -69,6 +72,7 @@ class ContactList extends ChangeNotifier {
 
   /// Returns -1 if not found
   int findContactIndexByName(final String name) {
+    // listOfContacts.firstWhere is written in dart so it's pointless to use it
     for (final (int index, Contact contact) in listOfContacts.indexed) {
       if (contact.name == name) {
         return index;
@@ -90,18 +94,22 @@ class ContactList extends ChangeNotifier {
   /// Returns true on success
   bool modifyContactByName(
     final String contactName,
-    final String changeType,
+    final ContactListChangeType changeType,
     final String newValue,
   ) {
     final int index = findContactIndexByName(contactName);
     if (index == -1) {
       return false;
     }
-    switch (changeType.toLowerCase()) {
-      case "name":
+    switch (changeType) {
+      case ContactListChangeType.name:
         listOfContacts[index].name = newValue;
-      case "encryptionkey":
+        break;
+      case ContactListChangeType.encryptionKey:
         listOfContacts[index].encryptionKey = newValue;
+        break;
+      case ContactListChangeType.phoneNumber:
+        listOfContacts[index].phoneNumber = newValue;
     }
     notifyListeners();
     return true;
@@ -137,6 +145,12 @@ class ContactList extends ChangeNotifier {
   ContactBadge getContactBadgeAtIndex(final int index) {
     return ContactBadge(listOfContacts[index]);
   }
+}
+
+enum ContactListChangeType {
+  name,
+  encryptionKey,
+  phoneNumber
 }
 
 /// True if it is invalid
