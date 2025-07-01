@@ -30,7 +30,7 @@ class _BasicButtonState extends State<BasicButton> {
   late final Function onPressed;
   late final double width;
   late final double heigth;
-  
+
   @override
   void initState() {
     super.initState();

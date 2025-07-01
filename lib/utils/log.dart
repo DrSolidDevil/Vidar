@@ -72,8 +72,8 @@ Future<void> exportLogs({final BuildContext? context}) async {
       ),
     );
   }
-  
-  if (Settings.keepLogs) {
+
+  if (LoggingConfiguration.extraVerboseLogs && Settings.keepLogs) {
     CommonObject.logger!.info('Logs have been exported to "${file.path}"');
   }
 }

@@ -60,7 +60,8 @@ class _EditContactPageState extends State<EditContactPage> {
 
   void save() {
     if (Settings.keepLogs) {
-      if (caller == ContactPageCaller.newContact) {
+      if (LoggingConfiguration.extraVerboseLogs &&
+          caller == ContactPageCaller.newContact) {
         CommonObject.logger!.info("Saving new contact ${contact.uuid}...");
       } else {
         CommonObject.logger!.info("Editing contact ${contact.uuid}...");
@@ -80,7 +81,7 @@ class _EditContactPageState extends State<EditContactPage> {
     contact.name = newName ?? contact.name;
 
     if (Settings.allowUnencryptedMessages && newKey == "0") {
-      if (Settings.keepLogs) {
+      if (LoggingConfiguration.extraVerboseLogs && Settings.keepLogs) {
         CommonObject.logger!.info("newKey is 0 -> no key");
       }
       contact.encryptionKey = "";
@@ -101,7 +102,7 @@ class _EditContactPageState extends State<EditContactPage> {
         clearNavigatorAndPush(context, const ContactListPage());
       case ContactPageCaller.newContact:
         if (isInvalidContactByParams(newName, newKey, newPhoneNumber)) {
-          if (Settings.keepLogs) {
+          if (LoggingConfiguration.extraVerboseLogs && Settings.keepLogs) {
             CommonObject.logger!.info(
               "Invalid details for new contact ${contact.uuid}...",
             );
@@ -133,9 +134,11 @@ class _EditContactPageState extends State<EditContactPage> {
           );
           if (Settings.keepLogs) {
             if (success) {
-              CommonObject.logger!.info(
-                "New contact ${contact.uuid} has been saved",
-              );
+              if (LoggingConfiguration.extraVerboseLogs) {
+                CommonObject.logger!.info(
+                  "New contact ${contact.uuid} has been saved",
+                );
+              }
             } else {
               CommonObject.logger!.warning(
                 "Failed to add contact ${contact.uuid}",

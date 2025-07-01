@@ -5,7 +5,10 @@ import "package:vidar/widgets/contact_badge.dart";
 class Contact {
   Contact(this.name, this.encryptionKey, this.phoneNumber);
 
-  factory Contact.fromMap(final Map<String, dynamic> map, {final bool withKey = false}) {
+  factory Contact.fromMap(
+    final Map<String, dynamic> map, {
+    final bool withKey = false,
+  }) {
     return Contact(
       map["name"]! as String,
       withKey ? map["encryptionKey"]! as String : "",
@@ -157,11 +160,7 @@ class ContactList extends ChangeNotifier {
   }
 }
 
-enum ContactListChangeType {
-  name,
-  encryptionKey,
-  phoneNumber
-}
+enum ContactListChangeType { name, encryptionKey, phoneNumber }
 
 /// True if it is invalid
 bool isInvalidContactByParams(

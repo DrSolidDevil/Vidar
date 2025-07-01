@@ -81,8 +81,8 @@ class ContactBadge extends StatelessWidget {
                               Settings.keepLogs) {
                             CommonObject.logger!.info(
                               success
-                                ? "Contact ${contact.uuid} deleted"
-                                : "Contact ${contact.uuid} failed to delete",
+                                  ? "Contact ${contact.uuid} deleted"
+                                  : "Contact ${contact.uuid} failed to delete",
                             );
                           }
                           clearNavigatorAndPush(

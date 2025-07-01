@@ -8,7 +8,6 @@ import "package:vidar/utils/settings.dart";
 import "package:vidar/utils/sms.dart";
 import "package:vidar/utils/storage.dart";
 
-
 late PermissionStatus smsStatus;
 
 void main() async {
@@ -23,7 +22,7 @@ void main() async {
   SmsConstants(await retrieveSmsConstantsMap());
   smsStatus = await Permission.sms.request();
   await Permission.manageExternalStorage.request();
-  
+
   runApp(const VidarApp());
 }
 
@@ -33,15 +32,9 @@ class VidarApp extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     if (smsStatus.isGranted) {
-      return const MaterialApp(
-      title: "Vidar",
-      home: ContactListPage()
-    );
+      return const MaterialApp(title: "Vidar", home: ContactListPage());
     } else {
-      return const MaterialApp(
-      title: "Vidar",
-      home: NoSmsPermissionPage()
-    );
+      return const MaterialApp(title: "Vidar", home: NoSmsPermissionPage());
     }
   }
 }

@@ -11,21 +11,22 @@ class Settings {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       "allowUnencryptedMessages": allowUnencryptedMessages,
-      "keepLogs": keepLogs
+      "keepLogs": keepLogs,
     };
   }
 
   /// Set state of all instance variables of Settings from map.
   /// If setting is not found then it goes to the default setting
   void fromMap(final Map<String, dynamic> map) {
-    
+    keepLogs = map["keepLogs"] as bool? ?? keepLogs;
 
-    keepLogs =  map["keepLogs"] as bool? ?? keepLogs;
-
-    final bool? newAllowUnencryptedMessages = map["allowUnencryptedMessages"]! as bool?;
+    final bool? newAllowUnencryptedMessages =
+        map["allowUnencryptedMessages"]! as bool?;
     if (newAllowUnencryptedMessages == null) {
       if (keepLogs) {
-        CommonObject.logger!.info("allowUnencryptedMessages was not in map, defaulting to $allowUnencryptedMessages");
+        CommonObject.logger!.info(
+          "allowUnencryptedMessages was not in map, defaulting to $allowUnencryptedMessages",
+        );
       }
     } else {
       allowUnencryptedMessages = newAllowUnencryptedMessages;
