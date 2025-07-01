@@ -2,7 +2,6 @@ import "package:flutter/material.dart";
 import "package:vidar/configuration.dart";
 import "package:vidar/utils/common_object.dart";
 import "package:vidar/utils/contact.dart";
-import "package:vidar/utils/popup_handler.dart";
 import "package:vidar/utils/settings.dart";
 import "package:vidar/utils/sms.dart";
 import "package:vidar/widgets/error_popup.dart";
@@ -17,7 +16,7 @@ class Conversation extends ChangeNotifier {
   late List<SmsMessage> chatLogs;
   late final SmsNotifier smsNotifier;
 
-  Future<void> updateChatLogs() async {
+  Future<void> updateChatLogs({final BuildContext? context}) async {
     final List<SmsMessage?> updatedChatLogs = (await querySms(
       phoneNumber: contact.phoneNumber,
     )).toList();
@@ -25,13 +24,19 @@ class Conversation extends ChangeNotifier {
       // this is a stupid operation since there are no null elements but it makes the compiler shut up
       chatLogs = updatedChatLogs.whereType<SmsMessage>().toList();
     } else {
-      PopupHandler.popup = const ErrorPopup(
-        title: "Failed to update chat logs",
-        body: "updatedChatLogs=[null]",
-        enableReturn: false,
-      );
-      PopupHandler.showPopup = true;
-      PopupHandler.popupUpdater.update();
+      if (context != null && context.mounted) {
+        showDialog<void>(
+          context: context,
+          builder: (final BuildContext context) => const ErrorPopup(
+            title: "Failed to update chat logs",
+            body: "updatedChatLogs=[null]",
+            enableReturn: false,
+          ),
+        );
+      }
+      if (Settings.keepLogs) {
+        CommonObject.logger!.info("Failed to update chat logs");
+      }
     }
     if (LoggingConfiguration.extraVerboseLogs && Settings.keepLogs) {
       CommonObject.logger!.info(

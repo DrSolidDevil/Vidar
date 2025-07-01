@@ -44,7 +44,7 @@ Future<String> encryptMessage(final String message, final String key) async {
         base64.encode(fullEncrypted);
   } on Exception catch (error, stackTrace) {
     if (Settings.keepLogs) {
-      CommonObject.logger!.shout(
+      CommonObject.logger!.warning(
         "Failed to encrypt message",
         error,
         stackTrace,
@@ -110,7 +110,7 @@ Future<String> decryptMessage(String message, final String key) async {
     return decryptedMessage;
   } on Exception catch (error, stackTrace) {
     if (Settings.keepLogs) {
-      CommonObject.logger!.shout(
+      CommonObject.logger!.warning(
         "Failed to decrypt message",
         error,
         stackTrace,

@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import "package:vidar/pages/contact_list.dart";
-import "package:vidar/utils/export.dart";
+import "package:vidar/utils/log.dart";
 import "package:vidar/utils/settings.dart";
 
 /// Alert dialog template for errors

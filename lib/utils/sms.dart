@@ -172,7 +172,7 @@ Future<List<SmsMessage?>> querySms({final String? phoneNumber}) async {
     return smsMessages;
   } on PlatformException catch (e) {
     if (Settings.keepLogs) {
-      CommonObject.logger!.shout(
+      CommonObject.logger!.warning(
         "Sms query failed",
         e.message,
         e.stacktrace == null ? null : StackTrace.fromString(e.stacktrace!),

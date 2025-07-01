@@ -1,17 +1,19 @@
 import "dart:convert";
+import "package:flutter/material.dart";
 import "package:flutter_secure_storage/flutter_secure_storage.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import "package:vidar/configuration.dart";
 import "package:vidar/utils/common_object.dart";
 import "package:vidar/utils/contact.dart";
-import "package:vidar/utils/popup_handler.dart";
+import "package:vidar/utils/log.dart";
 import "package:vidar/utils/settings.dart";
 import "package:vidar/widgets/error_popup.dart";
 
 Future<void> saveData(
   final ContactList contactList,
-  final Settings settings,
-) async {
+  final Settings settings, {
+  final BuildContext? context,
+}) async {
   try {
     if (LoggingConfiguration.extraVerboseLogs && Settings.keepLogs) {
       CommonObject.logger!.info("Saving data...");
@@ -30,43 +32,37 @@ Future<void> saveData(
     await prefs.setStringList("contacts", jsonContacts);
 
     if (LoggingConfiguration.extraVerboseLogs && Settings.keepLogs) {
-      CommonObject.logger!.shout("Data saved");
+      CommonObject.logger!.info("Data saved");
     }
   } on Exception catch (error, stackTrace) {
-    if (ErrorHandlingConfiguration.reportErrorOnFailedSave) {
-      PopupHandler.popup = ErrorPopup(
-        title: "Failed to save data",
-        body: "$error",
-        enableReturn: false,
+    if (context != null && context.mounted) {
+      showDialog<void>(
+        context: context,
+        builder: (final BuildContext context) => ErrorPopup(
+          title: "Failed to save data",
+          body: "$error",
+          enableReturn: false,
+        ),
       );
-      PopupHandler.showPopup = true;
-      PopupHandler.popupUpdater.update();
     }
     if (Settings.keepLogs) {
-      CommonObject.logger!.info("Failed to save data ", error, stackTrace);
+      CommonObject.logger!.finest("Failed to save data ", error, stackTrace);
     }
   }
 }
 
 Future<void> loadData(
   final ContactList contactList,
-  final Settings settings,
-) async {
+  final Settings settings, {
+  final BuildContext? context,
+}) async {
   try {
-    if (LoggingConfiguration.extraVerboseLogs && Settings.keepLogs) {
-      CommonObject.logger!.info("Loading data...");
-    }
-
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     final List<String> jsonContacts =
         prefs.getStringList("contacts") ?? <String>[];
 
     final String? jsonSettings = prefs.getString("settings");
-
-    if (Settings.keepLogs) {
-      CommonObject.logger!.info("Settings: :$jsonSettings");
-    }
 
     final List<Contact> listOfContacts = <Contact>[];
 
@@ -81,27 +77,24 @@ Future<void> loadData(
 
     if (jsonSettings != null) {
       settings.fromMap(jsonDecode(jsonSettings) as Map<String, dynamic>);
-    } else {
-      if (Settings.keepLogs) {
-        CommonObject.logger!.info("Could not fetch settings");
-      }
     }
 
-    if (LoggingConfiguration.extraVerboseLogs && Settings.keepLogs) {
-      CommonObject.logger!.info("Data loaded");
+    if (Settings.keepLogs) {
+      createLogger();
     }
   } on Exception catch (error, stackTrace) {
-    if (ErrorHandlingConfiguration.reportErrorOnFailedLoad) {
-      PopupHandler.popup = ErrorPopup(
-        title: "Failed to load data",
-        body: "$error",
-        enableReturn: false,
+    if (context != null && context.mounted) {
+      showDialog<void>(
+        context: context,
+        builder: (final BuildContext context) => ErrorPopup(
+          title: "Failed to load data",
+          body: "$error",
+          enableReturn: false,
+        ),
       );
-      PopupHandler.showPopup = true;
-      PopupHandler.popupUpdater.update();
     }
     if (Settings.keepLogs) {
-      CommonObject.logger!.shout("Failed to load data ", error, stackTrace);
+      CommonObject.logger!.finest("Failed to load data ", error, stackTrace);
     }
   }
 }
@@ -110,6 +103,7 @@ Future<void> loadData(
 Future<void> saveSettings(
   final Settings settings, {
   final SharedPreferences? sharedPreferences,
+  final BuildContext? context,
 }) async {
   try {
     final SharedPreferences prefs =
@@ -119,17 +113,18 @@ Future<void> saveSettings(
       CommonObject.logger!.info("Settings: ${jsonEncode(settings.toMap())}");
     }
   } on Exception catch (error, stackTrace) {
-    if (ErrorHandlingConfiguration.reportErrorOnFailedSaveSettings) {
-      PopupHandler.popup = ErrorPopup(
-        title: "Failed to save settings",
-        body: "$error",
-        enableReturn: false,
+    if (context != null && context.mounted) {
+      showDialog<void>(
+        context: context,
+        builder: (final BuildContext context) => ErrorPopup(
+          title: "Failed to save settings",
+          body: "$error",
+          enableReturn: false,
+        ),
       );
-      PopupHandler.showPopup = true;
-      PopupHandler.popupUpdater.update();
     }
     if (Settings.keepLogs) {
-      CommonObject.logger!.shout("Failed to save settings", error, stackTrace);
+      CommonObject.logger!.finest("Failed to save settings", error, stackTrace);
     }
   }
 }
@@ -171,7 +166,7 @@ Future<void> _loadKeys(final ContactList contactList) async {
     );
     if (!success) {
       if (Settings.keepLogs) {
-        CommonObject.logger!.shout("Failed to modify contact to have key");
+        CommonObject.logger!.finer("Failed to modify contact to have key");
       }
     }
   }

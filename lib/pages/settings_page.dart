@@ -3,6 +3,7 @@ import "package:logging/logging.dart";
 import "package:vidar/configuration.dart";
 import "package:vidar/pages/contact_list.dart";
 import "package:vidar/utils/common_object.dart";
+import "package:vidar/utils/log.dart";
 import "package:vidar/utils/settings.dart";
 import "package:vidar/utils/storage.dart";
 import "package:vidar/widgets/boolean_setting.dart";
@@ -41,15 +42,14 @@ class _SettingsPageState extends State<SettingsPage> {
     if (Settings.keepLogs) {
       CommonObject.logger = Logger(LoggingConfiguration.loggerName);
       CommonObject.logger!.onRecord.listen((final LogRecord log) {
-        debugPrint(LoggingConfiguration.errorMessage(log));
-        CommonObject.logs.add(LoggingConfiguration.errorMessage(log));
+        createLogger();
       });
     } else {
       CommonObject.logger!.clearListeners();
       CommonObject.logger = null;
       CommonObject.logs = <String>[];
     }
-    saveSettings(CommonObject.settings);
+    saveSettings(CommonObject.settings, context: context);
     Navigator.push(
       context,
       MaterialPageRoute<void>(

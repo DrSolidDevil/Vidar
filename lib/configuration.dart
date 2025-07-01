@@ -19,19 +19,13 @@ class VidarColors {
 }
 
 class CryptographicConfiguration {
-  // Length in bytes (18 bytes = 144 bits)
+  // Length in bytes
   static const int keyGenerationHashLength = 15;
   static const int nonceLength = 32;
   static const String encryptionPrefix = "☍";
   // Standard is 16 bytes for the cryptography library
   static const int macLength = 16;
   static const bool allowNoKey = true;
-}
-
-class ErrorHandlingConfiguration {
-  static const bool reportErrorOnFailedLoad = true;
-  static const bool reportErrorOnFailedSave = true;
-  static const bool reportErrorOnFailedSaveSettings = true;
 }
 
 class SizeConfiguration {
@@ -64,15 +58,27 @@ class LoggingConfiguration {
 
   static const bool extraVerboseLogs = true;
 
-  static const String logFileDefaultName = "vidarlogs.txt";
+  static const String logFileSaveLocation = "/storage/emulated/0/Download";
 
-  static String errorMessage(final LogRecord log) {
+  static String logFileName() {
+    return "vidarlogs_${DateTime.now().toIso8601String()}.txt";
+  }
+
+  static String verboseLogMessage(final LogRecord log) {
     return """
-        ${log.sequenceNumber} - ${log.time.toIso8601String()}
+        ${log.sequenceNumber}: ${log.time.toIso8601String()}
         Level: ${log.level.name}
         Error: ${log.error}
         Message: ${log.message}
         Stack Trace: ${log.stackTrace}
+      """;
+  }
+
+  static String conciseLogMessage(final LogRecord log) {
+    return """
+        ${log.sequenceNumber}: ${log.time.toIso8601String()}
+        Level: ${log.level.name}
+        Message: ${log.message}
       """;
   }
 }
