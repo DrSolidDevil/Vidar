@@ -22,12 +22,19 @@ class _MessageBarState extends State<MessageBar> {
   bool error = false;
   String errorMessage = "";
   Updater errorUpdater = Updater();
+  final TextEditingController controller = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     contact = widget.contact;
     updater = widget.updater;
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   Widget buildErrorMessageWidget(
@@ -102,6 +109,7 @@ class _MessageBarState extends State<MessageBar> {
                       MediaQuery.sizeOf(context).width -
                       SizeConfiguration.sendMessageIconSize * 2.5,
                   child: TextField(
+                    controller: controller,
                     style: const TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
@@ -118,6 +126,7 @@ class _MessageBarState extends State<MessageBar> {
                   child: Center(
                     child: IconButton(
                       onPressed: () async {
+                        controller.text = "";
                         final String encryptedMessage = await encryptMessage(
                           message!,
                           contact.encryptionKey,
