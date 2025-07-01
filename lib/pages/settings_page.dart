@@ -45,8 +45,10 @@ class _SettingsPageState extends State<SettingsPage> {
         createLogger();
       });
     } else {
-      CommonObject.logger!.clearListeners();
-      CommonObject.logger = null;
+      if (CommonObject.logger != null) {
+        CommonObject.logger!.clearListeners();
+        CommonObject.logger = null;
+      }
       CommonObject.logs = <String>[];
     }
     saveSettings(CommonObject.settings, context: context);

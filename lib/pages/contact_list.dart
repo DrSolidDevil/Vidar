@@ -39,7 +39,7 @@ class _ContactListPageState extends State<ContactListPage> {
             final Contact newContact = Contact("", "", "");
             clearNavigatorAndPush(
               context,
-              EditContactPage(newContact, "newcontact"),
+              EditContactPage(newContact, ContactPageCaller.newContact),
             );
           },
           backgroundColor: Colors.transparent,

@@ -61,24 +61,14 @@ class LoggingConfiguration {
   static const String logFileSaveLocation = "/storage/emulated/0/Download";
 
   static String logFileName() {
-    return "vidarlogs_${DateTime.now().toIso8601String()}.txt";
+    return "vidarlogs_${DateTime.now().millisecondsSinceEpoch}.txt";
   }
 
   static String verboseLogMessage(final LogRecord log) {
-    return """
-        ${log.sequenceNumber}: ${log.time.toIso8601String()}
-        Level: ${log.level.name}
-        Error: ${log.error}
-        Message: ${log.message}
-        Stack Trace: ${log.stackTrace}
-      """;
+    return "\n${log.sequenceNumber}: ${log.time.toIso8601String()}\nLevel: ${log.level.name}\nError: ${log.error}\nMessage: ${log.message}\nStack Trace: ${log.stackTrace}";
   }
 
   static String conciseLogMessage(final LogRecord log) {
-    return """
-        ${log.sequenceNumber}: ${log.time.toIso8601String()}
-        Level: ${log.level.name}
-        Message: ${log.message}
-      """;
+    return "\n${log.sequenceNumber}: ${log.time.toIso8601String()}\nLevel: ${log.level.name}\nMessage: ${log.message}";
   }
 }

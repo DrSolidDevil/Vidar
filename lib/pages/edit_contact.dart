@@ -10,11 +10,12 @@ import "package:vidar/utils/settings.dart";
 import "package:vidar/utils/storage.dart";
 import "package:vidar/utils/updater.dart";
 import "package:vidar/widgets/buttons.dart";
+import "package:vidar/widgets/error_popup.dart";
 
 class EditContactPage extends StatefulWidget {
   const EditContactPage(this.contact, this.caller, {super.key});
   final Contact contact;
-  final String caller;
+  final ContactPageCaller caller;
 
   @override
   _EditContactPageState createState() => _EditContactPageState();
@@ -23,7 +24,7 @@ class EditContactPage extends StatefulWidget {
 class _EditContactPageState extends State<EditContactPage> {
   _EditContactPageState();
   late Contact contact;
-  late String caller;
+  late ContactPageCaller caller;
   final Updater updater = Updater();
   final TextEditingController encryptionKeyController = TextEditingController();
 
@@ -47,17 +48,25 @@ class _EditContactPageState extends State<EditContactPage> {
   }
 
   void discard() {
-    switch (caller.toLowerCase()) {
-      case "chatpage":
+    switch (caller) {
+      case ContactPageCaller.chatPage:
         clearNavigatorAndPush(context, ChatPage(contact));
-      case "contactpage":
+      case ContactPageCaller.contactPage:
         clearNavigatorAndPush(context, const ContactListPage());
-      case "newcontact":
+      case ContactPageCaller.newContact:
         clearNavigatorAndPush(context, const ContactListPage());
     }
   }
 
   void save() {
+    if (Settings.keepLogs) {
+      if (caller == ContactPageCaller.newContact) {
+        CommonObject.logger!.info("Saving new contact ${contact.uuid}...");
+      } else {
+        CommonObject.logger!.info("Editing contact ${contact.uuid}...");
+      }
+    }
+
     if (newName == "") {
       newName = null;
     }
@@ -71,6 +80,9 @@ class _EditContactPageState extends State<EditContactPage> {
     contact.name = newName ?? contact.name;
 
     if (Settings.allowUnencryptedMessages && newKey == "0") {
+      if (Settings.keepLogs) {
+        CommonObject.logger!.info("newKey is 0 -> no key");
+      }
       contact.encryptionKey = "";
     } else {
       contact.encryptionKey = newKey ?? contact.encryptionKey;
@@ -82,21 +94,25 @@ class _EditContactPageState extends State<EditContactPage> {
     contact.phoneNumber = newPhoneNumber ?? contact.phoneNumber;
     saveData(CommonObject.contactList, CommonObject.settings);
 
-    switch (caller.toLowerCase()) {
-      case "chatpage":
+    switch (caller) {
+      case ContactPageCaller.chatPage:
         clearNavigatorAndPush(context, ChatPage(contact));
-      case "contactpage":
+      case ContactPageCaller.contactPage:
         clearNavigatorAndPush(context, const ContactListPage());
-      case "newcontact":
+      case ContactPageCaller.newContact:
         if (isInvalidContactByParams(newName, newKey, newPhoneNumber)) {
-          // ignore: inference_failure_on_function_invocation
-          showDialog(
+          if (Settings.keepLogs) {
+            CommonObject.logger!.info(
+              "Invalid details for new contact ${contact.uuid}...",
+            );
+          }
+          showDialog<void>(
             context: context,
             builder: (final BuildContext context) {
               return AlertDialog(
-                title: const Text("Missing details"),
+                title: const Text("Invalid details"),
                 content: const Text(
-                  "Please enter all details to create a new contact",
+                  "Please enter all details correctly to create a new contact",
                 ),
                 actions: <Widget>[
                   TextButton(
@@ -110,12 +126,36 @@ class _EditContactPageState extends State<EditContactPage> {
             },
           );
         } else {
-          CommonObject.contactList.addContactByParams(
+          final bool success = CommonObject.contactList.addContactByParams(
             newName!,
             newKey!,
             newPhoneNumber!,
           );
-          clearNavigatorAndPush(context, const ContactListPage());
+          if (Settings.keepLogs) {
+            if (success) {
+              CommonObject.logger!.info(
+                "New contact ${contact.uuid} has been saved",
+              );
+            } else {
+              CommonObject.logger!.warning(
+                "Failed to add contact ${contact.uuid}",
+              );
+            }
+          }
+          if (!success) {
+            showDialog<void>(
+              context: context,
+              builder: (final BuildContext context) {
+                return const ErrorPopup(
+                  title: "Failed to save contact",
+                  body: "addContactByParams failed",
+                  enableReturn: false,
+                );
+              },
+            );
+          } else {
+            clearNavigatorAndPush(context, const ContactListPage());
+          }
         }
     }
   }
@@ -306,3 +346,5 @@ class _EditContactPageState extends State<EditContactPage> {
     );
   }
 }
+
+enum ContactPageCaller { newContact, contactPage, chatPage }

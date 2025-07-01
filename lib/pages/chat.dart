@@ -58,7 +58,7 @@ class _ChatPageState extends State<ChatPage> {
             onPressed: () {
               clearNavigatorAndPush(
                 context,
-                EditContactPage(contact, "chatpage"),
+                EditContactPage(contact, ContactPageCaller.chatPage),
               );
             },
             icon: const Icon(Icons.edit, color: Colors.white),
