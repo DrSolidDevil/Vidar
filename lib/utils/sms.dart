@@ -4,6 +4,9 @@ import "dart:core";
 
 import "package:flutter/foundation.dart";
 import "package:flutter/services.dart";
+import "package:vidar/configuration.dart";
+import "package:vidar/utils/common_object.dart";
+import "package:vidar/utils/settings.dart";
 
 const MethodChannel MAIN_SMS_CHANNEL = MethodChannel("flutter.native/helper");
 
@@ -141,16 +144,16 @@ SmsMessage? _queryMapToSms(final Map<String, String?> smsMap) {
 /// Returns [null] upon failure (this is to ensure compatibility with FutureBuilder)
 Future<List<SmsMessage?>> querySms({final String? phoneNumber}) async {
   try {
-    debugPrint("phonenumber = $phoneNumber");
     final dynamic rawResult = await MAIN_SMS_CHANNEL.invokeMethod(
       "querySms",
       <String, String?>{"phoneNumber": phoneNumber},
     );
     if (rawResult == null) {
-      debugPrint("sms query is null");
+      if (LoggingConfiguration.extraVerboseLogs && Settings.keepLogs) {
+        CommonObject.logger!.info("Sms query is null");
+      }
       return <SmsMessage?>[null];
     }
-    debugPrint(rawResult.toString());
     final List<Map<String, String?>> result = <Map<String, String?>>[];
     for (final dynamic resultEntry in rawResult as Iterable<dynamic>) {
       result.add(
@@ -162,24 +165,37 @@ Future<List<SmsMessage?>> querySms({final String? phoneNumber}) async {
       smsMessages.add(_queryMapToSms(mapMessage)!);
     }
     if (smsMessages.isEmpty) {
-      debugPrint("(querySms) smsMessages is empty");
+      if (LoggingConfiguration.extraVerboseLogs && Settings.keepLogs) {
+        CommonObject.logger!.info("No sms messages");
+      }
     }
     return smsMessages;
   } on PlatformException catch (e) {
-    debugPrint(e.message);
+    if (Settings.keepLogs) {
+      CommonObject.logger!.shout(
+        "Sms query failed",
+        e.message,
+        e.stacktrace == null ? null : StackTrace.fromString(e.stacktrace!),
+      );
+    }
     return <SmsMessage?>[null];
   }
- 
 }
 
 /// The phone number is that of the other party
 Future<void> sendSms(final String body, final String phoneNumber) async {
   /// 0 = success, for now not used
+  if (LoggingConfiguration.extraVerboseLogs && Settings.keepLogs) {
+    CommonObject.logger!.info("Sending sms");
+  }
+  // ignore: unused_local_variable
   final dynamic result = await MAIN_SMS_CHANNEL.invokeMethod(
     "sendSms",
     <String, String>{"body": body, "phoneNumber": phoneNumber},
   );
-  debugPrint("Sending result: $result");
+  if (LoggingConfiguration.extraVerboseLogs && Settings.keepLogs) {
+    CommonObject.logger!.info("Sms sent");
+  }
 }
 
 Future<Map<String, dynamic>> retrieveSmsConstantsMap() async {

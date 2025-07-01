@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:logging/logging.dart";
 import "package:vidar/configuration.dart";
 import "package:vidar/pages/contact_list.dart";
 import "package:vidar/utils/common_object.dart";
@@ -24,6 +25,11 @@ class _SettingsPageState extends State<SettingsPage> {
     settingText: "Send unencrypted messages when contact has no key",
   );
 
+  BooleanSetting keepLogs = BooleanSetting(
+    setting: Settings.keepLogs,
+    settingText: "Keep Logs",
+  );
+
   @override
   void initState() {
     super.initState();
@@ -31,10 +37,19 @@ class _SettingsPageState extends State<SettingsPage> {
 
   void _save() {
     Settings.allowUnencryptedMessages = allowUnencryptedMessages.setting;
+    Settings.keepLogs = keepLogs.setting;
+    if (Settings.keepLogs) {
+      CommonObject.logger = Logger(LoggingConfiguration.loggerName);
+      CommonObject.logger!.onRecord.listen((final LogRecord log) {
+        debugPrint(LoggingConfiguration.errorMessage(log));
+        CommonObject.logs.add(LoggingConfiguration.errorMessage(log));
+      });
+    } else {
+      CommonObject.logger!.clearListeners();
+      CommonObject.logger = null;
+      CommonObject.logs = <String>[];
+    }
     saveSettings(CommonObject.settings);
-    debugPrint(
-      "allowUnencryptedMessages: ${Settings.allowUnencryptedMessages}",
-    );
     Navigator.push(
       context,
       MaterialPageRoute<void>(
@@ -58,11 +73,11 @@ class _SettingsPageState extends State<SettingsPage> {
       color: VidarColors.primaryDarkSpaceCadet,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
+        children: <Widget>[
           Column(
             spacing: 60,
             children: <Widget>[
-              Column(children: <Widget>[allowUnencryptedMessages]),
+              Column(children: <Widget>[allowUnencryptedMessages, keepLogs]),
               Container(
                 margin: const EdgeInsets.only(top: 60),
                 child: Row(

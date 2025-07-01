@@ -3,15 +3,19 @@ class Settings {
   /// Send unencrypted messages when contact has no key.
   static bool allowUnencryptedMessages = false;
 
+  static bool keepLogs = false;
+
   /// Get map of the state of all instance variable of Settings.
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       "allowUnencryptedMessages": allowUnencryptedMessages,
+      "keepLogs": keepLogs
     };
   }
 
   /// Set state of all instance variables of Settings from map.
   void fromMap(final Map<String, dynamic> map) {
     allowUnencryptedMessages = map["allowUnencryptedMessages"]! as bool;
+    keepLogs =  map["keepLogs"]! as bool;
   }
 }

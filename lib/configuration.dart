@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import "package:logging/logging.dart";
 
 class VidarColors {
   /// #1a1c28
@@ -58,4 +59,20 @@ class MiscellaneousConfiguration {
 class LoggingConfiguration {
   /// If encryption errors should be logged/printed
   static const bool verboseEncryptionError = false;
+
+  static const String loggerName = "VidarLogger";
+
+  static const bool extraVerboseLogs = true;
+
+  static const String logFileDefaultName = "vidarlogs.txt";
+
+  static String errorMessage(final LogRecord log) {
+    return """
+        ${log.sequenceNumber} - ${log.time.toIso8601String()}
+        Level: ${log.level.name}
+        Error: ${log.error}
+        Message: ${log.message}
+        Stack Trace: ${log.stackTrace}
+      """;
+  }
 }

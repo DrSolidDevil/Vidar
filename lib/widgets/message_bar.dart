@@ -62,7 +62,6 @@ class _MessageBarState extends State<MessageBar> {
           ).then((_) => errorUpdater.update());
           switch (errorMessage) {
             case "MESSAGE_FAILED":
-              debugPrint("MESSAGE_FAILED");
               return buildErrorMessageWidget(context, "Failed to send message");
             case "NO_KEY":
               return buildErrorMessageWidget(
@@ -119,7 +118,6 @@ class _MessageBarState extends State<MessageBar> {
                   child: Center(
                     child: IconButton(
                       onPressed: () async {
-                        debugPrint("Sending message: $message");
                         final String encryptedMessage = await encryptMessage(
                           message!,
                           contact.encryptionKey,

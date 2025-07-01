@@ -1,6 +1,9 @@
 import "package:flutter/material.dart";
+import "package:vidar/configuration.dart";
+import "package:vidar/utils/common_object.dart";
 import "package:vidar/utils/contact.dart";
 import "package:vidar/utils/popup_handler.dart";
+import "package:vidar/utils/settings.dart";
 import "package:vidar/utils/sms.dart";
 import "package:vidar/widgets/error_popup.dart";
 
@@ -30,7 +33,11 @@ class Conversation extends ChangeNotifier {
       PopupHandler.showPopup = true;
       PopupHandler.popupUpdater.update();
     }
-    debugPrint("chatlogs updated");
+    if (LoggingConfiguration.extraVerboseLogs && Settings.keepLogs) {
+      CommonObject.logger!.info(
+        "Chat logs updated for contact ${contact.uuid}",
+      );
+    }
     notifyListeners();
   }
 
@@ -39,7 +46,9 @@ class Conversation extends ChangeNotifier {
   }
 
   void externalNotify() {
-    debugPrint("External notify");
+    if (LoggingConfiguration.extraVerboseLogs && Settings.keepLogs) {
+      CommonObject.logger!.info("External notify for contact ${contact.uuid}");
+    }
     notifyListeners();
   }
 }

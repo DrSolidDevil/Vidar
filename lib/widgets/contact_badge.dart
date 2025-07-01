@@ -5,6 +5,7 @@ import "package:vidar/pages/contact_list.dart";
 import "package:vidar/utils/common_object.dart";
 import "package:vidar/utils/contact.dart";
 import "package:vidar/utils/navigation.dart";
+import "package:vidar/utils/settings.dart";
 import "package:vidar/utils/storage.dart";
 
 /// Badge button to contact, shows name and phone number.
@@ -76,11 +77,14 @@ class ContactBadge extends StatelessWidget {
                             CommonObject.contactList,
                             CommonObject.settings,
                           );
-                          debugPrint(
-                            success
-                                ? "Contact deleted"
-                                : "Contact failed to delete",
-                          );
+                          if (LoggingConfiguration.extraVerboseLogs &&
+                              Settings.keepLogs) {
+                            CommonObject.logger!.info(
+                              success
+                                ? "Contact ${contact.uuid} deleted"
+                                : "Contact ${contact.uuid} failed to delete",
+                            );
+                          }
                           clearNavigatorAndPush(
                             context,
                             const ContactListPage(),

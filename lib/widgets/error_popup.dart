@@ -1,5 +1,7 @@
 import "package:flutter/material.dart";
 import "package:vidar/pages/contact_list.dart";
+import "package:vidar/utils/export.dart";
+import "package:vidar/utils/settings.dart";
 
 /// Alert dialog template for errors
 class ErrorPopup extends StatefulWidget {
@@ -30,6 +32,48 @@ class _ErrorPopupState extends State<ErrorPopup> {
   late final String body;
   late final bool enableReturn;
 
+  List<Widget> actions(final BuildContext context) {
+    final List<Widget> list = <Widget>[
+      TextButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute<void>(
+              builder: (final BuildContext context) => const ContactListPage(),
+            ),
+          );
+        },
+        child: const Text("Home"),
+      ),
+    ];
+    if (Settings.keepLogs) {
+      list.add(
+        TextButton(
+          onPressed: () {
+            exportLogs();
+            Navigator.push(
+              context,
+              MaterialPageRoute<void>(
+                builder: (final BuildContext context) =>
+                    const ContactListPage(),
+              ),
+            );
+          },
+          child: const Text("Save logs"),
+        ),
+      );
+    }
+    list.add(
+      TextButton(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        child: const Text("Back"),
+      ),
+    );
+    return list;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -48,26 +92,7 @@ class _ErrorPopupState extends State<ErrorPopup> {
           child: AlertDialog(
             title: Text(title),
             content: Text(body),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute<void>(
-                      builder: (final BuildContext context) =>
-                          const ContactListPage(),
-                    ),
-                  );
-                },
-                child: const Text("Home"),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text("Back"),
-              ),
-            ],
+            actions: actions(context),
           ),
         ),
       ],

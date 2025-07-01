@@ -1,5 +1,7 @@
 import "package:flutter/material.dart";
+import "package:logging/logging.dart";
 import "package:permission_handler/permission_handler.dart";
+import "package:vidar/configuration.dart";
 import "package:vidar/pages/contact_list.dart";
 import "package:vidar/utils/common_object.dart";
 import "package:vidar/utils/contact.dart";
@@ -24,11 +26,15 @@ void main() async {
   CommonObject.settings = settings;
 
   await loadData(contactList, settings);
-
-  debugPrint("Fetching sms constants...");
   SmsConstants(await retrieveSmsConstantsMap());
-  debugPrint("Sms constants fetched");
   await Permission.sms.request();
+  if (Settings.keepLogs) {
+    CommonObject.logger = Logger(LoggingConfiguration.loggerName);
+    CommonObject.logger!.onRecord.listen((final LogRecord log) {
+      debugPrint(LoggingConfiguration.errorMessage(log));
+      CommonObject.logs.add(LoggingConfiguration.errorMessage(log));
+    });
+  }
   runApp(const App());
 }
 

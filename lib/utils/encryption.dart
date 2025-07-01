@@ -1,15 +1,17 @@
 import "dart:convert";
 
 import "package:cryptography/cryptography.dart";
-import "package:flutter/foundation.dart" show debugPrint;
 import "package:vidar/configuration.dart";
+import "package:vidar/utils/common_object.dart";
 import "package:vidar/utils/settings.dart";
 
 /// If key is blank then it returns the message argument
 /// Will output with an encryption prefix (i.e. a string prefix that signals that this is an encrypted message)
 Future<String> encryptMessage(final String message, final String key) async {
   if (key == "") {
-    debugPrint("No key");
+    if (Settings.keepLogs) {
+      CommonObject.logger!.info("No key for encryption");
+    }
     if (Settings.allowUnencryptedMessages) {
       return message;
     } else {
@@ -41,9 +43,12 @@ Future<String> encryptMessage(final String message, final String key) async {
     return CryptographicConfiguration.encryptionPrefix +
         base64.encode(fullEncrypted);
   } on Exception catch (error, stackTrace) {
-    if (LoggingConfiguration.verboseEncryptionError) {
-      debugPrint("Encryption Failed: $error");
-      debugPrint("Stacktrace:\n$stackTrace");
+    if (Settings.keepLogs) {
+      CommonObject.logger!.shout(
+        "Failed to encrypt message",
+        error,
+        stackTrace,
+      );
     }
     return "ENCRYPTION_FAILED";
   }
@@ -53,11 +58,15 @@ Future<String> encryptMessage(final String message, final String key) async {
 /// If decryption fails then it returns "DECRYPTION_FAILED"
 Future<String> decryptMessage(String message, final String key) async {
   if (key == "") {
-    debugPrint("No key");
+    if (Settings.keepLogs) {
+      CommonObject.logger!.info("No key for decryption");
+    }
     return message;
   }
   if (!message.startsWith(CryptographicConfiguration.encryptionPrefix)) {
-    debugPrint("No encryption prefix");
+    if (Settings.keepLogs) {
+      CommonObject.logger!.info("No encryption prefix");
+    }
     return message;
   }
 
@@ -100,9 +109,12 @@ Future<String> decryptMessage(String message, final String key) async {
     final String decryptedMessage = utf8.decode(decryptedBytes);
     return decryptedMessage;
   } on Exception catch (error, stackTrace) {
-    if (LoggingConfiguration.verboseEncryptionError) {
-      debugPrint("Decryption Failed: $error");
-      debugPrint("Stacktrace:\n$stackTrace");
+    if (Settings.keepLogs) {
+      CommonObject.logger!.shout(
+        "Failed to decrypt message",
+        error,
+        stackTrace,
+      );
     }
     return "${MiscellaneousConfiguration.errorPrefix}DECRYPTION_FAILED";
   }
