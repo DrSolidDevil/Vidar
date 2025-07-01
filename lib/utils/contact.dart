@@ -4,9 +4,6 @@ import "package:vidar/widgets/contact_badge.dart";
 
 class Contact {
   Contact(this.name, this.encryptionKey, this.phoneNumber);
-  
-  // Used for anonymizing user logs
-  final String uuid = const Uuid().v4();
 
   factory Contact.fromMap(final Map<String, dynamic> map, {final bool withKey = false}) {
     return Contact(
@@ -15,6 +12,9 @@ class Contact {
       map["phoneNumber"]! as String,
     );
   }
+
+  // Used for anonymizing user logs
+  final String uuid = const Uuid().v4();
 
   String name;
   String encryptionKey;
