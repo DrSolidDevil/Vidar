@@ -6,6 +6,12 @@ If you have any questions feel free to ask!
 
 <br>
 
+Notes:
+* Permission manage files is only needed if you want to export logs. If you won't need to export logs then you can deny the permission.
+
+<br>
+<br>
+
 **Please be aware that the encrypted messages can be long and can eat away at your phone plan if you don't have unlimited texting**
 
 <br>
