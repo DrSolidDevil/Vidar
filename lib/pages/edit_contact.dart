@@ -198,7 +198,10 @@ class _EditContactPageState extends State<EditContactPage> {
                           borderSide: BorderSide.none,
                         ),
                       ),
-                      style: const TextStyle(color: Colors.white),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                      ),
                       onChanged: (final String value) {
                         newName = value;
                       },
@@ -244,6 +247,7 @@ class _EditContactPageState extends State<EditContactPage> {
                                           "Encryption Key${Settings.allowUnencryptedMessages ? ", 0=No Key" : ""}",
                                       hintStyle: const TextStyle(
                                         color: Colors.white,
+                                        fontSize: 12
                                       ),
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(7),
@@ -314,7 +318,10 @@ class _EditContactPageState extends State<EditContactPage> {
                           borderSide: BorderSide.none,
                         ),
                       ),
-                      style: const TextStyle(color: Colors.white),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                      ),
                       onChanged: (final String value) {
                         newPhoneNumber = value;
                       },
