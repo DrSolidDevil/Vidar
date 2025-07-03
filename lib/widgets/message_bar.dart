@@ -1,7 +1,9 @@
 import "package:flutter/material.dart";
 import "package:vidar/configuration.dart";
+import "package:vidar/utils/common_object.dart";
 import "package:vidar/utils/contact.dart";
 import "package:vidar/utils/encryption.dart";
+import "package:vidar/utils/settings.dart";
 import "package:vidar/utils/sms.dart";
 import "package:vidar/utils/updater.dart";
 
@@ -142,12 +144,11 @@ class _MessageBarState extends State<MessageBar> {
                           errorUpdater.update();
                         } else {
                           sendSms(encryptedMessage, contact.phoneNumber);
-                          await Future<void>.delayed(
-                            const Duration(
-                              seconds: TimeConfiguration.smsUpdateDelay,
-                            ),
-                          );
-                          updater.update();
+                          if (CommonObject.currentConversation != null) {
+                            CommonObject.currentConversation!.notifyListeners();
+                          } else if (Settings.keepLogs) {
+                            CommonObject.logger!.info("Current conversation is null, can not notifyListeners");
+                          }
                         }
                       },
                       icon: const Icon(

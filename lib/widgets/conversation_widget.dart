@@ -29,6 +29,7 @@ class _ConversationWidgetState extends State<ConversationWidget> {
     super.initState();
     contact = widget.contact;
     conversation = Conversation(contact);
+    CommonObject.currentConversation = conversation;
   }
 
   @override
