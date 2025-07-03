@@ -13,7 +13,7 @@ class BasicButton extends StatelessWidget {
   final Color textColor;
   final Color buttonColor;
   final String buttonText;
-  final Function onPressed;
+  final VoidCallback onPressed;
   final double width;
   final double height;
 
