@@ -34,7 +34,7 @@ Future<void> exportLogs({final BuildContext? context}) async {
     );
     if (!directory.existsSync()) {
       throw Exception(
-        'The directory "${LoggingConfiguration.logFileSaveLocation}" does not exits',
+        'The directory "${LoggingConfiguration.logFileSaveLocation}" does not exist',
       );
     }
     file =
