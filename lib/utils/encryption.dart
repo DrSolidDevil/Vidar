@@ -5,6 +5,10 @@ import "package:vidar/configuration.dart";
 import "package:vidar/utils/common_object.dart";
 import "package:vidar/utils/settings.dart";
 
+const String _ENCRYPTION_FAILED = "${MiscellaneousConfiguration.errorPrefix}ENCRYPTION_FAILED";
+const String _DECRYPTION_FAILED = "${MiscellaneousConfiguration.errorPrefix}DECRYPTION_FAILED";
+const String _NO_KEY = "${MiscellaneousConfiguration.errorPrefix}NO_KEY";
+
 /// If key is blank then it returns the message argument
 /// Will output with an encryption prefix (i.e. a string prefix that signals that this is an encrypted message)
 Future<String> encryptMessage(final String message, final String key) async {
@@ -15,7 +19,7 @@ Future<String> encryptMessage(final String message, final String key) async {
     if (Settings.allowUnencryptedMessages) {
       return message;
     } else {
-      return "${MiscellaneousConfiguration.errorPrefix}NO_KEY";
+      return _NO_KEY;
     }
   }
 
@@ -50,13 +54,13 @@ Future<String> encryptMessage(final String message, final String key) async {
         stackTrace,
       );
     }
-    return "${MiscellaneousConfiguration.errorPrefix}ENCRYPTION_FAILED";
+    return _ENCRYPTION_FAILED;
   }
 }
 
 /// If key is blank or encryption prefix is missing then it returns the message argument
 /// If decryption fails then it returns "DECRYPTION_FAILED"
-Future<String> decryptMessage(final String message, final String key) async {
+Future<String> decryptMessage(final String message, final String key, {AesGcm? algorithm}) async {
   if (key == "") {
     if (Settings.keepLogs) {
       CommonObject.logger!.info("No key for decryption");
@@ -76,7 +80,7 @@ Future<String> decryptMessage(final String message, final String key) async {
       "",
     );
 
-    final AesGcm algorithm = AesGcm.with256bits(
+    algorithm ??= AesGcm.with256bits(
       nonceLength: CryptographicConfiguration.nonceLength,
     );
 
@@ -115,6 +119,6 @@ Future<String> decryptMessage(final String message, final String key) async {
         stackTrace,
       );
     }
-    return "${MiscellaneousConfiguration.errorPrefix}DECRYPTION_FAILED";
+    return _DECRYPTION_FAILED;
   }
 }

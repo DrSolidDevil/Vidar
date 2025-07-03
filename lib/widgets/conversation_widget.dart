@@ -1,3 +1,4 @@
+import "package:cryptography/cryptography.dart" show AesGcm;
 import "package:flutter/material.dart";
 import "package:vidar/configuration.dart";
 import "package:vidar/utils/common_object.dart";
@@ -106,6 +107,10 @@ class _ConversationWidgetState extends State<ConversationWidget> {
                           future: decryptMessage(
                             message.body,
                             contact.encryptionKey,
+                            algorithm: AesGcm.with256bits(
+                              nonceLength:
+                                  CryptographicConfiguration.nonceLength,
+                            ),
                           ),
                           builder:
                               (
