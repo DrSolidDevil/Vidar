@@ -5,6 +5,8 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import android.content.Context
 import io.flutter.plugin.common.EventChannel
+import android.provider.Telephony.Sms.Intents as SmsIntents
+import android.content.IntentFilter
 
 @Suppress("PrivatePropertyName")
 class MainActivity : FlutterActivity() {
@@ -19,17 +21,15 @@ class MainActivity : FlutterActivity() {
         super.configureFlutterEngine(flutterEngine);
 
         EventChannel(flutterEngine.dartExecutor.binaryMessenger, SMS_NOTIFIER_CHANNEL)
-            .setStreamHandler(object : EventChannel.StreamHandler {
-                override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
-                    eventSink = events
-                    smsReceiver = SmsReceiver(eventSink)
-                }
+        .setStreamHandler(object : EventChannel.StreamHandler {
+            override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+                SmsReceiver.eventSink = events
+            }
 
-                override fun onCancel(arguments: Any?) {
-                    unregisterReceiver(smsReceiver)
-                    eventSink = null
-                }
-            })
+            override fun onCancel(arguments: Any?) {
+                SmsReceiver.eventSink = null
+            }
+        })
         MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
             CHANNEL

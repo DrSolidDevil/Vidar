@@ -6,7 +6,10 @@ import android.content.Intent
 import io.flutter.plugin.common.EventChannel
 import android.provider.Telephony.Sms.Intents as SmsIntents
 
-class SmsReceiver(private val eventSink: EventChannel.EventSink?) : BroadcastReceiver() {
+class SmsReceiver : BroadcastReceiver() {
+    companion object {
+        var eventSink: EventChannel.EventSink? = null
+    }
     override fun onReceive(context: Context?, intent: Intent?) {
         if (intent?.action == SmsIntents.SMS_RECEIVED_ACTION) {
             // getMessagesFromIntent returns an array of pdus, only the first one is relevant

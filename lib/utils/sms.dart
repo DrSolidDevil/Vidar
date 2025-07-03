@@ -281,8 +281,10 @@ class SmsConstants {
 /// Notifies when (any) sms is recieved
 class SmsNotifier extends ChangeNotifier {
   SmsNotifier() {
-    SMS_NOTIFIER_CHANNEL.receiveBroadcastStream((final dynamic event) {
-      if (event is String && event == "smsreceived") {
+    SMS_NOTIFIER_CHANNEL.receiveBroadcastStream().listen((
+      final dynamic onData,
+    ) {
+      if (onData is String && onData == "smsreceived") {
         notifyListeners();
       }
     });
