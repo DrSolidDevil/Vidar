@@ -50,13 +50,13 @@ Future<String> encryptMessage(final String message, final String key) async {
         stackTrace,
       );
     }
-    return "ENCRYPTION_FAILED";
+    return "${MiscellaneousConfiguration.errorPrefix}ENCRYPTION_FAILED";
   }
 }
 
 /// If key is blank or encryption prefix is missing then it returns the message argument
 /// If decryption fails then it returns "DECRYPTION_FAILED"
-Future<String> decryptMessage(String message, final String key) async {
+Future<String> decryptMessage(final String message, final String key) async {
   if (key == "") {
     if (Settings.keepLogs) {
       CommonObject.logger!.info("No key for decryption");
@@ -71,8 +71,7 @@ Future<String> decryptMessage(String message, final String key) async {
   }
 
   try {
-    // ignore: parameter_assignments
-    message = message.replaceFirst(
+    final String trimmedMessage = message.replaceFirst(
       CryptographicConfiguration.encryptionPrefix,
       "",
     );
@@ -83,7 +82,7 @@ Future<String> decryptMessage(String message, final String key) async {
 
     final List<int> hashedKey = (await Sha256().hash(utf8.encode(key))).bytes;
     final SecretKey secretKey = SecretKey(hashedKey);
-    final List<int> encryptedBytes = base64.decode(message);
+    final List<int> encryptedBytes = base64.decode(trimmedMessage);
 
     final List<int> nonce = encryptedBytes.sublist(
       0,
