@@ -124,18 +124,20 @@ class ContactList extends ChangeNotifier {
 
   bool modifyContactByContact(
     final Contact contact,
-    final String changeType,
+    final ContactListChangeType changeType,
     final String newValue,
   ) {
     final int index = listOfContacts.indexOf(contact);
     if (index == -1) {
       return false;
     }
-    switch (changeType.toLowerCase()) {
-      case "name":
+    switch (changeType) {
+      case ContactListChangeType.name:
         listOfContacts[index].name = newValue;
-      case "encryptionkey":
+      case ContactListChangeType.encryptionKey:
         listOfContacts[index].encryptionKey = newValue;
+      case ContactListChangeType.phoneNumber:
+        listOfContacts[index].phoneNumber = newValue;
     }
     notifyListeners();
     return true;
