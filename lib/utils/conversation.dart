@@ -56,4 +56,9 @@ class Conversation extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  @override
+  void notifyListeners() {
+    super.notifyListeners();
+  }
 }

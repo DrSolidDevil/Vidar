@@ -23,14 +23,12 @@ class _ConversationWidgetState extends State<ConversationWidget> {
   late Conversation conversation;
   bool chatLoaded = false;
   String loadMessage = "Loading...";
-  late Future<List<SmsMessage?>?> _smsFuture;
 
   @override
   void initState() {
     super.initState();
     contact = widget.contact;
     conversation = Conversation(contact);
-    _smsFuture = querySms(phoneNumber: contact.phoneNumber);
   }
 
   @override
@@ -38,69 +36,70 @@ class _ConversationWidgetState extends State<ConversationWidget> {
     if (LoggingConfiguration.extraVerboseLogs && Settings.keepLogs) {
       CommonObject.logger!.info("Querying sms for contact ${contact.uuid}...");
     }
-    return FutureBuilder<List<SmsMessage?>?>(
-      future: _smsFuture,
-      builder:
-          (
-            final BuildContext context,
-            final AsyncSnapshot<List<SmsMessage?>?> snapshot,
-          ) {
-            if (!snapshot.hasData) {
-              return ChatLoadingScreen(contact.name);
-            } else {
-              // snapshot.data == [null] does not work
-              if (snapshot.data![0] == null) {
-                if (Settings.keepLogs) {
-                  CommonObject.logger!.info(
-                    "SMS query failed for contact ${contact.uuid}",
-                  );
-                }
-                return ColoredBox(
-                  color: VidarColors.primaryDarkSpaceCadet,
-                  child: Center(
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.6,
-                      child: const Center(
-                        child: Text(
-                          "SMS query failed, please ensure the phone number is correct.",
-                          style: TextStyle(fontSize: 20, color: Colors.white),
+    return ListenableBuilder(
+      listenable: conversation,
+      builder: (final BuildContext context, final Widget? asyncSnapshot) {
+        final Future<List<SmsMessage?>?> smsFuture = Future<void>.delayed(
+          const Duration(milliseconds: 100),
+        ).then((final void _) => querySms(phoneNumber: contact.phoneNumber));
+
+        return FutureBuilder<List<SmsMessage?>?>(
+          future: smsFuture,
+          builder:
+              (
+                final BuildContext context,
+                final AsyncSnapshot<List<SmsMessage?>?> snapshot,
+              ) {
+                if (!snapshot.hasData) {
+                  return ChatLoadingScreen(contact.name);
+                } else {
+                  // snapshot.data == [null] does not work
+                  if (snapshot.data![0] == null) {
+                    if (Settings.keepLogs) {
+                      CommonObject.logger!.info(
+                        "SMS query failed for contact ${contact.uuid}",
+                      );
+                    }
+                    return ColoredBox(
+                      color: VidarColors.primaryDarkSpaceCadet,
+                      child: Center(
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.6,
+                          child: const Center(
+                            child: Text(
+                              "SMS query failed, please ensure the phone number is correct.",
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                );
-              } else {
-                final List<SmsMessage> chatLogs = snapshot.data!
-                    .whereType<SmsMessage>()
-                    .toList();
-                conversation.chatLogs = <SmsMessage>[];
-                for (final SmsMessage chat in chatLogs) {
-                  if (chat.status == SmsConstants.STATUS_FAILED) {
-                    conversation.chatLogs.add(
-                      chat.clone(newBody: "MESSAGE_FAILED"),
                     );
                   } else {
-                    conversation.chatLogs.add(chat);
-                  }
-                }
-                if (LoggingConfiguration.extraVerboseLogs &&
-                    Settings.keepLogs) {
-                  CommonObject.logger!.info(
-                    "SMS query complete for contact ${contact.uuid}",
-                  );
-                }
-                return ListenableBuilder(
-                  listenable: conversation,
-                  builder: (final BuildContext context, final Widget? child) {
+                    final List<SmsMessage> chatLogs = snapshot.data!
+                        .whereType<SmsMessage>()
+                        .toList();
+                    conversation.chatLogs = <SmsMessage>[];
+                    for (final SmsMessage chat in chatLogs) {
+                      if (chat.status == SmsConstants.STATUS_FAILED) {
+                        conversation.chatLogs.add(
+                          chat.clone(newBody: "MESSAGE_FAILED"),
+                        );
+                      } else {
+                        conversation.chatLogs.add(chat);
+                      }
+                    }
                     if (LoggingConfiguration.extraVerboseLogs &&
                         Settings.keepLogs) {
                       CommonObject.logger!.info(
-                        "Chat loaded for contact ${contact.uuid}",
+                        "SMS query complete for contact ${contact.uuid}",
                       );
                     }
-                    final List<SmsMessage> messages = conversation.chatLogs;
+
                     final List<Widget> decryptedSpeechBubbles = <Widget>[];
-                    for (final SmsMessage message in messages) {
+                    for (final SmsMessage message in conversation.chatLogs) {
                       decryptedSpeechBubbles.add(
                         FutureBuilder<String>(
                           future: decryptMessage(
@@ -136,11 +135,11 @@ class _ConversationWidgetState extends State<ConversationWidget> {
                         children: decryptedSpeechBubbles,
                       ),
                     );
-                  },
-                );
-              }
-            }
-          },
+                  }
+                }
+              },
+        );
+      },
     );
   }
 }
