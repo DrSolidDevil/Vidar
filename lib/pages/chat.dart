@@ -67,12 +67,7 @@ class _ChatPageState extends State<ChatPage> {
         ),
       ],
     ),
-    body: ListenableBuilder(
-      listenable: updater,
-      builder: (final BuildContext context, final Widget? child) {
-        return ConversationWidget(contact);
-      },
-    ),
-    bottomNavigationBar: MessageBar(contact, updater),
+    body: ConversationWidget(contact),
+    bottomNavigationBar: MessageBar(contact),
   );
 }

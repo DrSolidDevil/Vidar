@@ -8,9 +8,8 @@ import "package:vidar/utils/sms.dart";
 import "package:vidar/utils/updater.dart";
 
 class MessageBar extends StatefulWidget {
-  const MessageBar(this.contact, this.updater, {super.key});
+  const MessageBar(this.contact, {super.key});
   final Contact contact;
-  final Updater updater;
 
   @override
   _MessageBarState createState() => _MessageBarState();
@@ -19,8 +18,7 @@ class MessageBar extends StatefulWidget {
 class _MessageBarState extends State<MessageBar> {
   _MessageBarState();
   late Contact contact;
-  late Updater updater;
-  String? message;
+  String message = "";
   bool error = false;
   String errorMessage = "";
   Updater errorUpdater = Updater();
@@ -30,7 +28,6 @@ class _MessageBarState extends State<MessageBar> {
   void initState() {
     super.initState();
     contact = widget.contact;
-    updater = widget.updater;
   }
 
   @override
@@ -49,7 +46,7 @@ class _MessageBarState extends State<MessageBar> {
         children: <Widget>[
           Text(text, style: const TextStyle(color: Colors.white)),
           IconButton(
-            onPressed: () => errorUpdater.update,
+            onPressed: () => errorUpdater.update(),
             icon: const Icon(Icons.sms, color: Colors.white),
           ),
         ],
@@ -128,9 +125,8 @@ class _MessageBarState extends State<MessageBar> {
                   child: Center(
                     child: IconButton(
                       onPressed: () async {
-                        controller.text = "";
                         final String encryptedMessage = await encryptMessage(
-                          message!,
+                          message,
                           contact.encryptionKey,
                         );
                         if (encryptedMessage.startsWith(
@@ -144,6 +140,7 @@ class _MessageBarState extends State<MessageBar> {
                           errorUpdater.update();
                         } else {
                           sendSms(encryptedMessage, contact.phoneNumber);
+                          controller.text = ""; // Clear only after successful send
                           if (CommonObject.currentConversation != null) {
                             CommonObject.currentConversation!.notifyListeners();
                           } else if (Settings.keepLogs) {

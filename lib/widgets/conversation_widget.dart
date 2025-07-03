@@ -41,7 +41,7 @@ class _ConversationWidgetState extends State<ConversationWidget> {
       listenable: conversation,
       builder: (final BuildContext context, final Widget? asyncSnapshot) {
         final Future<List<SmsMessage?>?> smsFuture = Future<void>.delayed(
-          const Duration(milliseconds: 100),
+          const Duration(seconds: 1),
         ).then((final void _) => querySms(phoneNumber: contact.phoneNumber));
 
         return FutureBuilder<List<SmsMessage?>?>(
