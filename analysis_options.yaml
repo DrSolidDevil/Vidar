@@ -9,8 +9,7 @@ analyzer:
 
 formatter:
   trailing_commas: automate
-
-
+  
 linter:
   rules:
     - always_declare_return_types
@@ -186,11 +185,6 @@ linter:
     - use_to_and_as_if_applicable
     - use_truncating_division
     - valid_regexps
-    
-
-
-
-
 
 
 
