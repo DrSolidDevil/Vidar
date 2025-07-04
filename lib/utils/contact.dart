@@ -96,8 +96,6 @@ class ContactList extends ChangeNotifier {
     return wasSuccess;
   }
 
-  /// Change types are case-insensitive
-  /// Change types: "name", "encryptionKey"
   /// Returns true on success
   bool modifyContactByName(
     final String contactName,
@@ -180,7 +178,6 @@ bool isInvalidContactByParams(
   if (phoneNumber[0] != "+") {
     return true;
   }
-  // phone number contains non numberic characters
   if (phoneNumber.contains(RegExp(r"[^\d+]"))) {
     return true;
   }
