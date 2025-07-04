@@ -117,6 +117,7 @@ class ContactList extends ChangeNotifier {
         break;
       case ContactListChangeType.phoneNumber:
         listOfContacts[index].phoneNumber = newValue;
+        break;
     }
     notifyListeners();
     return true;
