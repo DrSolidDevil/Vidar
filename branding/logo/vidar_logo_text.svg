@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="310" height="120" viewBox="0 0 310 120">
+    <style>
+        @font-face {
+        font-family: &apos;Boldonse&apos;;
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+        src: url(https://fonts.gstatic.com/s/boldonse/v1/ZgNQjPxGPbbJUZemjB37jGA.woff2)
+        format(&apos;woff2&apos;);
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+        U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF,
+        U+FFFD;
+        }
+        text {
+        fill: #64007b;
+        font-size: 60px;
+        font-family: "Boldonse", system-ui;
+        }
+    </style>
+    <text x="115" y="90">Vidar</text>
+    <g transform="translate(20 15)" fill="#64007b">
+        <rect width="80" height="80" rx="5" ry="5" />
+        <rect width="10" height="10" y="70" rx="0" ry="0" />
+        <polygon points="0,100 0,79 20,79" />
+    </g>
+    <g transform="translate(42 55)" stroke="#1a1c28" fill="#1a1c28">
+        <circle r="10" fill="none" stroke-width="9" />
+        <rect width="40" height="10" x="10" y="-5" rx="2" ry="2" stroke="none" />
+        <rect width="8" height="11" x="42" y="2" rx="2" ry="2" stroke="none" />
+        <rect width="8" height="11" x="32" y="2" rx="2" ry="2" stroke="none" />
+    </g>
+</svg>
