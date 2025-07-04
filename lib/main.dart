@@ -21,7 +21,6 @@ void main() async {
   await loadData(contactList, settings);
   SmsConstants(await retrieveSmsConstantsMap());
   smsStatus = await Permission.sms.request();
-  await Permission.manageExternalStorage.request();
 
   runApp(const VidarApp());
 }
