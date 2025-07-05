@@ -12,7 +12,7 @@ Why? Because privacy is a fundamental human right and it should be respected as 
 2. Open your file manager and go to your download location.
 3. Press to open the APK, you will be prompted with an installation dialog.
 4. Press install.
-5. Enjoy your newfound privacy
+5. Enjoy your newfound privacy!
 
 <br>
 
