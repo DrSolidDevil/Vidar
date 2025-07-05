@@ -136,7 +136,11 @@ class _DecryptingTextState extends State<DecryptingText> {
               }
               if (iteration++ % 3 == 0) {
                 placedFromTarget.add(
-                  _generateUniqueRandomInt(placedFromTarget, targetLength, random: random),
+                  _generateUniqueRandomInt(
+                    placedFromTarget,
+                    targetLength,
+                    random: random,
+                  ),
                 );
               }
               final List<String> newText = <String>[];
@@ -181,7 +185,11 @@ String _generateRandomChar({Random? random}) {
   return chars[random.nextInt(chars.length)];
 }
 
-int _generateUniqueRandomInt(final List<int> reserved, final int max, {Random? random}) {
+int _generateUniqueRandomInt(
+  final List<int> reserved,
+  final int max, {
+  Random? random,
+}) {
   if (reserved.length == max) {
     throw Exception("All numbers are reserved!");
   }

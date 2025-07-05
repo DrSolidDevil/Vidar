@@ -140,11 +140,14 @@ class _MessageBarState extends State<MessageBar> {
                           errorUpdater.update();
                         } else {
                           sendSms(encryptedMessage, contact.phoneNumber);
-                          controller.text = ""; // Clear only after successful send
+                          controller.text =
+                              ""; // Clear only after successful send
                           if (CommonObject.currentConversation != null) {
                             CommonObject.currentConversation!.notifyListeners();
                           } else if (Settings.keepLogs) {
-                            CommonObject.logger!.info("Current conversation is null, can not notifyListeners");
+                            CommonObject.logger!.info(
+                              "Current conversation is null, can not notifyListeners",
+                            );
                           }
                         }
                       },

@@ -17,7 +17,6 @@ class BasicButton extends StatelessWidget {
   final double width;
   final double height;
 
-  
   @override
   Widget build(final BuildContext context) {
     return TextButton(

@@ -5,8 +5,10 @@ import "package:vidar/configuration.dart";
 import "package:vidar/utils/common_object.dart";
 import "package:vidar/utils/settings.dart";
 
-const String _ENCRYPTION_FAILED = "${MiscellaneousConfiguration.errorPrefix}ENCRYPTION_FAILED";
-const String _DECRYPTION_FAILED = "${MiscellaneousConfiguration.errorPrefix}DECRYPTION_FAILED";
+const String _ENCRYPTION_FAILED =
+    "${MiscellaneousConfiguration.errorPrefix}ENCRYPTION_FAILED";
+const String _DECRYPTION_FAILED =
+    "${MiscellaneousConfiguration.errorPrefix}DECRYPTION_FAILED";
 const String _NO_KEY = "${MiscellaneousConfiguration.errorPrefix}NO_KEY";
 
 /// If key is blank then it returns the message argument
@@ -60,7 +62,11 @@ Future<String> encryptMessage(final String message, final String key) async {
 
 /// If key is blank or encryption prefix is missing then it returns the message argument
 /// If decryption fails then it returns "DECRYPTION_FAILED"
-Future<String> decryptMessage(final String message, final String key, {AesGcm? algorithm}) async {
+Future<String> decryptMessage(
+  final String message,
+  final String key, {
+  AesGcm? algorithm,
+}) async {
   if (key == "") {
     if (Settings.keepLogs) {
       CommonObject.logger!.info("No key for decryption");

@@ -6,7 +6,9 @@ void clearNavigatorAndPush(
 ) {
   Navigator.pushAndRemoveUntil(
     currentContext,
-    MaterialPageRoute<void>(builder: (final BuildContext context) => destination),
+    MaterialPageRoute<void>(
+      builder: (final BuildContext context) => destination,
+    ),
     (final Route<dynamic> route) => false,
   );
 }
