@@ -185,8 +185,3 @@ linter:
     - use_to_and_as_if_applicable
     - use_truncating_division
     - valid_regexps
-
-
-
-#make error:
-# 
