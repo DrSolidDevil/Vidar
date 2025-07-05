@@ -1,0 +1,39 @@
+name: "Build APK"
+description: "Builds APK and adds it to the release"
+
+on:
+    release: 
+        types: 
+            - published
+
+permissions:
+  contents: write
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: subosito/flutter-action@v2.21.0
+              with:
+                channel: 'stable'
+
+            - run: flutter --version
+
+            - name: Install dependencies
+              run: dart pub get
+            
+            - name: Build APK
+              run: flutter build apk
+              
+            - name: Create APK_PATH as env variable
+              run: echo "APK_PATH=build/app/outputs/flutter-apk/vidar-$(echo \"$GITHUB_REF\" | cut -d'/' -f3 | cut -d'v' -f2).apk" >> $GITHUB_ENV
+            
+            - name: Rename APK
+              run: mv build/app/outputs/flutter-apk/app-release.apk "$APK_PATH"
+            
+            - name: Add APK to release
+              uses: softprops/action-gh-release@v2.3.2
+              with:
+                files: ${{ env.APK_PATH }}
+            
