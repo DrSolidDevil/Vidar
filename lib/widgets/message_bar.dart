@@ -158,9 +158,11 @@ class _MessageBarState extends State<MessageBar> {
                           controller.text =
                               ""; // Clear only after successful send
                           if (CommonObject.currentConversation != null) {
+                            int delay = (encryptedMessage.length~/65)*TimeConfiguration.smsUpdateDelay;
+                            delay = delay == 0 ? 1 : delay;
                             Future<void>.delayed(
-                              const Duration(
-                                seconds: TimeConfiguration.smsUpdateDelay,
+                              Duration(
+                                seconds: delay,
                               ),
                             ).then(
                               (_) {CommonObject
