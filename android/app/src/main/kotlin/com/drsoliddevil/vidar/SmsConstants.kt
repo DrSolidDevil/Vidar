@@ -1,4 +1,4 @@
-package com.vidar.vidar
+package com.drsoliddevil.vidar
 
 import android.provider.Telephony.TextBasedSmsColumns
 

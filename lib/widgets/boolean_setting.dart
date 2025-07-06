@@ -19,7 +19,7 @@ class BooleanSetting extends StatefulWidget {
 class _BooleanSettingState extends State<BooleanSetting> {
   _BooleanSettingState();
 
-  late String settingText;
+  late final String settingText;
 
   @override
   void initState() {

@@ -1,4 +1,4 @@
-package com.vidar.vidar
+package com.drsoliddevil.vidar
 
 import android.telephony.SmsManager
 import android.content.Context

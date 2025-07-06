@@ -1,27 +1,40 @@
-# Vidar 0.1.0
-An sms application utilizing AES256 encryption to keep your private messages private.
-Why? Because privacy is a human right and it should be respected.
+<h1 align="center"><img src="https://github.com/DrSolidDevil/Vidar/blob/5e33c19f4a9d61d294e678f68249639c5fc8a1d9/branding/logo/vidar_logo_text.svg" width=400></h1>
 
-If you have any questions feel free to ask!
+Vidar is an open-source end-to-end encrypted SMS application utilizing the Advanced Encryption Standard (AES256) to send symmetrically encrypted messages
+With Vidar you can keep your private conversations private; free from snooping governments and malicious actors.
 
-<br>
-
-Notes:
-* Permission manage files is only needed if you want to export logs. If you won't need to export logs then you can deny the permission.
-
-<br>
-<br>
-
-**Please be aware that the encrypted messages can be long and can eat away at your phone plan if you don't have unlimited texting**
+Why? Because privacy is a fundamental human right and it should be respected as such.
 
 <br>
 
-## Screenshots
-<img src="screenshots/chat_bob.png" width="200px">
-<br>
-<img src="screenshots/chat_mom.png" width="200px">
-<br>
-<img src="screenshots/contact_list.png" width="200px">
-<br>
-<img src="screenshots/edit_contact.png" width="200px">
+## 🚀 Installation Steps
+1. Download the APK from the [latest stable release](https://github.com/DrSolidDevil/Vidar/releases) to your android phone.
+2. Open your file manager and go to your download location.
+3. Press to open the APK, you will be prompted with an installation dialog.
+4. Press install.
+5. Enjoy your newfound privacy!
 
+<br>
+
+## 📸 Screenshots
+<table>
+  <tr>
+    <td align="center">Contact List</td>
+     <td align="center">Chat</td>
+     <td align="center">Edit Contact</td>
+  </tr>
+  <tr>
+    <td><img src="https://github.com/DrSolidDevil/Vidar/blob/110b2e2611224218c3e3028205e279d0c7dffbd4/screenshots/contact_list.png" width=270></td>
+    <td><img src="https://github.com/DrSolidDevil/Vidar/blob/110b2e2611224218c3e3028205e279d0c7dffbd4/screenshots/chat_bob.png" width=270></td>
+    <td><img src="https://github.com/DrSolidDevil/Vidar/blob/110b2e2611224218c3e3028205e279d0c7dffbd4/screenshots/edit_contact.png" width=270></td>
+  </tr>
+ </table>
+
+<br>
+
+## 🤝 Contributing
+If you want to say Thank You and/or support the active development of Vidar:
+* ⭐ Add a GitHub Star to the project.
+* 📢 Share the project on social media.
+
+If you want to do more than so then we welcome you to raise issues, create pull-requests and be an active part of the community.

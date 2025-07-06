@@ -107,7 +107,7 @@ class _DecryptingTextState extends State<DecryptingText> {
     targetLength = targets[currentTarget].length;
     currentText = List<String>.generate(
       targetLength,
-      (_) => _generateRandomChar(),
+      (_) => _generateRandomChar(random: random),
     ).join();
     timer = Timer.periodic(
       const Duration(milliseconds: TimeConfiguration.decryptingLoadingText),
@@ -136,7 +136,11 @@ class _DecryptingTextState extends State<DecryptingText> {
               }
               if (iteration++ % 3 == 0) {
                 placedFromTarget.add(
-                  _generateUniqueRandomInt(placedFromTarget, targetLength),
+                  _generateUniqueRandomInt(
+                    placedFromTarget,
+                    targetLength,
+                    random: random,
+                  ),
                 );
               }
               final List<String> newText = <String>[];
@@ -144,7 +148,7 @@ class _DecryptingTextState extends State<DecryptingText> {
                 if (placedFromTarget.contains(i)) {
                   newText.add(targets[currentTarget][i]);
                 } else {
-                  newText.add(_generateRandomChar());
+                  newText.add(_generateRandomChar(random: random));
                 }
               }
               currentText = newText.join();
@@ -173,19 +177,23 @@ class _DecryptingTextState extends State<DecryptingText> {
   }
 }
 
-String _generateRandomChar() {
+String _generateRandomChar({Random? random}) {
   //MiscellaneousConfiguration.loadingTextChars
-  final Random random = Random();
+  random ??= Random();
   const String chars =
       r"AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890!@#%&/()=?+}][{$@}]*<>-_.:,;~^§\";
   return chars[random.nextInt(chars.length)];
 }
 
-int _generateUniqueRandomInt(final List<int> reserved, final int max) {
+int _generateUniqueRandomInt(
+  final List<int> reserved,
+  final int max, {
+  Random? random,
+}) {
   if (reserved.length == max) {
     throw Exception("All numbers are reserved!");
   }
-  final Random random = Random();
+  random ??= Random();
   late int x;
   do {
     x = random.nextInt(max);

@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:logging/logging.dart";
+import "package:permission_handler/permission_handler.dart";
 import "package:vidar/configuration.dart";
 import "package:vidar/pages/contact_list.dart";
 import "package:vidar/utils/common_object.dart";
@@ -36,14 +37,47 @@ class _SettingsPageState extends State<SettingsPage> {
     super.initState();
   }
 
-  void _save() {
+  Future<void> _save() async {
     Settings.allowUnencryptedMessages = allowUnencryptedMessages.setting;
     Settings.keepLogs = keepLogs.setting;
     if (Settings.keepLogs) {
-      CommonObject.logger = Logger(LoggingConfiguration.loggerName);
-      CommonObject.logger!.onRecord.listen((final LogRecord log) {
-        createLogger();
-      });
+      final PermissionStatus manageExternalStorageStatus = await Permission
+          .manageExternalStorage
+          .request();
+      if (manageExternalStorageStatus.isDenied) {
+        if (mounted) {
+          showDialog<void>(
+            context: context,
+            builder: (final BuildContext context) => AlertDialog(
+              title: const Text("Can't keep logs"),
+              content: const Text(
+                "To keep logs you must allow Vidar to manage external storage.",
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (final BuildContext context) =>
+                            const ContactListPage(),
+                      ),
+                    );
+                  },
+                  child: const Text("Continue"),
+                ),
+              ],
+            ),
+          );
+        }
+        Settings.keepLogs = false;
+        return;
+      } else {
+        CommonObject.logger = Logger(LoggingConfiguration.loggerName);
+        CommonObject.logger!.onRecord.listen((final LogRecord log) {
+          createLogger();
+        });
+      }
     } else {
       if (CommonObject.logger != null) {
         CommonObject.logger!.clearListeners();
@@ -51,13 +85,16 @@ class _SettingsPageState extends State<SettingsPage> {
       }
       CommonObject.logs = <String>[];
     }
-    saveSettings(CommonObject.settings, context: context);
-    Navigator.push(
-      context,
-      MaterialPageRoute<void>(
-        builder: (final BuildContext context) => const ContactListPage(),
-      ),
-    );
+
+    if (mounted) {
+      saveSettings(CommonObject.settings, context: context);
+      Navigator.push(
+        context,
+        MaterialPageRoute<void>(
+          builder: (final BuildContext context) => const ContactListPage(),
+        ),
+      );
+    }
   }
 
   void _discard() {

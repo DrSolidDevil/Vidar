@@ -4,7 +4,6 @@ import "package:vidar/pages/contact_list.dart";
 import "package:vidar/pages/edit_contact.dart";
 import "package:vidar/utils/contact.dart";
 import "package:vidar/utils/navigation.dart";
-import "package:vidar/utils/updater.dart";
 import "package:vidar/widgets/conversation_widget.dart";
 import "package:vidar/widgets/message_bar.dart";
 
@@ -19,7 +18,6 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   _ChatPageState();
   late Contact contact;
-  final Updater updater = Updater();
 
   @override
   void initState() {
@@ -67,12 +65,7 @@ class _ChatPageState extends State<ChatPage> {
         ),
       ],
     ),
-    body: ListenableBuilder(
-      listenable: updater,
-      builder: (final BuildContext context, final Widget? child) {
-        return ConversationWidget(contact);
-      },
-    ),
-    bottomNavigationBar: MessageBar(contact, updater),
+    body: ConversationWidget(contact),
+    bottomNavigationBar: MessageBar(contact),
   );
 }

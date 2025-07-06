@@ -8,7 +8,6 @@ import "package:vidar/utils/navigation.dart";
 import "package:vidar/utils/random_key.dart";
 import "package:vidar/utils/settings.dart";
 import "package:vidar/utils/storage.dart";
-import "package:vidar/utils/updater.dart";
 import "package:vidar/widgets/buttons.dart";
 import "package:vidar/widgets/error_popup.dart";
 
@@ -25,7 +24,6 @@ class _EditContactPageState extends State<EditContactPage> {
   _EditContactPageState();
   late Contact contact;
   late ContactPageCaller caller;
-  final Updater updater = Updater();
   final TextEditingController encryptionKeyController = TextEditingController();
 
   String? newName;
@@ -198,10 +196,7 @@ class _EditContactPageState extends State<EditContactPage> {
                           borderSide: BorderSide.none,
                         ),
                       ),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                      ),
+                      style: const TextStyle(color: Colors.white, fontSize: 12),
                       onChanged: (final String value) {
                         newName = value;
                       },
@@ -233,33 +228,24 @@ class _EditContactPageState extends State<EditContactPage> {
                             border: Border.all(color: Colors.transparent),
                           ),
                           padding: const EdgeInsets.only(left: 10),
-                          child: ListenableBuilder(
-                            listenable: updater,
-                            builder:
-                                (
-                                  final BuildContext context,
-                                  final Widget? child,
-                                ) {
-                                  return TextField(
-                                    controller: encryptionKeyController,
-                                    decoration: InputDecoration(
-                                      hintText:
-                                          "Encryption Key${Settings.allowUnencryptedMessages ? ", 0=No Key" : ""}",
-                                      hintStyle: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12
-                                      ),
-                                      border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(7),
-                                        borderSide: BorderSide.none,
-                                      ),
-                                    ),
-                                    style: const TextStyle(color: Colors.white),
-                                    onChanged: (final String value) {
-                                      newKey = value;
-                                    },
-                                  );
-                                },
+                          child: TextField(
+                            controller: encryptionKeyController,
+                            decoration: InputDecoration(
+                              hintText:
+                                  "Encryption Key${Settings.allowUnencryptedMessages ? ", 0=No Key" : ""}",
+                              hintStyle: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(7),
+                                borderSide: BorderSide.none,
+                              ),
+                            ),
+                            style: const TextStyle(color: Colors.white),
+                            onChanged: (final String value) {
+                              newKey = value;
+                            },
                           ),
                         ),
                       ),
@@ -318,10 +304,7 @@ class _EditContactPageState extends State<EditContactPage> {
                           borderSide: BorderSide.none,
                         ),
                       ),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                      ),
+                      style: const TextStyle(color: Colors.white, fontSize: 12),
                       onChanged: (final String value) {
                         newPhoneNumber = value;
                       },

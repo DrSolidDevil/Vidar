@@ -96,8 +96,6 @@ class ContactList extends ChangeNotifier {
     return wasSuccess;
   }
 
-  /// Change types are case-insensitive
-  /// Change types: "name", "encryptionKey"
   /// Returns true on success
   bool modifyContactByName(
     final String contactName,
@@ -117,6 +115,7 @@ class ContactList extends ChangeNotifier {
         break;
       case ContactListChangeType.phoneNumber:
         listOfContacts[index].phoneNumber = newValue;
+        break;
     }
     notifyListeners();
     return true;
@@ -124,18 +123,20 @@ class ContactList extends ChangeNotifier {
 
   bool modifyContactByContact(
     final Contact contact,
-    final String changeType,
+    final ContactListChangeType changeType,
     final String newValue,
   ) {
     final int index = listOfContacts.indexOf(contact);
     if (index == -1) {
       return false;
     }
-    switch (changeType.toLowerCase()) {
-      case "name":
+    switch (changeType) {
+      case ContactListChangeType.name:
         listOfContacts[index].name = newValue;
-      case "encryptionkey":
+      case ContactListChangeType.encryptionKey:
         listOfContacts[index].encryptionKey = newValue;
+      case ContactListChangeType.phoneNumber:
+        listOfContacts[index].phoneNumber = newValue;
     }
     notifyListeners();
     return true;
@@ -177,7 +178,6 @@ bool isInvalidContactByParams(
   if (phoneNumber[0] != "+") {
     return true;
   }
-  // phone number contains non numberic characters
   if (phoneNumber.contains(RegExp(r"[^\d+]"))) {
     return true;
   }

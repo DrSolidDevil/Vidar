@@ -1,3 +1,4 @@
+import "package:cryptography/cryptography.dart" show AesGcm;
 import "package:flutter/material.dart";
 import "package:vidar/configuration.dart";
 import "package:vidar/utils/common_object.dart";
@@ -41,7 +42,7 @@ class _ConversationWidgetState extends State<ConversationWidget> {
       listenable: conversation,
       builder: (final BuildContext context, final Widget? asyncSnapshot) {
         final Future<List<SmsMessage?>?> smsFuture = Future<void>.delayed(
-          const Duration(milliseconds: 100),
+          const Duration(seconds: 1),
         ).then((final void _) => querySms(phoneNumber: contact.phoneNumber));
 
         return FutureBuilder<List<SmsMessage?>?>(
@@ -106,6 +107,10 @@ class _ConversationWidgetState extends State<ConversationWidget> {
                           future: decryptMessage(
                             message.body,
                             contact.encryptionKey,
+                            algorithm: AesGcm.with256bits(
+                              nonceLength:
+                                  CryptographicConfiguration.nonceLength,
+                            ),
                           ),
                           builder:
                               (

@@ -1,4 +1,4 @@
-package com.vidar.vidar
+package com.drsoliddevil.vidar
 
 import android.content.Context
 import android.database.Cursor
@@ -9,7 +9,6 @@ import android.provider.Telephony.TextBasedSmsColumns
 fun querySms(context: Context, phoneNumber: String?): ArrayList<HashMap<String, String>>? {
     val sms: Cursor?
     if (phoneNumber != null) {
-        println("phoneNumber not null")
         sms = context.contentResolver.query(
             "content://sms/".toUri(),
             includedQueryData,
@@ -18,7 +17,6 @@ fun querySms(context: Context, phoneNumber: String?): ArrayList<HashMap<String, 
             null
         )
     } else {
-        println("phoneNumber null")
         sms = context.contentResolver.query(
             "content://sms/".toUri(),
             includedQueryData,

@@ -3,14 +3,13 @@ import "package:vidar/configuration.dart";
 import "package:vidar/utils/common_object.dart";
 import "package:vidar/utils/contact.dart";
 import "package:vidar/utils/encryption.dart";
+import "package:vidar/utils/public_change_notifier.dart";
 import "package:vidar/utils/settings.dart";
 import "package:vidar/utils/sms.dart";
-import "package:vidar/utils/updater.dart";
 
 class MessageBar extends StatefulWidget {
-  const MessageBar(this.contact, this.updater, {super.key});
+  const MessageBar(this.contact, {super.key});
   final Contact contact;
-  final Updater updater;
 
   @override
   _MessageBarState createState() => _MessageBarState();
@@ -19,18 +18,16 @@ class MessageBar extends StatefulWidget {
 class _MessageBarState extends State<MessageBar> {
   _MessageBarState();
   late Contact contact;
-  late Updater updater;
-  String? message;
+  String message = "";
   bool error = false;
   String errorMessage = "";
-  Updater errorUpdater = Updater();
+  PublicChangeNotifier errorNotifier = PublicChangeNotifier();
   final TextEditingController controller = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     contact = widget.contact;
-    updater = widget.updater;
   }
 
   @override
@@ -43,14 +40,29 @@ class _MessageBarState extends State<MessageBar> {
     final BuildContext context,
     final String text,
   ) {
-    return ColoredBox(
-      color: VidarColors.secondaryMetallicViolet,
+    return Container(
+      color: VidarColors.tertiaryGold,
+      padding: const EdgeInsets.only(bottom: 50, left: 20, right: 20, top: 10),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Text(text, style: const TextStyle(color: Colors.white)),
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.75,
+            child: Text(
+              text,
+              style: const TextStyle(
+                color: VidarColors.secondaryMetallicViolet,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+          ),
           IconButton(
-            onPressed: () => errorUpdater.update,
-            icon: const Icon(Icons.sms, color: Colors.white),
+            onPressed: () => errorNotifier.notifyListeners(),
+            icon: const Icon(
+              Icons.sms,
+              color: VidarColors.secondaryMetallicViolet,
+            ),
           ),
         ],
       ),
@@ -60,7 +72,7 @@ class _MessageBarState extends State<MessageBar> {
   @override
   Widget build(final BuildContext context) {
     return ListenableBuilder(
-      listenable: errorUpdater,
+      listenable: errorNotifier,
       builder: (final BuildContext context, final Widget? child) {
         if (error) {
           error = false;
@@ -68,7 +80,7 @@ class _MessageBarState extends State<MessageBar> {
             const Duration(
               seconds: TimeConfiguration.messageWidgetErrorDisplayTime,
             ),
-          ).then((_) => errorUpdater.update());
+          ).then((_) => errorNotifier.notifyListeners());
           switch (errorMessage) {
             case "MESSAGE_FAILED":
               return buildErrorMessageWidget(context, "Failed to send message");
@@ -128,9 +140,8 @@ class _MessageBarState extends State<MessageBar> {
                   child: Center(
                     child: IconButton(
                       onPressed: () async {
-                        controller.text = "";
                         final String encryptedMessage = await encryptMessage(
-                          message!,
+                          message,
                           contact.encryptionKey,
                         );
                         if (encryptedMessage.startsWith(
@@ -141,13 +152,26 @@ class _MessageBarState extends State<MessageBar> {
                             "",
                           );
                           error = true;
-                          errorUpdater.update();
+                          errorNotifier.notifyListeners();
                         } else {
                           sendSms(encryptedMessage, contact.phoneNumber);
+                          controller.text =
+                              ""; // Clear only after successful send
                           if (CommonObject.currentConversation != null) {
-                            CommonObject.currentConversation!.notifyListeners();
+                            int delay =
+                                (encryptedMessage.length ~/ 65) *
+                                TimeConfiguration.smsUpdateDelay;
+                            delay = delay == 0 ? 1 : delay;
+                            Future<void>.delayed(Duration(seconds: delay)).then(
+                              (_) {
+                                CommonObject.currentConversation!
+                                    .notifyListeners();
+                              },
+                            );
                           } else if (Settings.keepLogs) {
-                            CommonObject.logger!.info("Current conversation is null, can not notifyListeners");
+                            CommonObject.logger!.info(
+                              "Current conversation is null, can not notifyListeners",
+                            );
                           }
                         }
                       },
