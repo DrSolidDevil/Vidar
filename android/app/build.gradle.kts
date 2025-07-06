@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.vidar.vidar"
+    namespace = "com.drsoliddevil.vidar"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "27.0.12077973"
 
@@ -20,7 +20,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.vidar.vidar"
+        applicationId = "com.drsoliddevil.vidar"
         minSdk = 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode

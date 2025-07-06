@@ -1,4 +1,4 @@
-package com.vidar.vidar
+package com.drsoliddevil.vidar
 
 import android.content.BroadcastReceiver
 import android.content.Context

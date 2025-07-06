@@ -158,7 +158,15 @@ class _MessageBarState extends State<MessageBar> {
                           controller.text =
                               ""; // Clear only after successful send
                           if (CommonObject.currentConversation != null) {
-                            CommonObject.currentConversation!.notifyListeners();
+                            Future<void>.delayed(
+                              const Duration(
+                                seconds: TimeConfiguration.smsUpdateDelay,
+                              ),
+                            ).then(
+                              (_) {CommonObject
+                                  .currentConversation!
+                                  .notifyListeners();},
+                            );
                           } else if (Settings.keepLogs) {
                             CommonObject.logger!.info(
                               "Current conversation is null, can not notifyListeners",

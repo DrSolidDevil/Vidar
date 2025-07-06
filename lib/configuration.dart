@@ -39,7 +39,7 @@ class SizeConfiguration {
 class TimeConfiguration {
   // Seconds
   static const int messageWidgetErrorDisplayTime = 5;
-  static const int smsUpdateDelay = 5;
+  static const int smsUpdateDelay = 1;
   // Milliseconds
   static const int decryptingLoadingText = 200;
   // Seconds to delay before going to next "decryption" with DecryptingText loader
