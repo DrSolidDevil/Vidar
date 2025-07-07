@@ -124,11 +124,7 @@ class _EditContactPageState extends State<EditContactPage> {
         }
 
       case ContactPageCaller.newContact:
-        if (isInvalidContactByParams(
-          newName,
-          newKey,
-          newPhoneNumber,
-        )) {
+        if (isInvalidContactByParams(newName, newKey, newPhoneNumber)) {
           if (LoggingConfiguration.extraVerboseLogs && Settings.keepLogs) {
             CommonObject.logger!.info(
               "Invalid details for new contact ${contact.uuid}",
