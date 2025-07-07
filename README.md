@@ -1,6 +1,8 @@
 <h1 align="center"><img src="https://github.com/DrSolidDevil/Vidar/blob/5e33c19f4a9d61d294e678f68249639c5fc8a1d9/branding/logo/vidar_logo_text.svg" width=400></h1>
 
-Vidar is an open-source end-to-end encrypted SMS application utilizing the Advanced Encryption Standard (AES256) to send symmetrically encrypted messages
+Vidar is an open-source end-to-end encrypted SMS application utilizing the Advanced Encryption Standard (AES256) to send symmetrically encrypted messages. 
+Unlike most messaging apps, Vidar operates entirely over SMS; this eliminates the need for internet access or external servers. As long as there's a cellular signal, your messages go through.
+
 With Vidar you can keep your private conversations private; free from snooping governments and malicious actors.
 
 Why? Because privacy is a fundamental human right and it should be respected as such.
