@@ -42,7 +42,14 @@ class _MessageBarState extends State<MessageBar> {
   ) {
     return Container(
       color: VidarColors.tertiaryGold,
-      padding: const EdgeInsets.only(bottom: 50, left: 20, right: 20, top: 10),
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom > 50
+            ? MediaQuery.of(context).viewInsets.bottom
+            : 50,
+        left: 20,
+        right: 20,
+        top: 10,
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -58,7 +65,10 @@ class _MessageBarState extends State<MessageBar> {
             ),
           ),
           IconButton(
-            onPressed: () => errorNotifier.notifyListeners(),
+            onPressed: () {
+              error = false;
+              errorNotifier.notifyListeners();
+            },
             icon: const Icon(
               Icons.sms,
               color: VidarColors.secondaryMetallicViolet,
@@ -75,12 +85,14 @@ class _MessageBarState extends State<MessageBar> {
       listenable: errorNotifier,
       builder: (final BuildContext context, final Widget? child) {
         if (error) {
-          error = false;
           Future<void>.delayed(
             const Duration(
               seconds: TimeConfiguration.messageWidgetErrorDisplayTime,
             ),
-          ).then((_) => errorNotifier.notifyListeners());
+          ).then((_) {
+            error = false;
+            errorNotifier.notifyListeners();
+          });
           switch (errorMessage) {
             case "MESSAGE_FAILED":
               return buildErrorMessageWidget(context, "Failed to send message");

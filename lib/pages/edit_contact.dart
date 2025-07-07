@@ -49,8 +49,6 @@ class _EditContactPageState extends State<EditContactPage> {
     switch (caller) {
       case ContactPageCaller.chatPage:
         clearNavigatorAndPush(context, ChatPage(contact));
-      case ContactPageCaller.contactPage:
-        clearNavigatorAndPush(context, const ContactListPage());
       case ContactPageCaller.newContact:
         clearNavigatorAndPush(context, const ContactListPage());
     }
@@ -66,43 +64,70 @@ class _EditContactPageState extends State<EditContactPage> {
       }
     }
 
-    if (newName == "") {
-      newName = null;
-    }
-    if (newKey == "") {
-      newKey = null;
-    }
-    if (newPhoneNumber == "") {
-      newPhoneNumber = null;
-    }
+    // Ensures non-edited settings are not changed.
+    newName = newName == "" ? null : newName;
+    newKey = newKey == "" ? null : newKey;
+    newPhoneNumber = newPhoneNumber == "" ? null : newPhoneNumber;
 
-    contact.name = newName ?? contact.name;
+    newName = newName ?? contact.name;
 
     if (Settings.allowUnencryptedMessages && newKey == "0") {
       if (LoggingConfiguration.extraVerboseLogs && Settings.keepLogs) {
         CommonObject.logger!.info("newKey is 0 -> no key");
       }
-      contact.encryptionKey = "";
+      newKey = "";
     } else {
-      contact.encryptionKey = newKey ?? contact.encryptionKey;
+      newKey = newKey ?? contact.encryptionKey;
     }
 
     // Remove all non-numeric characters
-    newPhoneNumber = newPhoneNumber?.replaceAll(RegExp(r"[^\d+]"), "");
+    newPhoneNumber = newPhoneNumber?.replaceAll(RegExp(r"[^\d]"), "");
 
-    contact.phoneNumber = newPhoneNumber ?? contact.phoneNumber;
+    if (newPhoneNumber != null) {
+      newPhoneNumber = "+$newPhoneNumber";
+    } else if (caller == ContactPageCaller.chatPage) {
+      newPhoneNumber = contact.phoneNumber;
+    }
+
     saveData(CommonObject.contactList, CommonObject.settings);
 
     switch (caller) {
       case ContactPageCaller.chatPage:
-        clearNavigatorAndPush(context, ChatPage(contact));
-      case ContactPageCaller.contactPage:
-        clearNavigatorAndPush(context, const ContactListPage());
+        if (isInvalidContactByParams(newName, newKey, newPhoneNumber)) {
+          if (LoggingConfiguration.extraVerboseLogs && Settings.keepLogs) {
+            CommonObject.logger!.info(
+              "Invalid details for existing contact ${contact.uuid}",
+            );
+          }
+          showDialog<void>(
+            context: context,
+            builder: (final BuildContext context) {
+              return AlertDialog(
+                title: const Text("Invalid details"),
+                content: const Text("Please ensure edited details are correct"),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      clearNavigatorAndPush(context, const ContactListPage());
+                    },
+                    child: const Text("OK"),
+                  ),
+                ],
+              );
+            },
+          );
+        } else {
+          contact.name = newName!;
+          contact.encryptionKey = newKey!;
+          contact.phoneNumber = newPhoneNumber!;
+          clearNavigatorAndPush(context, ChatPage(contact));
+        }
+
       case ContactPageCaller.newContact:
         if (isInvalidContactByParams(newName, newKey, newPhoneNumber)) {
           if (LoggingConfiguration.extraVerboseLogs && Settings.keepLogs) {
             CommonObject.logger!.info(
-              "Invalid details for new contact ${contact.uuid}...",
+              "Invalid details for new contact ${contact.uuid}",
             );
           }
           showDialog<void>(
@@ -125,11 +150,7 @@ class _EditContactPageState extends State<EditContactPage> {
             },
           );
         } else {
-          final bool success = CommonObject.contactList.addContactByParams(
-            newName!,
-            newKey!,
-            newPhoneNumber!,
-          );
+          final bool success = CommonObject.contactList.addContact(contact);
           if (Settings.keepLogs) {
             if (success) {
               if (LoggingConfiguration.extraVerboseLogs) {
@@ -149,12 +170,15 @@ class _EditContactPageState extends State<EditContactPage> {
               builder: (final BuildContext context) {
                 return const ErrorPopup(
                   title: "Failed to save contact",
-                  body: "addContactByParams failed",
+                  body: "addContact failed",
                   enableReturn: false,
                 );
               },
             );
           } else {
+            contact.name = newName!;
+            contact.encryptionKey = newKey!;
+            contact.phoneNumber = newPhoneNumber!;
             clearNavigatorAndPush(context, const ContactListPage());
           }
         }
@@ -340,4 +364,4 @@ class _EditContactPageState extends State<EditContactPage> {
   }
 }
 
-enum ContactPageCaller { newContact, contactPage, chatPage }
+enum ContactPageCaller { newContact, chatPage }
