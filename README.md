@@ -39,4 +39,9 @@ If you want to say Thank You and/or support the active development of Vidar:
 * ⭐ Add a GitHub Star to the project.
 * 📢 Share the project on social media.
 
-If you want to do more than so then we welcome you to raise issues, create pull-requests and be an active part of the community.
+Want to get more involved? We welcome contributions of all kinds! Feel free to:
+* Open issues
+* Submit pull requests
+* Join the community discussions
+
+Contributors may be added to the CONTRIBUTORS.md file, and significant contributors may be recognized in the AUTHORS.md file.
