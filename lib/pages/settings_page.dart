@@ -10,9 +10,7 @@ import "package:vidar/utils/storage.dart";
 import "package:vidar/widgets/boolean_setting.dart";
 import "package:vidar/widgets/buttons.dart";
 
-// ignore: public_member_api_docs
 class SettingsPage extends StatefulWidget {
-  // ignore: public_member_api_docs
   const SettingsPage({super.key});
 
   @override
