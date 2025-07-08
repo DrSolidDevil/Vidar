@@ -16,12 +16,12 @@ const String ENCRYPTION_ERROR_NO_KEY = "NO_KEY";
 Future<String> encryptMessage(final String message, final String key) async {
   if (key == "") {
     if (Settings.keepLogs) {
-      CommonObject.logger!.info("No key for encryption");
+      CommonObject.logger!.info("No key for encryption (${Settings.allowUnencryptedMessages ? "allowed" : "not allowed"})");
     }
     if (Settings.allowUnencryptedMessages) {
       return message;
     } else {
-      return  "${MiscellaneousConfiguration.errorPrefix}$ENCRYPTION_ERROR_NO_KEY";
+      return "${MiscellaneousConfiguration.errorPrefix}$ENCRYPTION_ERROR_NO_KEY";
     }
   }
 
