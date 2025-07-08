@@ -139,7 +139,7 @@ Future<void> _saveKeys(final ContactList contactList) async {
     CommonObject.logger!.info("Saving keys...");
   }
 
-  await storage.deleteAll(); // prevents keys of removed contacts being there
+  await storage.deleteAll(); // prevents keys of removed contacts remaining after contact is deleted
   for (final Contact contact in contactList.listOfContacts) {
     storage.write(key: contact.name, value: contact.encryptionKey);
   }
