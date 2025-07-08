@@ -20,8 +20,7 @@ class BasicButton extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return TextButton(
-      // ignore: unnecessary_lambdas
-      onPressed: () => onPressed(),
+      onPressed: onPressed,
       child: Container(
         width: width,
         height: height,
