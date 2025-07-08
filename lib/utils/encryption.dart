@@ -5,11 +5,11 @@ import "package:vidar/configuration.dart";
 import "package:vidar/utils/common_object.dart";
 import "package:vidar/utils/settings.dart";
 
-const String _ENCRYPTION_FAILED =
-    "${MiscellaneousConfiguration.errorPrefix}ENCRYPTION_FAILED";
-const String _DECRYPTION_FAILED =
-    "${MiscellaneousConfiguration.errorPrefix}DECRYPTION_FAILED";
-const String _NO_KEY = "${MiscellaneousConfiguration.errorPrefix}NO_KEY";
+const String ENCRYPTION_ERROR_ENCRYPTION_FAILED = "ENCRYPTION_FAILED";
+
+const String ENCRYPTION_ERROR_DECRYPTION_FAILED = "DECRYPTION_FAILED";
+
+const String ENCRYPTION_ERROR_NO_KEY = "NO_KEY";
 
 /// If key is blank then it returns the message argument
 /// Will output with an encryption prefix (i.e. a string prefix that signals that this is an encrypted message)
@@ -21,7 +21,7 @@ Future<String> encryptMessage(final String message, final String key) async {
     if (Settings.allowUnencryptedMessages) {
       return message;
     } else {
-      return _NO_KEY;
+      return  "${MiscellaneousConfiguration.errorPrefix}$ENCRYPTION_ERROR_NO_KEY";
     }
   }
 
@@ -56,7 +56,7 @@ Future<String> encryptMessage(final String message, final String key) async {
         stackTrace,
       );
     }
-    return _ENCRYPTION_FAILED;
+    return "${MiscellaneousConfiguration.errorPrefix}$ENCRYPTION_ERROR_ENCRYPTION_FAILED";
   }
 }
 
@@ -125,6 +125,6 @@ Future<String> decryptMessage(
         stackTrace,
       );
     }
-    return _DECRYPTION_FAILED;
+    return "${MiscellaneousConfiguration.errorPrefix}$ENCRYPTION_ERROR_DECRYPTION_FAILED";
   }
 }
