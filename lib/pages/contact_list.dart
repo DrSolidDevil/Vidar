@@ -6,9 +6,7 @@ import "package:vidar/utils/common_object.dart";
 import "package:vidar/utils/contact.dart";
 import "package:vidar/utils/navigation.dart";
 
-// ignore: public_member_api_docs
 class ContactListPage extends StatefulWidget {
-  // ignore: public_member_api_docs
   const ContactListPage({super.key});
 
   @override

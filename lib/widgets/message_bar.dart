@@ -94,19 +94,17 @@ class _MessageBarState extends State<MessageBar> {
             errorNotifier.notifyListeners();
           });
           switch (errorMessage) {
-            case "MESSAGE_FAILED":
-              return buildErrorMessageWidget(context, "Failed to send message");
-            case "NO_KEY":
+            case ENCRYPTION_ERROR_NO_KEY:
               return buildErrorMessageWidget(
                 context,
                 "No key set for contact, either disable key requirement or set a key",
               );
-            case "DECRYPTION_FAILED":
+            case ENCRYPTION_ERROR_DECRYPTION_FAILED:
               return buildErrorMessageWidget(
                 context,
                 "Decryption of message failed, please ensure your key is correct",
               );
-            case "ENCRYPTION_FAILED":
+            case ENCRYPTION_ERROR_ENCRYPTION_FAILED:
               return buildErrorMessageWidget(
                 context,
                 "Encryption of message failed",

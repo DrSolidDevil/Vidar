@@ -39,8 +39,6 @@ class _EditContactPageState extends State<EditContactPage> {
 
   @override
   void dispose() {
-    // Clean up the controller when the widget is removed from the
-    // widget tree.
     encryptionKeyController.dispose();
     super.dispose();
   }
