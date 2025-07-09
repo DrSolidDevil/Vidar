@@ -1,7 +1,7 @@
 name: vidar
 description: "Private Communications Application"
 publish_to: "none"
-version: 1.0.0
+version: 1.0.3-beta+1
 repository: "https://github.com/DrSolidDevil/Vidar"
 issue_tracker: "https://github.com/DrSolidDevil/Vidar/issues"
 
