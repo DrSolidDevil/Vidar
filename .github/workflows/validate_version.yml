@@ -1,0 +1,25 @@
+name: Validate version
+description: Ensures version in pubspec.yaml is not an active release
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install jq
+        uses: dcarbone/install-jq-action@v3.2.0
+      - name: Validate version
+        run: |
+          VERSION=$(grep '^version:' pubspec.yaml | cut -d ' ' -f2 | cut -d '+' -f1)
+          if wget -qO- https://api.github.com/repos/drsoliddevil/vidar/tags | jq -r '.[].name' | grep -q "^v$VERSION$"; then
+            echo "Tag v$VERSION already exists."
+            exit 1
+          else
+            echo "Tag v$VERSION does not exist yet. Proceeding."
+          fi
