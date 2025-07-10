@@ -1,0 +1,18 @@
+### Description
+*Please explain the changes you made here.*
+
+### Checklist
+- [ ] Check your code additions will fail neither code linting checks nor unit test.
+- [ ] Associated issues have been linked.
+- [ ] Performed a self-review of my own code.
+
+### Does this introduce a breaking change?
+- [ ] Yes
+- [ ] No
+
+### Where has this been tested?
+ - **Device:** (e.g. Asus Zenfone 11)
+ - **Android Version:** (e.g. Android 16)
+
+### Further comments
+If this is a relatively large or complex change, kick off the discussion by explaining why you chose the solution you did and what alternatives you considered, etc...
