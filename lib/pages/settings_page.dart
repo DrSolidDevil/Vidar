@@ -3,12 +3,14 @@ import "package:logging/logging.dart";
 import "package:permission_handler/permission_handler.dart";
 import "package:vidar/configuration.dart";
 import "package:vidar/pages/contact_list.dart";
+import "package:vidar/utils/colors.dart";
 import "package:vidar/utils/common_object.dart";
 import "package:vidar/utils/log.dart";
 import "package:vidar/utils/settings.dart";
 import "package:vidar/utils/storage.dart";
 import "package:vidar/widgets/boolean_setting.dart";
 import "package:vidar/widgets/buttons.dart";
+import "package:vidar/widgets/color_set_select.dart";
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -28,6 +30,15 @@ class _SettingsPageState extends State<SettingsPage> {
   BooleanSetting keepLogs = BooleanSetting(
     setting: Settings.keepLogs,
     settingText: "Keep Logs",
+  );
+
+  BooleanSetting showMessageBarHints = BooleanSetting(
+    setting: Settings.showMessageBarHints,
+    settingText: "Show message bar hints",
+  );
+
+  ColorSetSelect colorSetSelect = ColorSetSelect(
+    selectedSet: Settings.colorSet.colorSetName,
   );
 
   @override
@@ -83,6 +94,8 @@ class _SettingsPageState extends State<SettingsPage> {
       }
       CommonObject.logs = <String>[];
     }
+    Settings.showMessageBarHints = showMessageBarHints.setting;
+    Settings.colorSet = getColorSetFromName(colorSetSelect.selectedSet);
 
     if (mounted) {
       saveSettings(CommonObject.settings, context: context);
@@ -107,14 +120,21 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(final BuildContext context) {
     return ColoredBox(
-      color: VidarColors.primaryDarkSpaceCadet,
+      color: Settings.colorSet.primary,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Column(
             spacing: 60,
             children: <Widget>[
-              Column(children: <Widget>[allowUnencryptedMessages, keepLogs]),
+              Column(
+                children: <Widget>[
+                  allowUnencryptedMessages,
+                  keepLogs,
+                  showMessageBarHints,
+                  colorSetSelect,
+                ],
+              ),
               Container(
                 margin: const EdgeInsets.only(top: 60),
                 child: Row(
@@ -122,14 +142,14 @@ class _SettingsPageState extends State<SettingsPage> {
                   children: <Widget>[
                     BasicButton(
                       buttonText: "Discard",
-                      textColor: Colors.white,
-                      buttonColor: VidarColors.secondaryMetallicViolet,
+                      textColor: Settings.colorSet.text,
+                      buttonColor: Settings.colorSet.secondary,
                       onPressed: _discard,
                     ),
                     BasicButton(
                       buttonText: "Save",
-                      textColor: Colors.white,
-                      buttonColor: VidarColors.tertiaryGold,
+                      textColor: Settings.colorSet.text,
+                      buttonColor: Settings.colorSet.tertiary,
                       onPressed: _save,
                     ),
                   ],
@@ -141,8 +161,8 @@ class _SettingsPageState extends State<SettingsPage> {
             padding: const EdgeInsets.only(bottom: 150),
             child: BasicButton(
               buttonText: "Wipe Keys",
-              textColor: Colors.white,
-              buttonColor: VidarColors.extraFireBrick,
+              textColor: Settings.colorSet.text,
+              buttonColor: Settings.colorSet.wipeKeyButton,
               width: 200,
               onPressed: () {
                 showDialog<void>(

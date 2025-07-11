@@ -1,10 +1,10 @@
 import "package:flutter/material.dart";
-import "package:vidar/configuration.dart";
 import "package:vidar/pages/edit_contact.dart";
 import "package:vidar/pages/settings_page.dart";
 import "package:vidar/utils/common_object.dart";
 import "package:vidar/utils/contact.dart";
 import "package:vidar/utils/navigation.dart";
+import "package:vidar/utils/settings.dart";
 
 class ContactListPage extends StatefulWidget {
   const ContactListPage({super.key});
@@ -24,15 +24,17 @@ class _ContactListPageState extends State<ContactListPage> {
   @override
   Widget build(final BuildContext context) {
     return Scaffold(
-      backgroundColor: VidarColors.secondaryMetallicViolet,
+      backgroundColor: Settings.colorSet.secondary,
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: DecoratedBox(
         decoration: BoxDecoration(
-          color: VidarColors.secondaryMetallicViolet,
-          border: Border.all(color: Colors.white, width: 2),
+          color: Settings.colorSet.secondary,
+          border: Border.all(color: Settings.colorSet.text, width: 2),
           borderRadius: BorderRadius.circular(10),
         ),
         child: FloatingActionButton(
+          elevation: 0,
+          highlightElevation: 0,
           onPressed: () {
             final Contact newContact = Contact("", "", "");
             clearNavigatorAndPush(
@@ -41,7 +43,7 @@ class _ContactListPageState extends State<ContactListPage> {
             );
           },
           backgroundColor: Colors.transparent,
-          foregroundColor: Colors.white,
+          foregroundColor: Settings.colorSet.text,
           child: const Icon(Icons.add_comment),
         ),
       ),
@@ -59,12 +61,12 @@ class _ContactListPageState extends State<ContactListPage> {
       ),
 
       appBar: AppBar(
-        backgroundColor: VidarColors.primaryDarkSpaceCadet,
-        title: const Text(
+        backgroundColor: Settings.colorSet.primary,
+        title: Text(
           "Vidar - For Privacy's Sake",
           style: TextStyle(
             fontSize: 18,
-            color: Colors.white,
+            color: Settings.colorSet.text,
             decoration: TextDecoration.none,
           ),
         ),
@@ -75,7 +77,7 @@ class _ContactListPageState extends State<ContactListPage> {
               onPressed: () {
                 clearNavigatorAndPush(context, const SettingsPage());
               },
-              icon: const Icon(Icons.settings, color: Colors.white),
+              icon: Icon(Icons.settings, color: Settings.colorSet.text),
               tooltip: "Settings",
             ),
           ),

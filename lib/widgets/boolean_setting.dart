@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:vidar/configuration.dart";
+import "package:vidar/utils/settings.dart";
 
 // ignore: must_be_immutable
 class BooleanSetting extends StatefulWidget {
@@ -31,7 +32,7 @@ class _BooleanSettingState extends State<BooleanSetting> {
   Widget build(final BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 40),
-      color: VidarColors.primaryDarkSpaceCadet,
+      color: Settings.colorSet.primary,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -42,14 +43,14 @@ class _BooleanSettingState extends State<BooleanSetting> {
             child: Material(
               color: Colors.transparent,
               child: Switch(
-                activeColor: VidarColors.tertiaryGold,
-                inactiveThumbColor: VidarColors.secondaryMetallicViolet,
-                inactiveTrackColor: VidarColors.extraMidnightPurple,
+                activeColor: Settings.colorSet.tertiary,
+                inactiveThumbColor: Settings.colorSet.secondary,
+                inactiveTrackColor: Settings.colorSet.inactiveTrack,
                 trackOutlineColor: WidgetStateProperty.resolveWith(
                   (final Set<WidgetState> states) =>
                       states.contains(WidgetState.selected)
                       ? null
-                      : VidarColors.secondaryMetallicViolet,
+                      : Settings.colorSet.secondary,
                 ),
                 value: widget.setting,
                 onChanged: (final bool value) {
@@ -65,8 +66,8 @@ class _BooleanSettingState extends State<BooleanSetting> {
             width: MediaQuery.of(context).size.width * 0.6,
             child: Text(
               settingText,
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: Settings.colorSet.text,
                 fontSize: SizeConfiguration.settingInfoText,
                 decoration: TextDecoration.none,
               ),

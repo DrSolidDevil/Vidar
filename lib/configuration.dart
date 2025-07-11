@@ -1,22 +1,4 @@
-import "package:flutter/material.dart";
 import "package:logging/logging.dart";
-
-class VidarColors {
-  /// #1a1c28
-  static const Color primaryDarkSpaceCadet = Color.fromARGB(255, 26, 28, 40);
-
-  /// #64007b
-  static const Color secondaryMetallicViolet = Color.fromARGB(255, 53, 22, 100);
-
-  /// #b18c19
-  static const Color tertiaryGold = Color.fromARGB(255, 177, 140, 25);
-
-  /// #140627
-  static const Color extraMidnightPurple = Color.fromARGB(255, 20, 6, 39);
-
-  /// #b22222
-  static const Color extraFireBrick = Color.fromARGB(255, 178, 34, 34);
-}
 
 class CryptographicConfiguration {
   // Length in bytes
@@ -48,6 +30,13 @@ class TimeConfiguration {
 
 class MiscellaneousConfiguration {
   static const String errorPrefix = "⚠";
+  static const List<String> messageHints = <String>[
+    "Write them a message!",
+    "Show them some love ❤️",
+    "Tell them your secrets 👀",
+    "Start gossiping...",
+    "Talk to them, they miss you.",
+  ];
 }
 
 class LoggingConfiguration {

@@ -1,9 +1,9 @@
 import "package:flutter/material.dart";
-import "package:vidar/configuration.dart";
 import "package:vidar/pages/contact_list.dart";
 import "package:vidar/pages/edit_contact.dart";
 import "package:vidar/utils/contact.dart";
 import "package:vidar/utils/navigation.dart";
+import "package:vidar/utils/settings.dart";
 import "package:vidar/widgets/conversation_widget.dart";
 import "package:vidar/widgets/message_bar.dart";
 
@@ -28,12 +28,12 @@ class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(final BuildContext context) => Scaffold(
     appBar: AppBar(
-      backgroundColor: VidarColors.secondaryMetallicViolet,
+      backgroundColor: Settings.colorSet.secondary,
       title: Text(
         contact.name,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 18,
-          color: Colors.white,
+          color: Settings.colorSet.text,
           decoration: TextDecoration.none,
         ),
       ),
@@ -44,7 +44,7 @@ class _ChatPageState extends State<ChatPage> {
           onPressed: () {
             clearNavigatorAndPush(context, const ContactListPage());
           },
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: Settings.colorSet.text),
           tooltip: "Go back",
         ),
       ),
@@ -59,7 +59,7 @@ class _ChatPageState extends State<ChatPage> {
                 EditContactPage(contact, ContactPageCaller.chatPage),
               );
             },
-            icon: const Icon(Icons.edit, color: Colors.white),
+            icon: Icon(Icons.edit, color: Settings.colorSet.text),
             tooltip: "Edit",
           ),
         ),

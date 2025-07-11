@@ -187,7 +187,7 @@ class _EditContactPageState extends State<EditContactPage> {
   Widget build(final BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 30),
-      color: VidarColors.primaryDarkSpaceCadet,
+      color: Settings.colorSet.primary,
       child: Column(
         children: <Widget>[
           Column(
@@ -200,11 +200,11 @@ class _EditContactPageState extends State<EditContactPage> {
                   bottom: 30,
                 ),
                 child: Material(
-                  color: VidarColors.primaryDarkSpaceCadet,
+                  color: Settings.colorSet.primary,
                   child: Container(
                     height: 50,
                     decoration: BoxDecoration(
-                      color: VidarColors.secondaryMetallicViolet,
+                      color: Settings.colorSet.secondary,
                       borderRadius: BorderRadius.circular(7),
                       border: Border.all(color: Colors.transparent),
                     ),
@@ -212,13 +212,16 @@ class _EditContactPageState extends State<EditContactPage> {
                     child: TextField(
                       decoration: InputDecoration(
                         hintText: "Name",
-                        hintStyle: const TextStyle(color: Colors.white),
+                        hintStyle: TextStyle(color: Settings.colorSet.text),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(7),
                           borderSide: BorderSide.none,
                         ),
                       ),
-                      style: const TextStyle(color: Colors.white, fontSize: 12),
+                      style: TextStyle(
+                        color: Settings.colorSet.text,
+                        fontSize: 12,
+                      ),
                       onChanged: (final String value) {
                         newName = value;
                       },
@@ -241,11 +244,11 @@ class _EditContactPageState extends State<EditContactPage> {
                           160, // -100 for margins, -50 for button and -10 for button margin
                       height: 50,
                       child: Material(
-                        color: VidarColors.primaryDarkSpaceCadet,
+                        color: Settings.colorSet.primary,
                         child: Container(
                           height: 50,
                           decoration: BoxDecoration(
-                            color: VidarColors.secondaryMetallicViolet,
+                            color: Settings.colorSet.secondary,
                             borderRadius: BorderRadius.circular(7),
                             border: Border.all(color: Colors.transparent),
                           ),
@@ -255,8 +258,8 @@ class _EditContactPageState extends State<EditContactPage> {
                             decoration: InputDecoration(
                               hintText:
                                   "Encryption Key${Settings.allowUnencryptedMessages ? ", 0=No Key" : ""}",
-                              hintStyle: const TextStyle(
-                                color: Colors.white,
+                              hintStyle: TextStyle(
+                                color: Settings.colorSet.text,
                                 fontSize: 12,
                               ),
                               border: OutlineInputBorder(
@@ -264,7 +267,7 @@ class _EditContactPageState extends State<EditContactPage> {
                                 borderSide: BorderSide.none,
                               ),
                             ),
-                            style: const TextStyle(color: Colors.white),
+                            style: TextStyle(color: Settings.colorSet.text),
                             onChanged: (final String value) {
                               newKey = value;
                             },
@@ -283,15 +286,14 @@ class _EditContactPageState extends State<EditContactPage> {
                             encryptionKeyController.text = newKey ?? "";
                           },
                           style: IconButton.styleFrom(
-                            backgroundColor:
-                                VidarColors.secondaryMetallicViolet,
+                            backgroundColor: Settings.colorSet.secondary,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadiusGeometry.circular(7),
                             ),
                           ),
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.change_circle_outlined,
-                            color: Colors.white,
+                            color: Settings.colorSet.text,
                           ),
                         ),
                       ),
@@ -308,11 +310,11 @@ class _EditContactPageState extends State<EditContactPage> {
                   bottom: 30,
                 ),
                 child: Material(
-                  color: VidarColors.primaryDarkSpaceCadet,
+                  color: Settings.colorSet.primary,
                   child: Container(
                     height: 50,
                     decoration: BoxDecoration(
-                      color: VidarColors.secondaryMetallicViolet,
+                      color: Settings.colorSet.secondary,
                       borderRadius: BorderRadius.circular(7),
                       border: Border.all(color: Colors.transparent),
                     ),
@@ -320,13 +322,16 @@ class _EditContactPageState extends State<EditContactPage> {
                     child: TextField(
                       decoration: InputDecoration(
                         hintText: "Phone Number (international)",
-                        hintStyle: const TextStyle(color: Colors.white),
+                        hintStyle: TextStyle(color: Settings.colorSet.text),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(7),
                           borderSide: BorderSide.none,
                         ),
                       ),
-                      style: const TextStyle(color: Colors.white, fontSize: 12),
+                      style: TextStyle(
+                        color: Settings.colorSet.text,
+                        fontSize: 12,
+                      ),
                       onChanged: (final String value) {
                         newPhoneNumber = value;
                       },
@@ -343,14 +348,14 @@ class _EditContactPageState extends State<EditContactPage> {
               children: <Widget>[
                 BasicButton(
                   buttonText: "Discard",
-                  textColor: Colors.white,
-                  buttonColor: VidarColors.secondaryMetallicViolet,
+                  textColor: Settings.colorSet.text,
+                  buttonColor: Settings.colorSet.secondary,
                   onPressed: discard,
                 ),
                 BasicButton(
                   buttonText: "Save",
-                  textColor: Colors.white,
-                  buttonColor: VidarColors.tertiaryGold,
+                  textColor: Settings.colorSet.text,
+                  buttonColor: Settings.colorSet.tertiary,
                   onPressed: save,
                 ),
               ],
