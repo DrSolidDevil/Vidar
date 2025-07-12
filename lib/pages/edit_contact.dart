@@ -362,6 +362,7 @@ class _EditContactPageState extends State<EditContactPage> {
                   textColor: Settings.colorSet.text,
                   buttonColor: Settings.colorSet.tertiary,
                   onPressed: save,
+                  fontWeight: FontWeight.bold,
                 ),
               ],
             ),

@@ -151,6 +151,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       textColor: Settings.colorSet.text,
                       buttonColor: Settings.colorSet.tertiary,
                       onPressed: _save,
+                      fontWeight: FontWeight.bold,
                     ),
                   ],
                 ),
