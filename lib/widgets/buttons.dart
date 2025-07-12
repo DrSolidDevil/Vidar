@@ -33,7 +33,11 @@ class BasicButton extends StatelessWidget {
         ),
         child: Text(
           buttonText,
-          style: TextStyle(fontSize: 24, color: textColor, fontWeight: fontWeight),
+          style: TextStyle(
+            fontSize: 24,
+            color: textColor,
+            fontWeight: fontWeight,
+          ),
         ),
       ),
     );

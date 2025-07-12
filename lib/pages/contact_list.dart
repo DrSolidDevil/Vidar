@@ -28,7 +28,7 @@ class _ContactListPageState extends State<ContactListPage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: DecoratedBox(
         decoration: BoxDecoration(
-          color: Settings.colorSet.secondary,
+          color: Settings.colorSet.floatingActionButton,
           border: Border.all(color: Settings.colorSet.text, width: 2),
           borderRadius: BorderRadius.circular(10),
         ),

@@ -46,7 +46,7 @@ class _MessageBarState extends State<MessageBar> {
       color: Settings.colorSet.tertiary,
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom > 50
-            ? MediaQuery.of(context).viewInsets.bottom
+            ? MediaQuery.of(context).viewInsets.bottom + 10
             : 50,
         left: 20,
         right: 20,
@@ -116,7 +116,7 @@ class _MessageBarState extends State<MessageBar> {
             color: Settings.colorSet.secondary,
             padding: EdgeInsets.only(
               bottom: MediaQuery.of(context).viewInsets.bottom > 50
-                  ? MediaQuery.of(context).viewInsets.bottom
+                  ? MediaQuery.of(context).viewInsets.bottom + 10
                   : 50,
             ),
             child: Padding(
@@ -147,6 +147,9 @@ class _MessageBarState extends State<MessageBar> {
                             return null;
                           }
                         }(),
+                        hintStyle: TextStyle(
+                          color: Settings.colorSet.messageBarHintText,
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10.0),
                           borderSide: BorderSide.none,
@@ -199,9 +202,7 @@ class _MessageBarState extends State<MessageBar> {
                         icon: Icon(
                           size: SizeConfiguration.sendMessageIconSize,
                           Icons.send,
-                          color:
-                              Settings.colorSet.sendButton ??
-                              Settings.colorSet.text,
+                          color: Settings.colorSet.sendButton,
                         ),
                       ),
                     ),

@@ -38,7 +38,7 @@ class _SettingsPageState extends State<SettingsPage> {
   );
 
   ColorSetSelect colorSetSelect = ColorSetSelect(
-    selectedSet: Settings.colorSet.colorSetName,
+    selectedSet: Settings.colorSet.name,
   );
 
   @override
@@ -162,7 +162,7 @@ class _SettingsPageState extends State<SettingsPage> {
             padding: const EdgeInsets.only(bottom: 150),
             child: BasicButton(
               buttonText: "Wipe Keys",
-              textColor: Settings.colorSet.text,
+              textColor: Settings.colorSet.wipeKeyButtonText,
               buttonColor: Settings.colorSet.wipeKeyButton,
               width: 200,
               onPressed: () {

@@ -8,7 +8,7 @@ class Settings {
 
   static bool keepLogs = false;
 
-  static ColorSet colorSet = VidarColorSet();
+  static ColorSet colorSet = vidarColorSet;
 
   static bool showMessageBarHints = true;
 
@@ -18,7 +18,7 @@ class Settings {
       "allowUnencryptedMessages": allowUnencryptedMessages,
       "keepLogs": keepLogs,
       "showMessageBarHints": showMessageBarHints,
-      "colorSet": colorSet.colorSetName,
+      "colorSet": colorSet.name,
     };
   }
 

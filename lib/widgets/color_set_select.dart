@@ -40,9 +40,7 @@ class _ColorSetSelectState extends State<ColorSetSelect> {
                   right: MediaQuery.of(context).size.width * 0.05,
                 ),
                 dropdownColor: Settings.colorSet.secondary,
-                focusColor:
-                    Settings.colorSet.dropdownFocus ??
-                    Settings.colorSet.tertiary,
+                focusColor: Settings.colorSet.dropdownFocus,
                 icon: Icon(
                   Icons.arrow_circle_down_sharp,
                   color: Settings.colorSet.text,
