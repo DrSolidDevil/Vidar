@@ -87,8 +87,6 @@ class _EditContactPageState extends State<EditContactPage> {
       newPhoneNumber = contact.phoneNumber;
     }
 
-    saveData(CommonObject.contactList, CommonObject.settings);
-
     switch (caller) {
       case ContactPageCaller.chatPage:
         if (isInvalidContactByParams(newName, newKey, newPhoneNumber)) {
@@ -118,6 +116,7 @@ class _EditContactPageState extends State<EditContactPage> {
           contact.name = newName!;
           contact.encryptionKey = newKey!;
           contact.phoneNumber = newPhoneNumber!;
+          saveData(CommonObject.contactList, CommonObject.settings);
           clearNavigatorAndPush(context, ChatPage(contact));
         }
 
@@ -152,9 +151,14 @@ class _EditContactPageState extends State<EditContactPage> {
           if (Settings.keepLogs) {
             if (success) {
               if (LoggingConfiguration.extraVerboseLogs) {
+                contact.name = newName!;
+                contact.encryptionKey = newKey!;
+                contact.phoneNumber = newPhoneNumber!;
+                saveData(CommonObject.contactList, CommonObject.settings);
                 CommonObject.logger!.info(
                   "New contact ${contact.uuid} has been saved",
                 );
+                clearNavigatorAndPush(context, const ContactListPage());
               }
             } else {
               CommonObject.logger!.warning(
@@ -177,6 +181,7 @@ class _EditContactPageState extends State<EditContactPage> {
             contact.name = newName!;
             contact.encryptionKey = newKey!;
             contact.phoneNumber = newPhoneNumber!;
+            saveData(CommonObject.contactList, CommonObject.settings);
             clearNavigatorAndPush(context, const ContactListPage());
           }
         }
