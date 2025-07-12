@@ -1,8 +1,10 @@
 import "dart:io";
 
+import "package:device_info_plus/device_info_plus.dart";
 import "package:flutter/material.dart"
     show BuildContext, debugPrint, showDialog;
 import "package:logging/logging.dart";
+import "package:package_info_plus/package_info_plus.dart";
 import "package:permission_handler/permission_handler.dart";
 import "package:vidar/configuration.dart";
 import "package:vidar/utils/common_object.dart";
@@ -20,6 +22,17 @@ void createLogger() {
       CommonObject.logs.add(LoggingConfiguration.conciseLogMessage(log));
     }
   });
+  //_initLogs();
+}
+
+/// Logs written at logger creation (device information, etc)
+Future<void> _initLogs() async {
+  CommonObject.logger!.info(
+    LoggingConfiguration.vidarInfoLog(await PackageInfo.fromPlatform()),
+  );
+  CommonObject.logger!.info(
+    LoggingConfiguration.deviceInfoLog(await DeviceInfoPlugin().androidInfo),
+  );
 }
 
 Future<void> exportLogs({final BuildContext? context}) async {

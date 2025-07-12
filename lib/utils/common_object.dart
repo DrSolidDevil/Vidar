@@ -8,6 +8,7 @@ class CommonObject {
   static Settings settings = Settings();
   static Logger? logger;
   static List<String> logs = <String>[];
-
+  static String? ownPhoneNumber;
+  static Contact? currentContact;
   static Conversation? currentConversation;
 }

@@ -182,6 +182,24 @@ Future<List<SmsMessage?>> querySms({final String? phoneNumber}) async {
   }
 }
 
+Future<String?> getOwnPhoneNumber() async {
+  try {
+    final String? result = await MAIN_SMS_CHANNEL.invokeMethod(
+      "getOwnPhoneNumber",
+    );
+    return result;
+  } on PlatformException catch (e) {
+    if (Settings.keepLogs) {
+      CommonObject.logger!.warning(
+        "getOwnPhoneNumber failed",
+        e.message,
+        e.stacktrace == null ? null : StackTrace.fromString(e.stacktrace!),
+      );
+    }
+    return null;
+  }
+}
+
 /// The phone number is that of the other party
 Future<void> sendSms(final String body, final String phoneNumber) async {
   /// 0 = success, for now not used

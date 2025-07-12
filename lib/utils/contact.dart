@@ -1,5 +1,7 @@
 import "package:flutter/material.dart";
 import "package:uuid/uuid.dart";
+import "package:vidar/pages/edit_contact.dart";
+import "package:vidar/utils/common_object.dart";
 import "package:vidar/widgets/contact_badge.dart";
 
 class Contact {
@@ -96,6 +98,16 @@ class ContactList extends ChangeNotifier {
     return wasSuccess;
   }
 
+  /// Returns -1 if not found
+  int findContactIndexByPhoneNumber(final String phoneNumber) {
+    for (final (int index, Contact contact) in listOfContacts.indexed) {
+      if (contact.phoneNumber == phoneNumber) {
+        return index;
+      }
+    }
+    return -1;
+  }
+
   /// Returns true on success
   bool modifyContactByName(
     final String contactName,
@@ -190,4 +202,26 @@ bool isInvalidContact(final Contact contact) {
     contact.encryptionKey,
     contact.phoneNumber,
   );
+}
+
+/// If a contact has a phone number then it will modify that existing contact with a new key
+/// If no contact has that phone number then the user will be promted with the
+/// "edit contact" page with the key and phone number already filled
+Widget updateContact({
+  required final String phoneNumber,
+  required final String encryptionKey,
+}) {
+  final int contactIndex = CommonObject.contactList
+      .findContactIndexByPhoneNumber("+$phoneNumber");
+  if (contactIndex == -1) {
+    CommonObject.currentContact = Contact("", encryptionKey, phoneNumber);
+    return const EditContactPage("newContact");
+    //context.goNamed("EditContactPage", queryParameters: <String, String>{"caller": "newContact"});
+  } else {
+    CommonObject.currentContact =
+        CommonObject.contactList.listOfContacts[contactIndex];
+    CommonObject.currentContact?.phoneNumber = phoneNumber;
+    return const EditContactPage("qrModify");
+    //context.goNamed("EditContactPage", queryParameters: <String, String>{"caller": "qrModify", "encryptionKey": encryptionKey});
+  }
 }

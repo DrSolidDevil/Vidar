@@ -10,6 +10,8 @@ class ColorSet {
   late final Color inactiveTrack;
   late final Color? dropdownFocus;
   late final Color? sendButton;
+  late final Color? shareQrButton;
+  late final Color? qrCode;
 }
 
 const List<String> availableColorSets = <String>[
@@ -42,6 +44,8 @@ class VidarColorSet extends ColorSet {
 
     dropdownFocus = null;
     sendButton = null;
+    shareQrButton = null;
+    qrCode = tertiary;
   }
 }
 
@@ -69,6 +73,8 @@ class PlayaColorSet extends ColorSet {
 
     dropdownFocus = null;
     sendButton = null;
+    shareQrButton = null;
+    qrCode = null;
   }
 }
 
@@ -83,6 +89,8 @@ class MonochromeColorSet extends ColorSet {
     text = Colors.white;
     dropdownFocus = null;
     sendButton = null;
+    shareQrButton = null;
+    qrCode = null;
   }
 }
 
@@ -110,6 +118,8 @@ class BubblyColorSet extends ColorSet {
 
     dropdownFocus = wipeKeyButton;
     sendButton = primary;
+    shareQrButton = wipeKeyButton;
+    qrCode = secondary;
   }
 }
 

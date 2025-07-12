@@ -1,4 +1,6 @@
+import "package:device_info_plus/device_info_plus.dart" show AndroidDeviceInfo;
 import "package:logging/logging.dart";
+import "package:package_info_plus/package_info_plus.dart" show PackageInfo;
 
 class CryptographicConfiguration {
   // Length in bytes
@@ -59,5 +61,35 @@ class LoggingConfiguration {
 
   static String conciseLogMessage(final LogRecord log) {
     return "\n${log.sequenceNumber}: ${log.time.toIso8601String()}\nLevel: ${log.level.name}\nMessage: ${log.message}";
+  }
+
+  static String deviceInfoLog(final AndroidDeviceInfo deviceInfo) {
+    return """
+    ======== DEVICE INFO ========
+    Base OS: ${deviceInfo.version.baseOS}
+    Bootloader: ${deviceInfo.bootloader}
+    Total RAM: ${deviceInfo.physicalRamSize} MB
+    Release ${deviceInfo.version.release}
+    SDK: ${deviceInfo.version.sdkInt}
+    Security Patch: ${deviceInfo.version.securityPatch}
+    Manufacturer: ${deviceInfo.manufacturer}
+    Brand: ${deviceInfo.brand}
+    Model: ${deviceInfo.model}
+    Emulator: ${!deviceInfo.isPhysicalDevice}
+    Hardware Keystore:${deviceInfo.systemFeatures.contains("android.hardware.hardware_keystore")}
+    Telephony: ${deviceInfo.systemFeatures.contains("android.hardware.telephony")}
+    Telephony Messaging${deviceInfo.systemFeatures.contains("android.hardware.telephony.messaging")}
+    Telephony Subscription${deviceInfo.systemFeatures.contains("android.hardware.telephony.subscription")}
+    Any Camera: ${deviceInfo.systemFeatures.contains("android.hardware.camera.any")}
+    """;
+  }
+
+  static String vidarInfoLog(final PackageInfo packageInfo) {
+    return """
+    ======== VIDAR INFO ========
+    App Name: ${packageInfo.appName}
+    Version: ${packageInfo.version}
+    Build Number: ${packageInfo.buildNumber}
+    """;
   }
 }

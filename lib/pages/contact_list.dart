@@ -1,5 +1,5 @@
 import "package:flutter/material.dart";
-import "package:vidar/pages/edit_contact.dart";
+import "package:go_router/go_router.dart";
 import "package:vidar/pages/settings_page.dart";
 import "package:vidar/utils/common_object.dart";
 import "package:vidar/utils/contact.dart";
@@ -36,10 +36,10 @@ class _ContactListPageState extends State<ContactListPage> {
           elevation: 0,
           highlightElevation: 0,
           onPressed: () {
-            final Contact newContact = Contact("", "", "");
-            clearNavigatorAndPush(
-              context,
-              EditContactPage(newContact, ContactPageCaller.newContact),
+            CommonObject.currentContact = Contact("", "", "");
+            context.goNamed(
+              "EditContactPage",
+              pathParameters: {"caller": "newContact"},
             );
           },
           backgroundColor: Colors.transparent,
@@ -75,7 +75,7 @@ class _ContactListPageState extends State<ContactListPage> {
             margin: const EdgeInsets.only(right: 10),
             child: IconButton(
               onPressed: () {
-                clearNavigatorAndPush(context, const SettingsPage());
+                context.goNamed("SettingsPage");
               },
               icon: Icon(Icons.settings, color: Settings.colorSet.text),
               tooltip: "Settings",

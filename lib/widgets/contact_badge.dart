@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
+import "package:go_router/go_router.dart";
 import "package:vidar/configuration.dart";
-import "package:vidar/pages/chat.dart";
 import "package:vidar/pages/contact_list.dart";
 import "package:vidar/utils/common_object.dart";
 import "package:vidar/utils/contact.dart";
@@ -47,7 +47,8 @@ class ContactBadge extends StatelessWidget {
         ),
       ),
       onTap: () {
-        clearNavigatorAndPush(context, ChatPage(contact));
+        CommonObject.currentContact = contact;
+        context.goNamed("ChatPage");
       },
       onLongPress: () {
         showDialog<void>(
@@ -85,10 +86,7 @@ class ContactBadge extends StatelessWidget {
                                   : "Contact ${contact.uuid} failed to delete",
                             );
                           }
-                          clearNavigatorAndPush(
-                            context,
-                            const ContactListPage(),
-                          );
+                          context.goNamed("ContactListPage");
                         },
                         child: const Text("Delete"),
                       ),

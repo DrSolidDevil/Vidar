@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
+import "package:go_router/go_router.dart";
 import "package:vidar/pages/contact_list.dart";
-import "package:vidar/pages/edit_contact.dart";
+import "package:vidar/utils/common_object.dart";
 import "package:vidar/utils/contact.dart";
 import "package:vidar/utils/navigation.dart";
 import "package:vidar/utils/settings.dart";
@@ -8,8 +9,7 @@ import "package:vidar/widgets/conversation_widget.dart";
 import "package:vidar/widgets/message_bar.dart";
 
 class ChatPage extends StatefulWidget {
-  const ChatPage(this.contact, {super.key});
-  final Contact contact;
+  const ChatPage({super.key});
 
   @override
   _ChatPageState createState() => _ChatPageState();
@@ -17,12 +17,11 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   _ChatPageState();
-  late Contact contact;
+  Contact contact = CommonObject.currentContact!;
 
   @override
   void initState() {
     super.initState();
-    contact = widget.contact;
   }
 
   @override
@@ -42,7 +41,7 @@ class _ChatPageState extends State<ChatPage> {
         margin: const EdgeInsets.only(left: 10),
         child: IconButton(
           onPressed: () {
-            clearNavigatorAndPush(context, const ContactListPage());
+            context.goNamed("ContactListPage");
           },
           icon: Icon(Icons.arrow_back, color: Settings.colorSet.text),
           tooltip: "Go back",
@@ -54,9 +53,10 @@ class _ChatPageState extends State<ChatPage> {
           margin: const EdgeInsets.only(right: 10),
           child: IconButton(
             onPressed: () {
-              clearNavigatorAndPush(
-                context,
-                EditContactPage(contact, ContactPageCaller.chatPage),
+              CommonObject.currentContact = contact;
+              context.goNamed(
+                "EditContactPage",
+                pathParameters: {"caller": "chatPage"},
               );
             },
             icon: Icon(Icons.edit, color: Settings.colorSet.text),

@@ -34,6 +34,11 @@ Why? Because privacy is a fundamental human right and it should be respected as 
 
 <br>
 
+## Permissions – When they need to be enabled
+* Manage external storage: to export logs
+* Manage phone calls: to share contact QR-codes
+*If you don't need these functionalities then feel free to deny those permission requests!*
+
 ## License
 Vidar is licensed under the Mozilla Public License 2.0 (MPL-2.0).
 

@@ -1,9 +1,11 @@
 import "package:flutter/material.dart";
+import "package:go_router/go_router.dart";
 import "package:vidar/configuration.dart";
-import "package:vidar/pages/chat.dart";
 import "package:vidar/pages/contact_list.dart";
+import "package:vidar/pages/contact_qr.dart";
 import "package:vidar/utils/common_object.dart";
 import "package:vidar/utils/contact.dart";
+import "package:vidar/utils/generate_contact_uri.dart";
 import "package:vidar/utils/navigation.dart";
 import "package:vidar/utils/random_key.dart";
 import "package:vidar/utils/settings.dart";
@@ -12,9 +14,8 @@ import "package:vidar/widgets/buttons.dart";
 import "package:vidar/widgets/error_popup.dart";
 
 class EditContactPage extends StatefulWidget {
-  const EditContactPage(this.contact, this.caller, {super.key});
-  final Contact contact;
-  final ContactPageCaller caller;
+  const EditContactPage(this.caller, {super.key});
+  final String caller;
 
   @override
   _EditContactPageState createState() => _EditContactPageState();
@@ -22,8 +23,8 @@ class EditContactPage extends StatefulWidget {
 
 class _EditContactPageState extends State<EditContactPage> {
   _EditContactPageState();
-  late Contact contact;
-  late ContactPageCaller caller;
+  Contact contact = CommonObject.currentContact!;
+  late String caller;
   final TextEditingController encryptionKeyController = TextEditingController();
 
   String? newName;
@@ -33,8 +34,9 @@ class _EditContactPageState extends State<EditContactPage> {
   @override
   void initState() {
     super.initState();
-    contact = widget.contact;
     caller = widget.caller;
+    // If no phone number was provided to EditContactPage then
+    // newKey and newPhoneNumber will be null and it will be as usual.
   }
 
   @override
@@ -45,17 +47,21 @@ class _EditContactPageState extends State<EditContactPage> {
 
   void discard() {
     switch (caller) {
-      case ContactPageCaller.chatPage:
-        clearNavigatorAndPush(context, ChatPage(contact));
-      case ContactPageCaller.newContact:
-        clearNavigatorAndPush(context, const ContactListPage());
+      case "qrModify":
+      case "newContact":
+        context.goNamed("ContactListPage");
+        break;
+      case "chatPage":
+        CommonObject.currentContact = contact;
+        context.goNamed("ChatPage");
+        break;
     }
   }
 
   void save() {
     if (Settings.keepLogs) {
       if (LoggingConfiguration.extraVerboseLogs &&
-          caller == ContactPageCaller.newContact) {
+          caller == "newContact") {
         CommonObject.logger!.info("Saving new contact ${contact.uuid}...");
       } else {
         CommonObject.logger!.info("Editing contact ${contact.uuid}...");
@@ -83,14 +89,15 @@ class _EditContactPageState extends State<EditContactPage> {
 
     if (newPhoneNumber != null) {
       newPhoneNumber = "+$newPhoneNumber";
-    } else if (caller == ContactPageCaller.chatPage) {
+    } else if (caller == "chatPage") {
       newPhoneNumber = contact.phoneNumber;
     }
 
     saveData(CommonObject.contactList, CommonObject.settings);
 
     switch (caller) {
-      case ContactPageCaller.chatPage:
+      case "qrModify":
+      case "chatPage":
         if (isInvalidContactByParams(newName, newKey, newPhoneNumber)) {
           if (LoggingConfiguration.extraVerboseLogs && Settings.keepLogs) {
             CommonObject.logger!.info(
@@ -106,7 +113,7 @@ class _EditContactPageState extends State<EditContactPage> {
                 actions: <Widget>[
                   TextButton(
                     onPressed: () {
-                      clearNavigatorAndPush(context, const ContactListPage());
+                      context.goNamed("ContactListPage");
                     },
                     child: const Text("OK"),
                   ),
@@ -118,10 +125,11 @@ class _EditContactPageState extends State<EditContactPage> {
           contact.name = newName!;
           contact.encryptionKey = newKey!;
           contact.phoneNumber = newPhoneNumber!;
-          clearNavigatorAndPush(context, ChatPage(contact));
+          CommonObject.currentContact = contact;
+          context.goNamed("ChatPage");
         }
 
-      case ContactPageCaller.newContact:
+      case "newContact":
         if (isInvalidContactByParams(newName, newKey, newPhoneNumber)) {
           if (LoggingConfiguration.extraVerboseLogs && Settings.keepLogs) {
             CommonObject.logger!.info(
@@ -139,7 +147,7 @@ class _EditContactPageState extends State<EditContactPage> {
                 actions: <Widget>[
                   TextButton(
                     onPressed: () {
-                      clearNavigatorAndPush(context, const ContactListPage());
+                      context.goNamed("ContactListPage");
                     },
                     child: const Text("OK"),
                   ),
@@ -177,7 +185,7 @@ class _EditContactPageState extends State<EditContactPage> {
             contact.name = newName!;
             contact.encryptionKey = newKey!;
             contact.phoneNumber = newPhoneNumber!;
-            clearNavigatorAndPush(context, const ContactListPage());
+            context.goNamed("ContactListPage");
           }
         }
     }
@@ -341,6 +349,28 @@ class _EditContactPageState extends State<EditContactPage> {
               ),
             ],
           ),
+
+          Visibility(
+            visible: caller == "chatPage",
+            child: BasicButton(
+              buttonText: "Share QR-code",
+              textColor: Settings.colorSet.text,
+              buttonColor:
+                  Settings.colorSet.shareQrButton ??
+                  Settings.colorSet.secondary,
+              onPressed: () {
+                final String? uri = generateContactUri(
+                  contact: contact,
+                  context: context,
+                );
+                if (uri != null) {
+                  context.goNamed("ContactQrPage", pathParameters: {"uri": uri});
+                }
+              },
+              width: 200,
+            ),
+          ),
+
           Container(
             margin: const EdgeInsets.only(top: 20),
             child: Row(
@@ -366,5 +396,3 @@ class _EditContactPageState extends State<EditContactPage> {
     );
   }
 }
-
-enum ContactPageCaller { newContact, chatPage }

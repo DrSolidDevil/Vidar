@@ -48,6 +48,10 @@ class MainActivity : FlutterActivity() {
                     result.success(smsConstants)
                 }
 
+                "getOwnPhoneNumber" -> {
+                    result.success(getOwnPhoneNumber(context))
+                }
+
                 else -> {
                     result.notImplemented()
                 }
