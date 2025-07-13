@@ -325,6 +325,7 @@ class _EditContactPageState extends State<EditContactPage> {
                     ),
                     padding: const EdgeInsets.only(left: 10),
                     child: TextField(
+                      keyboardType: TextInputType.phone,
                       decoration: InputDecoration(
                         hintText: "Phone Number (international)",
                         hintStyle: TextStyle(color: Settings.colorSet.text),
