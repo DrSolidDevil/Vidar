@@ -125,7 +125,7 @@ class _ConversationWidgetState extends State<ConversationWidget> {
                                   if (LoggingConfiguration.extraVerboseLogs &&
                                       Settings.keepLogs) {
                                     CommonObject.logger!.info(
-                                      "Snapshot has not data for contact ${contact.uuid}",
+                                      "Snapshot has no data for contact ${contact.uuid}",
                                     );
                                   }
                                 }
