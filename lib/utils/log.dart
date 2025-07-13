@@ -20,10 +20,12 @@ Future<void> createLogger() async {
   CommonObject.logger!.onRecord.listen((final LogRecord log) {
     late final String logMessage;
     switch (log.level) {
-      case Level.INFO:
-        logMessage = LoggingConfiguration.conciseLogMessage(log);
       case Level.CONFIG:
         logMessage = LoggingConfiguration.minimalLogMessage(log);
+      case Level.INFO:
+        logMessage = LoggingConfiguration.conciseLogMessage(log);
+      case Level.WARNING:
+        logMessage = LoggingConfiguration.normalLogMessage(log);
       default:
         logMessage = LoggingConfiguration.verboseLogMessage(log);
     }
@@ -74,7 +76,7 @@ Future<void> exportLogs({final BuildContext? context}) async {
     }
 
     if (Settings.keepLogs) {
-      CommonObject.logger!.warning("Failed to export logs", error, stackTrace);
+      CommonObject.logger!.finest("Failed to export logs", error, stackTrace);
     }
 
     return;

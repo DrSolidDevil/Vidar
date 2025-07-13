@@ -170,12 +170,12 @@ Future<List<SmsMessage?>> querySms({final String? phoneNumber}) async {
       }
     }
     return smsMessages;
-  } on PlatformException catch (e) {
+  } on PlatformException catch (error, stackTrace) {
     if (Settings.keepLogs) {
-      CommonObject.logger!.warning(
+      CommonObject.logger!.finer(
         "Sms query failed",
-        e.message,
-        e.stacktrace == null ? null : StackTrace.fromString(e.stacktrace!),
+        error,
+        stackTrace,
       );
     }
     return <SmsMessage?>[null];

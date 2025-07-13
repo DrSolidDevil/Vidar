@@ -67,6 +67,15 @@ class LoggingConfiguration {
     """;
   }
 
+  static String normalLogMessage(final LogRecord log) {
+    return """
+[${log.sequenceNumber}] ${log.time.toIso8601String()}
+\tLevel: ${log.level.name}
+\tError: ${log.error}
+\tMessage: ${log.message.replaceAll("\n", "\n\t")}
+    """;
+  }
+
   static String conciseLogMessage(final LogRecord log) {
     return """
 [${log.sequenceNumber}] ${log.time.toIso8601String()}

@@ -161,7 +161,7 @@ class _EditContactPageState extends State<EditContactPage> {
                 clearNavigatorAndPush(context, const ContactListPage());
               }
             } else {
-              CommonObject.logger!.warning(
+              CommonObject.logger!.info(
                 "Failed to add contact ${contact.uuid}",
               );
             }
