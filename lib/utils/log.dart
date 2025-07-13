@@ -1,11 +1,12 @@
 import "dart:io";
 
-import "package:flutter/material.dart"
-    show BuildContext, debugPrint, showDialog;
+import "package:flutter/material.dart";
 import "package:logging/logging.dart";
 import "package:permission_handler/permission_handler.dart";
 import "package:vidar/configuration.dart";
+import "package:vidar/pages/contact_list.dart";
 import "package:vidar/utils/common_object.dart";
+import "package:vidar/utils/navigation.dart";
 import "package:vidar/utils/settings.dart";
 import "package:vidar/widgets/error_popup.dart";
 
@@ -65,10 +66,16 @@ Future<void> exportLogs({final BuildContext? context}) async {
   if (context != null && context.mounted) {
     showDialog<void>(
       context: context,
-      builder: (final BuildContext context) => ErrorPopup(
-        title: "Logs exported",
-        body: 'Logs have been exported to "${file.path}"',
-        enableReturn: false,
+      builder: (final BuildContext context) => AlertDialog(
+        title: const Text("Logs exported"),
+        content: Text('Logs have been exported to "${file.path}"'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () =>
+                clearNavigatorAndPush(context, const ContactListPage()),
+            child: const Text("Dismiss"),
+          ),
+        ],
       ),
     );
   }
