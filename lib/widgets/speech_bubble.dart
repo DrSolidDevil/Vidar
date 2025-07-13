@@ -50,17 +50,14 @@ class SpeechBubble extends StatelessWidget {
                 ),
               ),
             ),
-            // Temporarily disabled until fix
-            /*Container(
-              margin: EdgeInsets.only(top: 2, bottom: 2),
+            Container(
+              margin: const EdgeInsets.only(top: 2.0, bottom: 2.0),
               child: Text(
                 (isMe ? "Sent at " : "Received at ") +
-                    (isMe
-                        ? message.dateSent!.toIso8601String().substring(11, 16)
-                        : message.date!.toIso8601String().substring(11, 16)),
+                    message.date!.toIso8601String().substring(11, 16),
                 style: const TextStyle(color: Colors.white, fontSize: 8),
               ),
-            ),*/
+            ),
           ],
         ),
       ),

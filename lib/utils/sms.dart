@@ -104,10 +104,10 @@ SmsMessage? _queryMapToSms(final Map<String, String?> smsMap) {
   );
   final int? type = int.tryParse(smsMap[SmsConstants.COLUMN_NAME_TYPE]!);
   final String phoneNumber = smsMap[SmsConstants.COLUMN_NAME_ADDRESS]!;
-  final DateTime date = DateTime.fromMicrosecondsSinceEpoch(
+  final DateTime date = DateTime.fromMillisecondsSinceEpoch(
     int.parse(smsMap[SmsConstants.COLUMN_NAME_DATE]!),
   );
-  final DateTime dateSent = DateTime.fromMicrosecondsSinceEpoch(
+  final DateTime dateSent = DateTime.fromMillisecondsSinceEpoch(
     int.parse(smsMap[SmsConstants.COLUMN_NAME_DATE_SENT]!),
   );
   final bool seen = int.parse(smsMap[SmsConstants.COLUMN_NAME_SEEN]!) != 0;
