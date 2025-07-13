@@ -1,7 +1,5 @@
 import "package:flutter/material.dart";
-import "package:logging/logging.dart";
 import "package:permission_handler/permission_handler.dart";
-import "package:vidar/configuration.dart";
 import "package:vidar/pages/contact_list.dart";
 import "package:vidar/utils/colors.dart";
 import "package:vidar/utils/common_object.dart";
@@ -53,7 +51,9 @@ class _SettingsPageState extends State<SettingsPage> {
       final PermissionStatus manageExternalStorageStatus = await Permission
           .manageExternalStorage
           .request();
-      if (manageExternalStorageStatus.isDenied) {
+      if (manageExternalStorageStatus.isGranted) {
+        createLogger();
+      } else {
         if (mounted) {
           showDialog<void>(
             context: context,
@@ -80,12 +80,6 @@ class _SettingsPageState extends State<SettingsPage> {
           );
         }
         Settings.keepLogs = false;
-        return;
-      } else {
-        CommonObject.logger = Logger(LoggingConfiguration.loggerName);
-        CommonObject.logger!.onRecord.listen((final LogRecord log) {
-          createLogger();
-        });
       }
     } else {
       if (CommonObject.logger != null) {

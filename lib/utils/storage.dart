@@ -80,7 +80,7 @@ Future<void> loadData(
     }
 
     if (Settings.keepLogs) {
-      createLogger();
+      await createLogger();
     }
   } on Exception catch (error, stackTrace) {
     if (context != null && context.mounted) {
@@ -110,7 +110,14 @@ Future<void> saveSettings(
         sharedPreferences ?? await SharedPreferences.getInstance();
     await prefs.setString("settings", jsonEncode(settings.toMap()));
     if (Settings.keepLogs) {
-      CommonObject.logger!.info("Settings: ${jsonEncode(settings.toMap())}");
+      // Showing Settings.keepLogs is redundant but it's there for consistency
+      CommonObject.logger!.config("""
+      ======== SETTINGS ========
+      Allow Unencrypted Messages: ${Settings.allowUnencryptedMessages}
+      Keep Logs: ${Settings.keepLogs}
+      Color set: ${Settings.colorSet.name}
+      Show Message Bar Hints: ${Settings.showMessageBarHints}
+      """);
     }
   } on Exception catch (error, stackTrace) {
     if (context != null && context.mounted) {

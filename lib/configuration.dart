@@ -1,4 +1,11 @@
+import "package:device_info_plus/device_info_plus.dart" show AndroidDeviceInfo;
 import "package:logging/logging.dart";
+import "package:package_info_plus/package_info_plus.dart" show PackageInfo;
+
+void externalConfiguration() {
+  // Required to be true if you want to change log level of loggers (e.g. allow config messages).
+  hierarchicalLoggingEnabled = true;
+}
 
 class CryptographicConfiguration {
   // Length in bytes
@@ -40,9 +47,6 @@ class MiscellaneousConfiguration {
 }
 
 class LoggingConfiguration {
-  /// If encryption errors should be logged/printed
-  static const bool verboseEncryptionError = false;
-
   static const String loggerName = "VidarLogger";
 
   static const bool extraVerboseLogs = true;
@@ -54,10 +58,56 @@ class LoggingConfiguration {
   }
 
   static String verboseLogMessage(final LogRecord log) {
-    return "\n${log.sequenceNumber}: ${log.time.toIso8601String()}\nLevel: ${log.level.name}\nError: ${log.error}\nMessage: ${log.message}\nStack Trace: ${log.stackTrace}";
+    return """
+[${log.sequenceNumber}] ${log.time.toIso8601String()}
+\tLevel: ${log.level.name}
+\tError: ${log.error}
+\tMessage: ${log.message.replaceAll("\n", "\n\t")}
+\tStack Trace: ${log.stackTrace}
+    """;
   }
 
   static String conciseLogMessage(final LogRecord log) {
-    return "\n${log.sequenceNumber}: ${log.time.toIso8601String()}\nLevel: ${log.level.name}\nMessage: ${log.message}";
+    return """
+[${log.sequenceNumber}] ${log.time.toIso8601String()}
+\tLevel: ${log.level.name}
+\tMessage: ${log.message.replaceAll("\n", "\n\t")}
+    """;
+  }
+
+  static String minimalLogMessage(final LogRecord log) {
+    return """
+[${log.sequenceNumber}] ${log.time.toIso8601String()}
+\t${log.message.replaceAll("\n", "\n\t")}
+    """;
+  }
+
+  static String initLog({
+    required final PackageInfo packageInfo,
+    required final AndroidDeviceInfo deviceInfo,
+  }) {
+    return """
+========== APP INFO ==========
+App Name: ${packageInfo.appName}
+Version: ${packageInfo.version}
+Build Number: ${packageInfo.buildNumber}
+======== DEVICE INFO =========
+Base OS: ${deviceInfo.version.baseOS == "" ? "unknown" : deviceInfo.version.baseOS}
+Bootloader: ${deviceInfo.bootloader}
+Total RAM: ${deviceInfo.physicalRamSize} MB
+Release ${deviceInfo.version.release}
+SDK: ${deviceInfo.version.sdkInt}
+Security Patch: ${deviceInfo.version.securityPatch}
+Manufacturer: ${deviceInfo.manufacturer}
+Brand: ${deviceInfo.brand}
+Model: ${deviceInfo.model}
+Emulator: ${!deviceInfo.isPhysicalDevice}
+Hardware Keystore: ${deviceInfo.systemFeatures.contains("android.hardware.hardware_keystore")}
+Telephony: ${deviceInfo.systemFeatures.contains("android.hardware.telephony")}
+Telephony Messaging: ${deviceInfo.systemFeatures.contains("android.hardware.telephony.messaging")}
+Telephony Subscription: ${deviceInfo.systemFeatures.contains("android.hardware.telephony.subscription")}
+Any Camera: ${deviceInfo.systemFeatures.contains("android.hardware.camera.any")}
+==============================
+    """;
   }
 }
