@@ -34,7 +34,7 @@ Why? Because privacy is a fundamental human right and it should be respected as 
 
 <br>
 
-## License
+## 📜 License
 Vidar is licensed under the Mozilla Public License 2.0 (MPL-2.0).
 
 ## 🤝 Contributing
