@@ -57,7 +57,7 @@ final ColorSet vidarColorSet = ColorSet(
   pWipeKeyButton: const Color.fromARGB(255, 178, 34, 34),
   pFloatingActionButton: const Color.fromARGB(255, 39, 8, 86),
   pMessageBarHintText: const Color.fromARGB(255, 172, 116, 255),
-  pSendButton: const Color.fromARGB(255, 172, 116, 255)
+  pSendButton: const Color.fromARGB(255, 172, 116, 255),
 );
 
 final ColorSet playaColorSet = ColorSet(

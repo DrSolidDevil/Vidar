@@ -21,22 +21,27 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   _SettingsPageState();
 
-  BooleanSetting allowUnencryptedMessages = BooleanSetting(
+  final BooleanSetting allowUnencryptedMessages = BooleanSetting(
     setting: Settings.allowUnencryptedMessages,
     settingText: "Send unencrypted messages when contact has no key",
   );
 
-  BooleanSetting keepLogs = BooleanSetting(
+  final BooleanSetting keepLogs = BooleanSetting(
     setting: Settings.keepLogs,
     settingText: "Keep Logs",
   );
 
-  BooleanSetting showMessageBarHints = BooleanSetting(
+  final BooleanSetting showEncryptionKeyInEditContact = BooleanSetting(
+    setting: Settings.showEncryptionKeyInEditContact,
+    settingText: "Show encryption key when editing contact",
+  );
+
+  final BooleanSetting showMessageBarHints = BooleanSetting(
     setting: Settings.showMessageBarHints,
     settingText: "Show message bar hints",
   );
 
-  ColorSetSelect colorSetSelect = ColorSetSelect(
+  final ColorSetSelect colorSetSelect = ColorSetSelect(
     selectedSet: Settings.colorSet.name,
   );
 
@@ -48,6 +53,8 @@ class _SettingsPageState extends State<SettingsPage> {
   Future<void> _save() async {
     Settings.allowUnencryptedMessages = allowUnencryptedMessages.setting;
     Settings.keepLogs = keepLogs.setting;
+    Settings.showEncryptionKeyInEditContact =
+        showEncryptionKeyInEditContact.setting;
     if (Settings.keepLogs) {
       final PermissionStatus manageExternalStorageStatus = await Permission
           .manageExternalStorage
@@ -125,6 +132,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 children: <Widget>[
                   allowUnencryptedMessages,
                   keepLogs,
+                  showEncryptionKeyInEditContact,
                   showMessageBarHints,
                   colorSetSelect,
                 ],
