@@ -121,11 +121,10 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(final BuildContext context) {
     return ColoredBox(
       color: Settings.colorSet.primary,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: ListView(
         children: <Widget>[
           Column(
-            spacing: 60,
+            spacing: 20,
             children: <Widget>[
               Column(
                 children: <Widget>[
@@ -159,47 +158,62 @@ class _SettingsPageState extends State<SettingsPage> {
             ],
           ),
           Padding(
-            padding: const EdgeInsets.only(bottom: 150),
-            child: BasicButton(
-              buttonText: "Wipe Keys",
-              textColor: Settings.colorSet.wipeKeyButtonText,
-              buttonColor: Settings.colorSet.wipeKeyButton,
-              width: 200,
-              onPressed: () {
-                showDialog<void>(
-                  context: context,
-                  builder: (final BuildContext context) {
-                    return AlertDialog(
-                      title: const Text("Wipe all keys"),
-                      content: const Text(
-                        "Are you sure you want to wipe all keys? This is a permanent action which can not be undone.",
-                      ),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text("Cancel"),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            CommonObject.contactList.wipeKeys();
-                            wipeSecureStorage();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute<void>(
-                                builder: (final BuildContext context) =>
-                                    const ContactListPage(),
-                              ),
-                            );
-                          },
-                          child: const Text("Wipe Keys"),
-                        ),
-                      ],
+            padding: const EdgeInsets.only(top: 100),
+            child: Column(
+              spacing: 50,
+              children: <Widget>[
+                Visibility(
+                  visible: Settings.keepLogs,
+                  child: BasicButton(
+                    buttonText: "Export Logs",
+                    textColor: Settings.colorSet.text,
+                    buttonColor: Settings.colorSet.exportLogsButton,
+                    onPressed: () => exportLogs(context: context),
+                    width: 200,
+                  ),
+                ),
+                BasicButton(
+                  buttonText: "Wipe Keys",
+                  textColor: Settings.colorSet.wipeKeyButtonText,
+                  buttonColor: Settings.colorSet.wipeKeyButton,
+                  width: 200,
+                  onPressed: () {
+                    showDialog<void>(
+                      context: context,
+                      builder: (final BuildContext context) {
+                        return AlertDialog(
+                          title: const Text("Wipe all keys"),
+                          content: const Text(
+                            "Are you sure you want to wipe all keys? This is a permanent action which can not be undone.",
+                          ),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text("Cancel"),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                CommonObject.contactList.wipeKeys();
+                                wipeSecureStorage();
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute<void>(
+                                    builder: (final BuildContext context) =>
+                                        const ContactListPage(),
+                                  ),
+                                );
+                              },
+                              child: const Text("Wipe Keys"),
+                            ),
+                          ],
+                        );
+                      },
                     );
                   },
-                );
-              },
+                ),
+              ],
             ),
           ),
         ],

@@ -14,6 +14,7 @@ class ColorSet {
     final Color? pFloatingActionButton,
     final Color? pWipeKeyButtonText,
     final Color? pMessageBarHintText,
+    final Color? pExportLogsButton,
   }) {
     wipeKeyButton = pWipeKeyButton ?? secondary;
     inactiveTrack = pInactiveTrack ?? primary;
@@ -22,6 +23,7 @@ class ColorSet {
     floatingActionButton = pFloatingActionButton ?? tertiary;
     wipeKeyButtonText = pWipeKeyButtonText ?? text;
     messageBarHintText = pMessageBarHintText ?? text;
+    exportLogsButton = pExportLogsButton ?? tertiary;
   }
   final String name;
   final Color primary;
@@ -36,6 +38,7 @@ class ColorSet {
   late final Color floatingActionButton;
   late final Color wipeKeyButtonText;
   late final Color messageBarHintText;
+  late final Color exportLogsButton;
 }
 
 final List<String> availableColorSets = <String>[
@@ -84,11 +87,12 @@ final ColorSet bubblyColorSet = ColorSet(
   secondary: const Color.fromARGB(255, 255, 102, 179),
   tertiary: const Color.fromARGB(255, 2, 45, 64),
   text: const Color.fromARGB(255, 240, 246, 246),
-  pWipeKeyButton: const Color.fromARGB(255, 165, 40, 255),
+  pWipeKeyButton: const Color.fromARGB(255, 255, 40, 183),
   pInactiveTrack: const Color.fromARGB(255, 66, 191, 221),
   pSendButton: const Color.fromARGB(255, 8, 75, 131),
   pDropdownFocus: const Color.fromARGB(255, 165, 40, 255),
   pMessageBarHintText: const Color.fromARGB(255, 66, 191, 221),
+  pExportLogsButton: const Color.fromARGB(255, 165, 40, 255),
 );
 
 /// If color set is not found then it returns default
