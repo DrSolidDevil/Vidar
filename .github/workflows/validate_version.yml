@@ -16,7 +16,6 @@ jobs:
         uses: dcarbone/install-jq-action@v3.2.0
       - name: Validate version
         run: |
-          echo "pubspec: $(grep '^version:' pubspec.yaml)"
           VERSION=$(grep '^version:' pubspec.yaml | cut -d ' ' -f2 | cut -d '+' -f1)
           if wget -qO- https://api.github.com/repos/drsoliddevil/vidar/tags | jq -r '.[].name' | grep -q "^v$VERSION$"; then
             echo "Tag v$VERSION already exists."
