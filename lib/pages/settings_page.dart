@@ -1,14 +1,15 @@
 import "package:flutter/material.dart";
-import "package:logging/logging.dart";
 import "package:permission_handler/permission_handler.dart";
-import "package:vidar/configuration.dart";
 import "package:vidar/pages/contact_list.dart";
+import "package:vidar/utils/colors.dart";
 import "package:vidar/utils/common_object.dart";
 import "package:vidar/utils/log.dart";
+import "package:vidar/utils/navigation.dart";
 import "package:vidar/utils/settings.dart";
 import "package:vidar/utils/storage.dart";
 import "package:vidar/widgets/boolean_setting.dart";
 import "package:vidar/widgets/buttons.dart";
+import "package:vidar/widgets/color_set_select.dart";
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -20,14 +21,28 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   _SettingsPageState();
 
-  BooleanSetting allowUnencryptedMessages = BooleanSetting(
+  final BooleanSetting allowUnencryptedMessages = BooleanSetting(
     setting: Settings.allowUnencryptedMessages,
     settingText: "Send unencrypted messages when contact has no key",
   );
 
-  BooleanSetting keepLogs = BooleanSetting(
+  final BooleanSetting keepLogs = BooleanSetting(
     setting: Settings.keepLogs,
     settingText: "Keep Logs",
+  );
+
+  final BooleanSetting showEncryptionKeyInEditContact = BooleanSetting(
+    setting: Settings.showEncryptionKeyInEditContact,
+    settingText: "Show encryption key when editing contact",
+  );
+
+  final BooleanSetting showMessageBarHints = BooleanSetting(
+    setting: Settings.showMessageBarHints,
+    settingText: "Show message bar hints",
+  );
+
+  final ColorSetSelect colorSetSelect = ColorSetSelect(
+    selectedSet: Settings.colorSet.name,
   );
 
   @override
@@ -38,11 +53,15 @@ class _SettingsPageState extends State<SettingsPage> {
   Future<void> _save() async {
     Settings.allowUnencryptedMessages = allowUnencryptedMessages.setting;
     Settings.keepLogs = keepLogs.setting;
+    Settings.showEncryptionKeyInEditContact =
+        showEncryptionKeyInEditContact.setting;
     if (Settings.keepLogs) {
       final PermissionStatus manageExternalStorageStatus = await Permission
           .manageExternalStorage
           .request();
-      if (manageExternalStorageStatus.isDenied) {
+      if (manageExternalStorageStatus.isGranted) {
+        createLogger();
+      } else {
         if (mounted) {
           showDialog<void>(
             context: context,
@@ -54,13 +73,7 @@ class _SettingsPageState extends State<SettingsPage> {
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute<void>(
-                        builder: (final BuildContext context) =>
-                            const ContactListPage(),
-                      ),
-                    );
+                    clearNavigatorAndPush(context, const ContactListPage());
                   },
                   child: const Text("Continue"),
                 ),
@@ -69,12 +82,6 @@ class _SettingsPageState extends State<SettingsPage> {
           );
         }
         Settings.keepLogs = false;
-        return;
-      } else {
-        CommonObject.logger = Logger(LoggingConfiguration.loggerName);
-        CommonObject.logger!.onRecord.listen((final LogRecord log) {
-          createLogger();
-        });
       }
     } else {
       if (CommonObject.logger != null) {
@@ -83,38 +90,37 @@ class _SettingsPageState extends State<SettingsPage> {
       }
       CommonObject.logs = <String>[];
     }
+    Settings.showMessageBarHints = showMessageBarHints.setting;
+    Settings.colorSet = getColorSetFromName(colorSetSelect.selectedSet);
 
     if (mounted) {
       saveSettings(CommonObject.settings, context: context);
-      Navigator.push(
-        context,
-        MaterialPageRoute<void>(
-          builder: (final BuildContext context) => const ContactListPage(),
-        ),
-      );
+      clearNavigatorAndPush(context, const ContactListPage());
     }
   }
 
   void _discard() {
-    Navigator.push(
-      context,
-      MaterialPageRoute<void>(
-        builder: (final BuildContext context) => const ContactListPage(),
-      ),
-    );
+    clearNavigatorAndPush(context, const ContactListPage());
   }
 
   @override
   Widget build(final BuildContext context) {
     return ColoredBox(
-      color: VidarColors.primaryDarkSpaceCadet,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      color: Settings.colorSet.primary,
+      child: ListView(
         children: <Widget>[
           Column(
-            spacing: 60,
+            spacing: 20,
             children: <Widget>[
-              Column(children: <Widget>[allowUnencryptedMessages, keepLogs]),
+              Column(
+                children: <Widget>[
+                  allowUnencryptedMessages,
+                  keepLogs,
+                  showEncryptionKeyInEditContact,
+                  showMessageBarHints,
+                  colorSetSelect,
+                ],
+              ),
               Container(
                 margin: const EdgeInsets.only(top: 60),
                 child: Row(
@@ -122,15 +128,16 @@ class _SettingsPageState extends State<SettingsPage> {
                   children: <Widget>[
                     BasicButton(
                       buttonText: "Discard",
-                      textColor: Colors.white,
-                      buttonColor: VidarColors.secondaryMetallicViolet,
+                      textColor: Settings.colorSet.text,
+                      buttonColor: Settings.colorSet.secondary,
                       onPressed: _discard,
                     ),
                     BasicButton(
                       buttonText: "Save",
-                      textColor: Colors.white,
-                      buttonColor: VidarColors.tertiaryGold,
+                      textColor: Settings.colorSet.text,
+                      buttonColor: Settings.colorSet.tertiary,
                       onPressed: _save,
+                      fontWeight: FontWeight.bold,
                     ),
                   ],
                 ),
@@ -138,47 +145,64 @@ class _SettingsPageState extends State<SettingsPage> {
             ],
           ),
           Padding(
-            padding: const EdgeInsets.only(bottom: 150),
-            child: BasicButton(
-              buttonText: "Wipe Keys",
-              textColor: Colors.white,
-              buttonColor: VidarColors.extraFireBrick,
-              width: 200,
-              onPressed: () {
-                showDialog<void>(
-                  context: context,
-                  builder: (final BuildContext context) {
-                    return AlertDialog(
-                      title: const Text("Wipe all keys"),
-                      content: const Text(
-                        "Are you sure you want to wipe all keys? This is a permanent action which can not be undone.",
-                      ),
-                      actions: <Widget>[
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text("Cancel"),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            CommonObject.contactList.wipeKeys();
-                            wipeSecureStorage();
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute<void>(
-                                builder: (final BuildContext context) =>
-                                    const ContactListPage(),
-                              ),
-                            );
-                          },
-                          child: const Text("Wipe Keys"),
-                        ),
-                      ],
+            padding: const EdgeInsets.only(top: 100),
+            child: Column(
+              spacing: 50,
+              children: <Widget>[
+                Visibility(
+                  visible: Settings.keepLogs,
+                  child: BasicButton(
+                    buttonText: "Export Logs",
+                    textColor: Settings.colorSet.text,
+                    buttonColor: Settings.colorSet.exportLogsButton,
+                    onPressed: () => exportLogs(context: context),
+                    width: 200,
+                  ),
+                ),
+                BasicButton(
+                  buttonText: "Wipe Keys",
+                  textColor: Settings.colorSet.wipeKeyButtonText,
+                  buttonColor: Settings.colorSet.wipeKeyButton,
+                  width: 200,
+                  onPressed: () {
+                    showDialog<void>(
+                      context: context,
+                      builder: (final BuildContext context) {
+                        return AlertDialog(
+                          title: const Text("Wipe all keys"),
+                          content: const Text(
+                            "Are you sure you want to wipe all keys? This is a permanent action which can not be undone.",
+                          ),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text("Cancel"),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                if (Settings.keepLogs) {
+                                  CommonObject.logger!.info(
+                                    "Wiping all keys...",
+                                  );
+                                }
+                                CommonObject.contactList.wipeKeys();
+                                wipeSecureStorage();
+                                clearNavigatorAndPush(
+                                  context,
+                                  const ContactListPage(),
+                                );
+                              },
+                              child: const Text("Wipe Keys"),
+                            ),
+                          ],
+                        );
+                      },
                     );
                   },
-                );
-              },
+                ),
+              ],
             ),
           ),
         ],

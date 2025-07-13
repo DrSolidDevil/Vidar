@@ -8,6 +8,7 @@ class BasicButton extends StatelessWidget {
     required this.onPressed,
     this.width = 100,
     this.height = 50,
+    this.fontWeight = FontWeight.normal,
     super.key,
   });
   final Color textColor;
@@ -16,6 +17,7 @@ class BasicButton extends StatelessWidget {
   final VoidCallback onPressed;
   final double width;
   final double height;
+  final FontWeight fontWeight;
 
   @override
   Widget build(final BuildContext context) {
@@ -31,7 +33,11 @@ class BasicButton extends StatelessWidget {
         ),
         child: Text(
           buttonText,
-          style: TextStyle(fontSize: 24, color: textColor),
+          style: TextStyle(
+            fontSize: 24,
+            color: textColor,
+            fontWeight: fontWeight,
+          ),
         ),
       ),
     );

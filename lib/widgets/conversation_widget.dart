@@ -63,16 +63,16 @@ class _ConversationWidgetState extends State<ConversationWidget> {
                       );
                     }
                     return ColoredBox(
-                      color: VidarColors.primaryDarkSpaceCadet,
+                      color: Settings.colorSet.primary,
                       child: Center(
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width * 0.6,
-                          child: const Center(
+                          child: Center(
                             child: Text(
                               "SMS query failed, please ensure the phone number is correct.",
                               style: TextStyle(
                                 fontSize: 20,
-                                color: Colors.white,
+                                color: Settings.colorSet.text,
                               ),
                             ),
                           ),
@@ -125,7 +125,7 @@ class _ConversationWidgetState extends State<ConversationWidget> {
                                   if (LoggingConfiguration.extraVerboseLogs &&
                                       Settings.keepLogs) {
                                     CommonObject.logger!.info(
-                                      "Snapshot has not data for contact ${contact.uuid}",
+                                      "Snapshot has no data for contact ${contact.uuid}",
                                     );
                                   }
                                 }
@@ -135,7 +135,7 @@ class _ConversationWidgetState extends State<ConversationWidget> {
                       );
                     }
                     return ColoredBox(
-                      color: VidarColors.primaryDarkSpaceCadet,
+                      color: Settings.colorSet.primary,
                       child: ListView(
                         reverse: true,
                         children: decryptedSpeechBubbles,

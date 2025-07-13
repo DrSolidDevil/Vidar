@@ -2,6 +2,7 @@
 
 import "package:flutter/material.dart";
 import "package:vidar/configuration.dart";
+import "package:vidar/utils/settings.dart";
 import "package:vidar/widgets/loading_text.dart";
 
 class ChatLoadingScreen extends LoadingScreen {
@@ -25,7 +26,7 @@ class LoadingScreen extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return ColoredBox(
-      color: VidarColors.primaryDarkSpaceCadet,
+      color: Settings.colorSet.primary,
       child: Column(
         spacing: 30,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -33,13 +34,13 @@ class LoadingScreen extends StatelessWidget {
           Transform.scale(
             scale: 2,
             child: CircularProgressIndicator(
-              color: VidarColors.secondaryMetallicViolet,
+              color: Settings.colorSet.secondary,
             ),
           ),
           DecryptingText(
             targets: loadingMessages,
             style: TextStyle(
-              color: VidarColors.secondaryMetallicViolet,
+              color: Settings.colorSet.secondary,
               fontSize: SizeConfiguration.loadingFontSize,
             ),
           ),

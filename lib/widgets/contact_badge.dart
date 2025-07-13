@@ -21,7 +21,7 @@ class ContactBadge extends StatelessWidget {
         padding: const EdgeInsets.only(top: 10, bottom: 10),
         margin: const EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
         decoration: BoxDecoration(
-          color: VidarColors.primaryDarkSpaceCadet,
+          color: Settings.colorSet.primary,
           borderRadius: BorderRadius.circular(10),
         ),
 
@@ -29,17 +29,17 @@ class ContactBadge extends StatelessWidget {
           children: <Widget>[
             Text(
               contact.name,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 32,
-                color: Colors.white,
+                color: Settings.colorSet.text,
                 decoration: TextDecoration.none,
               ),
             ),
             Text(
               contact.phoneNumber,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 12,
-                color: Colors.white,
+                color: Settings.colorSet.text,
                 decoration: TextDecoration.none,
               ),
             ),

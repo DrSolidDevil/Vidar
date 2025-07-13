@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:vidar/configuration.dart";
+import "package:vidar/utils/settings.dart";
 import "package:vidar/utils/sms.dart";
 
 class SpeechBubble extends StatelessWidget {
@@ -34,8 +35,8 @@ class SpeechBubble extends StatelessWidget {
                 ),
                 decoration: BoxDecoration(
                   color: isMe
-                      ? VidarColors.secondaryMetallicViolet
-                      : VidarColors.tertiaryGold,
+                      ? Settings.colorSet.secondary
+                      : Settings.colorSet.tertiary,
                   borderRadius: BorderRadius.only(
                     topLeft: const Radius.circular(10),
                     topRight: const Radius.circular(10),
@@ -45,21 +46,18 @@ class SpeechBubble extends StatelessWidget {
                 ),
                 child: Text(
                   message.body,
-                  style: const TextStyle(color: Colors.white, fontSize: 12),
+                  style: TextStyle(color: Settings.colorSet.text, fontSize: 12),
                 ),
               ),
             ),
-            // Temporarily disabled until fix
-            /*Container(
-              margin: EdgeInsets.only(top: 2, bottom: 2),
+            Container(
+              margin: const EdgeInsets.only(top: 2.0, bottom: 2.0),
               child: Text(
                 (isMe ? "Sent at " : "Received at ") +
-                    (isMe
-                        ? message.dateSent!.toIso8601String().substring(11, 16)
-                        : message.date!.toIso8601String().substring(11, 16)),
+                    message.date!.toIso8601String().substring(11, 16),
                 style: const TextStyle(color: Colors.white, fontSize: 8),
               ),
-            ),*/
+            ),
           ],
         ),
       ),

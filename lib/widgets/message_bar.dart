@@ -1,3 +1,5 @@
+import "dart:math";
+
 import "package:flutter/material.dart";
 import "package:vidar/configuration.dart";
 import "package:vidar/utils/common_object.dart";
@@ -41,10 +43,10 @@ class _MessageBarState extends State<MessageBar> {
     final String text,
   ) {
     return Container(
-      color: VidarColors.tertiaryGold,
+      color: Settings.colorSet.tertiary,
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom > 50
-            ? MediaQuery.of(context).viewInsets.bottom
+            ? MediaQuery.of(context).viewInsets.bottom + 10
             : 50,
         left: 20,
         right: 20,
@@ -57,8 +59,8 @@ class _MessageBarState extends State<MessageBar> {
             width: MediaQuery.of(context).size.width * 0.75,
             child: Text(
               text,
-              style: const TextStyle(
-                color: VidarColors.secondaryMetallicViolet,
+              style: TextStyle(
+                color: Settings.colorSet.secondary,
                 fontWeight: FontWeight.bold,
                 fontSize: 16,
               ),
@@ -69,10 +71,7 @@ class _MessageBarState extends State<MessageBar> {
               error = false;
               errorNotifier.notifyListeners();
             },
-            icon: const Icon(
-              Icons.sms,
-              color: VidarColors.secondaryMetallicViolet,
-            ),
+            icon: Icon(Icons.sms, color: Settings.colorSet.secondary),
           ),
         ],
       ),
@@ -114,86 +113,102 @@ class _MessageBarState extends State<MessageBar> {
           }
         } else {
           return Container(
-            color: VidarColors.tertiaryGold,
+            color: Settings.colorSet.secondary,
             padding: EdgeInsets.only(
               bottom: MediaQuery.of(context).viewInsets.bottom > 50
-                  ? MediaQuery.of(context).viewInsets.bottom
+                  ? MediaQuery.of(context).viewInsets.bottom + 10
                   : 50,
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Container(
-                  decoration: BoxDecoration(
-                    color: VidarColors.secondaryMetallicViolet,
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  padding: const EdgeInsets.only(left: 10),
-                  width:
-                      MediaQuery.sizeOf(context).width -
-                      SizeConfiguration.sendMessageIconSize * 2.5,
-                  child: TextField(
-                    controller: controller,
-                    style: const TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide.none,
-                      ),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 5.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Settings.colorSet.primary,
+                      borderRadius: BorderRadius.circular(4.0),
                     ),
-                    onChanged: (final String value) => message = value,
+                    padding: const EdgeInsets.only(left: 10.0),
+                    width:
+                        MediaQuery.sizeOf(context).width -
+                        SizeConfiguration.sendMessageIconSize * 2.5,
+                    child: TextField(
+                      controller: controller,
+                      style: TextStyle(color: Settings.colorSet.text),
+                      decoration: InputDecoration(
+                        hintText: () {
+                          if (Settings.showMessageBarHints) {
+                            return MiscellaneousConfiguration
+                                .messageHints[Random().nextInt(
+                              MiscellaneousConfiguration.messageHints.length,
+                            )];
+                          } else {
+                            return null;
+                          }
+                        }(),
+                        hintStyle: TextStyle(
+                          color: Settings.colorSet.messageBarHintText,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                      onChanged: (final String value) => message = value,
+                    ),
                   ),
-                ),
-                SizedBox(
-                  width: 50,
-                  height: 60,
-                  child: Center(
-                    child: IconButton(
-                      onPressed: () async {
-                        final String encryptedMessage = await encryptMessage(
-                          message,
-                          contact.encryptionKey,
-                        );
-                        if (encryptedMessage.startsWith(
-                          MiscellaneousConfiguration.errorPrefix,
-                        )) {
-                          errorMessage = encryptedMessage.replaceFirst(
-                            MiscellaneousConfiguration.errorPrefix,
-                            "",
+                  SizedBox(
+                    width: 50.0,
+                    height: 60.0,
+                    child: Center(
+                      child: IconButton(
+                        onPressed: () async {
+                          final String encryptedMessage = await encryptMessage(
+                            message,
+                            contact.encryptionKey,
                           );
-                          error = true;
-                          errorNotifier.notifyListeners();
-                        } else {
-                          sendSms(encryptedMessage, contact.phoneNumber);
-                          controller.text =
-                              ""; // Clear only after successful send
-                          if (CommonObject.currentConversation != null) {
-                            int delay =
-                                (encryptedMessage.length ~/ 65) *
-                                TimeConfiguration.smsUpdateDelay;
-                            delay = delay == 0 ? 1 : delay;
-                            Future<void>.delayed(Duration(seconds: delay)).then(
-                              (_) {
+                          if (encryptedMessage.startsWith(
+                            MiscellaneousConfiguration.errorPrefix,
+                          )) {
+                            errorMessage = encryptedMessage.replaceFirst(
+                              MiscellaneousConfiguration.errorPrefix,
+                              "",
+                            );
+                            error = true;
+                            errorNotifier.notifyListeners();
+                          } else {
+                            sendSms(encryptedMessage, contact.phoneNumber);
+                            controller.text =
+                                ""; // Clear only after successful send
+                            if (CommonObject.currentConversation != null) {
+                              int delay =
+                                  (encryptedMessage.length ~/ 65) *
+                                  TimeConfiguration.smsUpdateDelay;
+                              delay = delay == 0 ? 1 : delay;
+                              Future<void>.delayed(
+                                Duration(seconds: delay),
+                              ).then((_) {
                                 CommonObject.currentConversation!
                                     .notifyListeners();
-                              },
-                            );
-                          } else if (Settings.keepLogs) {
-                            CommonObject.logger!.info(
-                              "Current conversation is null, can not notifyListeners",
-                            );
+                              });
+                            } else if (Settings.keepLogs) {
+                              CommonObject.logger!.info(
+                                "Current conversation is null, can not notifyListeners",
+                              );
+                            }
                           }
-                        }
-                      },
-                      icon: const Icon(
-                        size: SizeConfiguration.sendMessageIconSize,
-                        Icons.send,
-                        color: VidarColors.secondaryMetallicViolet,
+                        },
+                        icon: Icon(
+                          size: SizeConfiguration.sendMessageIconSize,
+                          Icons.send,
+                          color: Settings.colorSet.sendButton,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         }

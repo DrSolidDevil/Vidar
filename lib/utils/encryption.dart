@@ -50,9 +50,9 @@ Future<String> encryptMessage(final String message, final String key) async {
 
     return CryptographicConfiguration.encryptionPrefix +
         base64.encode(fullEncrypted);
-  } on Exception catch (error, stackTrace) {
+  } catch (error, stackTrace) {
     if (Settings.keepLogs) {
-      CommonObject.logger!.warning(
+      CommonObject.logger!.finest(
         "Failed to encrypt message",
         error,
         stackTrace,
@@ -119,9 +119,14 @@ Future<String> decryptMessage(
     );
     final String decryptedMessage = utf8.decode(decryptedBytes);
     return decryptedMessage;
-  } on Exception catch (error, stackTrace) {
+  } on SecretBoxAuthenticationError catch (error) {
     if (Settings.keepLogs) {
-      CommonObject.logger!.warning(
+      CommonObject.logger!.warning("Failed to decrypt message", error);
+    }
+    return "${MiscellaneousConfiguration.errorPrefix}$ENCRYPTION_ERROR_DECRYPTION_FAILED";
+  } catch (error, stackTrace) {
+    if (Settings.keepLogs) {
+      CommonObject.logger!.finer(
         "Failed to decrypt message",
         error,
         stackTrace,
