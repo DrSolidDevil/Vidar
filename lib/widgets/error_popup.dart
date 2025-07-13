@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 import "package:vidar/pages/contact_list.dart";
 import "package:vidar/utils/log.dart";
+import "package:vidar/utils/navigation.dart";
 import "package:vidar/utils/settings.dart";
 
 /// Alert dialog template for errors
@@ -36,12 +37,7 @@ class _ErrorPopupState extends State<ErrorPopup> {
     final List<Widget> list = <Widget>[
       TextButton(
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute<void>(
-              builder: (final BuildContext context) => const ContactListPage(),
-            ),
-          );
+          clearNavigatorAndPush(context, const ContactListPage());
         },
         child: const Text("Home"),
       ),
@@ -51,15 +47,9 @@ class _ErrorPopupState extends State<ErrorPopup> {
         TextButton(
           onPressed: () {
             exportLogs();
-            Navigator.push(
-              context,
-              MaterialPageRoute<void>(
-                builder: (final BuildContext context) =>
-                    const ContactListPage(),
-              ),
-            );
+            clearNavigatorAndPush(context, const ContactListPage());
           },
-          child: const Text("Save logs"),
+          child: const Text("Export logs"),
         ),
       );
     }
