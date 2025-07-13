@@ -17,7 +17,7 @@ void main() async {
   await loadData(CommonObject.contactList, CommonObject.settings);
   SmsConstants(await retrieveSmsConstantsMap());
   smsStatus = await Permission.sms.request();
-  
+
   runApp(const VidarApp());
 }
 

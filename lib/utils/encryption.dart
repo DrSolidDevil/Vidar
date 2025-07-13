@@ -121,10 +121,7 @@ Future<String> decryptMessage(
     return decryptedMessage;
   } on SecretBoxAuthenticationError catch (error) {
     if (Settings.keepLogs) {
-      CommonObject.logger!.warning(
-        "Failed to decrypt message",
-        error,
-      );
+      CommonObject.logger!.warning("Failed to decrypt message", error);
     }
     return "${MiscellaneousConfiguration.errorPrefix}$ENCRYPTION_ERROR_DECRYPTION_FAILED";
   } catch (error, stackTrace) {

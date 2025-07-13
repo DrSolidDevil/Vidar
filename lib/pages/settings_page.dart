@@ -191,11 +191,16 @@ class _SettingsPageState extends State<SettingsPage> {
                             TextButton(
                               onPressed: () {
                                 if (Settings.keepLogs) {
-                                  CommonObject.logger!.info("Wiping all keys...");
+                                  CommonObject.logger!.info(
+                                    "Wiping all keys...",
+                                  );
                                 }
                                 CommonObject.contactList.wipeKeys();
                                 wipeSecureStorage();
-                                clearNavigatorAndPush(context, const ContactListPage());
+                                clearNavigatorAndPush(
+                                  context,
+                                  const ContactListPage(),
+                                );
                               },
                               child: const Text("Wipe Keys"),
                             ),
