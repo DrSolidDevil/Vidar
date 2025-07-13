@@ -4,6 +4,7 @@ import "package:vidar/pages/contact_list.dart";
 import "package:vidar/utils/colors.dart";
 import "package:vidar/utils/common_object.dart";
 import "package:vidar/utils/log.dart";
+import "package:vidar/utils/navigation.dart";
 import "package:vidar/utils/settings.dart";
 import "package:vidar/utils/storage.dart";
 import "package:vidar/widgets/boolean_setting.dart";
@@ -189,15 +190,12 @@ class _SettingsPageState extends State<SettingsPage> {
                             ),
                             TextButton(
                               onPressed: () {
+                                if (Settings.keepLogs) {
+                                  CommonObject.logger!.info("Wiping all keys...");
+                                }
                                 CommonObject.contactList.wipeKeys();
                                 wipeSecureStorage();
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute<void>(
-                                    builder: (final BuildContext context) =>
-                                        const ContactListPage(),
-                                  ),
-                                );
+                                clearNavigatorAndPush(context, const ContactListPage());
                               },
                               child: const Text("Wipe Keys"),
                             ),
