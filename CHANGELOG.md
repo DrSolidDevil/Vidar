@@ -1,3 +1,31 @@
+## [1.1.0-beta](https://github.com/DrSolidDevil/Vidar/compare/v1.0.3-beta...v1.1.0-beta) (2025-07-13)
+
+> This version of Vidar introduces color sets! You can now choose how your experience will look. In addition to color sets, now you can export logs at any time through the settings. This version also finally introduces the ability to see the time a message was sent/received.
+
+### New Features
+* Color sets for Vidar currently there are four color sets (including default). [`642c3cb`](https://github.com/DrSolidDevil/Vidar/commit/642c3cb95b271b4a59e451042c7fba6dbc9c8198) [`7c8b6a2`](https://github.com/DrSolidDevil/Vidar/commit/7c8b6a27091b0fcbcef068cbdcfd49f73d7b81bc) [`1cd2a28`](https://github.com/DrSolidDevil/Vidar/commit/1cd2a281deba7977c7dceef8990b148d243d6e13) [`0aea5e9`](https://github.com/DrSolidDevil/Vidar/commit/0aea5e9f067f290435c84f7c09a9084c10cb3aa5)
+* Ability to export logs at any time using a button on the settings page. [`9ae93a9`](https://github.com/DrSolidDevil/Vidar/commit/9ae93a9304b2644da57b72c15ee4e7101f639341)
+* Messages now display the time it was sent/received. [`beadd53`](https://github.com/DrSolidDevil/Vidar/commit/beadd532267ba8660ea0b7e61c91194838a467c1)
+* Edit contact page now shows current name, phone number and optionally the encryption key (by default not shown) [`004cb38`](https://github.com/DrSolidDevil/Vidar/commit/004cb38036a8227c8a5c064a7e39515c6a0b9cf9)
+
+### Bug Fixes
+* Fixed faulty save logic for edit_contact.dart. [`1a336aa`](https://github.com/DrSolidDevil/Vidar/commit/1a336aaea631f39e64b88e62519036bc3ac796a9)
+* Fixed SMS dates when retrieving from map sent via method channel. [`beadd53`](https://github.com/DrSolidDevil/Vidar/commit/beadd532267ba8660ea0b7e61c91194838a467c1)
+
+### Other Changes
+* Added pull-request templates. [`c2a31a3`](https://github.com/DrSolidDevil/Vidar/commit/c2a31a3516d4918a4a047b59079074dbfad05646)
+* Created changelog. [`3e8177c`](https://github.com/DrSolidDevil/Vidar/commit/3e8177cd76368379a5eb42b556e45deeac08435d)
+* Changed keyboard type of the phone number field on the edit contact page to a phone number optimized one. [`6b71f84`](https://github.com/DrSolidDevil/Vidar/commit/6b71f84ada9b4e4b174ae4c49878e8f5231752aa)
+* Navigation standardization. [`ce58482`](https://github.com/DrSolidDevil/Vidar/commit/ce58482f1f167ccb4718b28444523155de199212) [`4087354`](https://github.com/DrSolidDevil/Vidar/commit/4087354c3840b4233f2201550ac0c0f349b06e89)
+* Dialog to export logs no longer utilizes ErrorPopup [`8eb897a`](https://github.com/DrSolidDevil/Vidar/commit/8eb897a9eca87de5edaf9e0834f45f8348003409)
+* Rewrote logging in an effort to improve DX. [`4a9881f`](https://github.com/DrSolidDevil/Vidar/commit/4a9881f6c5a270f651fe7e9b80fe33a40c0b2c56) [`f013694`](https://github.com/DrSolidDevil/Vidar/commit/f013694183178e95691b375165db0d9631248e8c) [`ccd64bf`](https://github.com/DrSolidDevil/Vidar/commit/ccd64bfcd92ff13739b4dbeab8b6c51426ee1f7d)
+* Removed unused packages. [`51d0fbe`](https://github.com/DrSolidDevil/Vidar/commit/51d0fbe2698d26d2765c7859acebb809f0587ca8)
+* Removed linter rule "avoid_catches_without_on_clauses" [`6663e48`](https://github.com/DrSolidDevil/Vidar/commit/6663e4875c569440df35afb8933c5ef4be1fea2b)
+* Minor visual enhancements [`f7c8f78`](https://github.com/DrSolidDevil/Vidar/commit/f7c8f78eac044fb0e6e51a80660fa16c99bf8582)
+* Typo fixed. [`9aca116`](https://github.com/DrSolidDevil/Vidar/commit/9aca116fb4da0046f514e83219efbe55d646a6a8)
+
+<br>
+
 ## [1.0.3-beta](https://github.com/DrSolidDevil/Vidar/compare/v1.0.2-beta...v1.0.3-beta) (2025-07-10)
 
 > No real changes for the end user; upgrading is not necessary.
