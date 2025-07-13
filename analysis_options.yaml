@@ -20,7 +20,6 @@ linter:
     - annotate_overrides
     - annotate_redeclares
     - avoid_bool_literals_in_conditional_expressions
-    - avoid_catches_without_on_clauses
     - avoid_catching_errors
     - avoid_empty_else
     - avoid_escaping_inner_quotes
