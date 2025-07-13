@@ -73,13 +73,7 @@ class _SettingsPageState extends State<SettingsPage> {
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute<void>(
-                        builder: (final BuildContext context) =>
-                            const ContactListPage(),
-                      ),
-                    );
+                    clearNavigatorAndPush(context, const ContactListPage());
                   },
                   child: const Text("Continue"),
                 ),
@@ -101,22 +95,12 @@ class _SettingsPageState extends State<SettingsPage> {
 
     if (mounted) {
       saveSettings(CommonObject.settings, context: context);
-      Navigator.push(
-        context,
-        MaterialPageRoute<void>(
-          builder: (final BuildContext context) => const ContactListPage(),
-        ),
-      );
+      clearNavigatorAndPush(context, const ContactListPage());
     }
   }
 
   void _discard() {
-    Navigator.push(
-      context,
-      MaterialPageRoute<void>(
-        builder: (final BuildContext context) => const ContactListPage(),
-      ),
-    );
+    clearNavigatorAndPush(context, const ContactListPage());
   }
 
   @override
