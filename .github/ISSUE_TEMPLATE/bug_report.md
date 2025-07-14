@@ -21,11 +21,12 @@ Steps to reproduce the behavior:
 *A clear and concise description of what you expected to happen.*
 
 **Actual Behaviour**
+*What actually happend, be descriptive of the differences.*
 
 **Screenshots** \
 *If applicable, add screenshots to help explain your problem.*
 
-**Device information:** \
+**Device information:**
  - Device: [e.g. Samsung Galaxy A26]
  - Android version: [e.g. Android 15]
  - Screen size: [e.g. 720x1612]
@@ -33,5 +34,8 @@ Steps to reproduce the behavior:
 **Possible Solution** \
 *Any obvious solution to the problem*
 
-**Additional context**
+**Additional context** \
 *Add any other context about the problem here.*
+
+**Logs** \
+*If you have logs enabled, please attach them.*
