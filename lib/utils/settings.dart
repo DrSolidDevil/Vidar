@@ -10,6 +10,10 @@ class Settings {
 
   static bool showEncryptionKeyInEditContact = false;
 
+  static bool allowWipeoutTime = false;
+
+  static int wipeoutTime = 0;
+
   static bool showMessageBarHints = true;
 
   static ColorSet colorSet = vidarColorSet;
@@ -20,6 +24,8 @@ class Settings {
       "allowUnencryptedMessages": allowUnencryptedMessages,
       "keepLogs": keepLogs,
       "showEncryptionKeyInEditContact": showEncryptionKeyInEditContact,
+      "allowWipeoutTime": allowWipeoutTime,
+      "wipeoutTime": wipeoutTime,
       "showMessageBarHints": showMessageBarHints,
       "colorSet": colorSet.name,
     };
@@ -34,18 +40,10 @@ class Settings {
         showEncryptionKeyInEditContact;
     showMessageBarHints =
         map["showMessageBarHints"] as bool? ?? showMessageBarHints;
+    allowWipeoutTime = map["allowWipeoutTime"] as bool? ?? allowWipeoutTime;
+    wipeoutTime = map["wipeoutTime"] as int? ?? wipeoutTime;
     colorSet = getColorSetFromName(map["colorSet"] as String? ?? "default");
 
-    final bool? newAllowUnencryptedMessages =
-        map["allowUnencryptedMessages"]! as bool?;
-    if (newAllowUnencryptedMessages == null) {
-      if (keepLogs) {
-        CommonObject.logger!.info(
-          "allowUnencryptedMessages was not in map, defaulting to $allowUnencryptedMessages",
-        );
-      }
-    } else {
-      allowUnencryptedMessages = newAllowUnencryptedMessages;
-    }
+    allowUnencryptedMessages = map["allowUnencryptedMessages"]! as bool? ?? allowUnencryptedMessages;
   }
 }
