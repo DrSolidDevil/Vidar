@@ -121,7 +121,7 @@ class _EditContactPageState extends State<EditContactPage> {
           contact.name = newName!;
           contact.encryptionKey = newKey!;
           contact.phoneNumber = newPhoneNumber!;
-          saveData(CommonObject.contactList, CommonObject.settings);
+          saveData(CommonObject.contactList);
           clearNavigatorAndPush(context, ChatPage(contact));
         }
 
@@ -159,7 +159,7 @@ class _EditContactPageState extends State<EditContactPage> {
                 contact.name = newName!;
                 contact.encryptionKey = newKey!;
                 contact.phoneNumber = newPhoneNumber!;
-                saveData(CommonObject.contactList, CommonObject.settings);
+                saveData(CommonObject.contactList);
                 CommonObject.logger!.info(
                   "New contact ${contact.uuid} has been saved",
                 );
@@ -186,7 +186,7 @@ class _EditContactPageState extends State<EditContactPage> {
             contact.name = newName!;
             contact.encryptionKey = newKey!;
             contact.phoneNumber = newPhoneNumber!;
-            saveData(CommonObject.contactList, CommonObject.settings);
+            saveData(CommonObject.contactList);
             clearNavigatorAndPush(context, const ContactListPage());
           }
         }

@@ -10,6 +10,7 @@ import "package:vidar/utils/storage.dart";
 import "package:vidar/widgets/boolean_setting.dart";
 import "package:vidar/widgets/buttons.dart";
 import "package:vidar/widgets/color_set_select.dart";
+import "package:vidar/widgets/int_setting.dart";
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -19,7 +20,21 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  _SettingsPageState();
+  _SettingsPageState() {
+    allowWipeoutTime = LightBooleanSetting(
+      initValue: allowWipeoutTimeValue,
+      settingText: "Require login every X days",
+      onChanged: (final bool value) {
+        setState(() {
+          allowWipeoutTimeValue = !allowWipeoutTimeValue;
+        });
+      },
+    );
+  }
+
+  late final LightBooleanSetting allowWipeoutTime;
+
+  bool allowWipeoutTimeValue = Settings.allowWipeoutTime;
 
   final BooleanSetting allowUnencryptedMessages = BooleanSetting(
     setting: Settings.allowUnencryptedMessages,
@@ -45,6 +60,12 @@ class _SettingsPageState extends State<SettingsPage> {
     selectedSet: Settings.colorSet.name,
   );
 
+  final IntSetting wipeoutTime = IntSetting(
+    setting: Settings.wipeoutTime,
+    settingText: "Max logon interval (days)",
+    maxLength: 4,
+  );
+
   @override
   void initState() {
     super.initState();
@@ -55,6 +76,17 @@ class _SettingsPageState extends State<SettingsPage> {
     Settings.keepLogs = keepLogs.setting;
     Settings.showEncryptionKeyInEditContact =
         showEncryptionKeyInEditContact.setting;
+    Settings.allowUnencryptedMessages = allowUnencryptedMessages.setting;
+    Settings.allowWipeoutTime = allowWipeoutTimeValue;
+    if (allowWipeoutTimeValue) {
+      if (wipeoutTime.setting < 1) {
+        Settings.allowWipeoutTime = false;
+        Settings.wipeoutTime = 0;
+      } else {
+        Settings.allowWipeoutTime = true;
+        Settings.wipeoutTime = wipeoutTime.setting;
+      }
+    }
     if (Settings.keepLogs) {
       final PermissionStatus manageExternalStorageStatus = await Permission
           .manageExternalStorage
@@ -94,7 +126,7 @@ class _SettingsPageState extends State<SettingsPage> {
     Settings.colorSet = getColorSetFromName(colorSetSelect.selectedSet);
 
     if (mounted) {
-      saveSettings(CommonObject.settings, context: context);
+      saveSettings(context: context);
       clearNavigatorAndPush(context, const ContactListPage());
     }
   }
@@ -117,6 +149,15 @@ class _SettingsPageState extends State<SettingsPage> {
                   allowUnencryptedMessages,
                   keepLogs,
                   showEncryptionKeyInEditContact,
+                  Column(
+                    children: <Widget>[
+                      allowWipeoutTime,
+                      Visibility(
+                        visible: allowWipeoutTimeValue,
+                        child: wipeoutTime,
+                      ),
+                    ],
+                  ),
                   showMessageBarHints,
                   colorSetSelect,
                 ],

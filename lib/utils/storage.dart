@@ -10,8 +10,7 @@ import "package:vidar/utils/settings.dart";
 import "package:vidar/widgets/error_popup.dart";
 
 Future<void> saveData(
-  final ContactList contactList,
-  final Settings settings, {
+  final ContactList contactList, {
   final BuildContext? context,
 }) async {
   try {
@@ -27,7 +26,7 @@ Future<void> saveData(
     }
 
     _saveKeys(contactList);
-    saveSettings(settings, sharedPreferences: prefs);
+    saveSettings(sharedPreferences: prefs);
 
     await prefs.setStringList("contacts", jsonContacts);
 
@@ -52,8 +51,7 @@ Future<void> saveData(
 }
 
 Future<void> loadData(
-  final ContactList contactList,
-  final Settings settings, {
+  final ContactList contactList, {
   final BuildContext? context,
 }) async {
   try {
@@ -63,6 +61,12 @@ Future<void> loadData(
         prefs.getStringList("contacts") ?? <String>[];
 
     final String? jsonSettings = prefs.getString("settings");
+    final String? lastLogon = prefs.getString("lastlogon");
+    if (lastLogon == null) {
+      CommonObject.lastLogon = null;
+    } else {
+      CommonObject.lastLogon = DateTime.tryParse(lastLogon);
+    }
 
     final List<Contact> listOfContacts = <Contact>[];
 
@@ -76,7 +80,7 @@ Future<void> loadData(
     _loadKeys(contactList);
 
     if (jsonSettings != null) {
-      settings.fromMap(jsonDecode(jsonSettings) as Map<String, dynamic>);
+      Settings.fromMap(jsonDecode(jsonSettings) as Map<String, dynamic>);
     }
 
     if (Settings.keepLogs) {
@@ -100,23 +104,25 @@ Future<void> loadData(
 }
 
 /// Only saves settings, to save settings and contacts use [saveData]
-Future<void> saveSettings(
-  final Settings settings, {
+Future<void> saveSettings({
   final SharedPreferences? sharedPreferences,
   final BuildContext? context,
 }) async {
   try {
     final SharedPreferences prefs =
         sharedPreferences ?? await SharedPreferences.getInstance();
-    await prefs.setString("settings", jsonEncode(settings.toMap()));
+    await prefs.setString("settings", jsonEncode(Settings.toMap()));
     if (Settings.keepLogs) {
       // Showing Settings.keepLogs is redundant but it's there for consistency
       CommonObject.logger!.config("""
-      ======== SETTINGS ========
-      Allow Unencrypted Messages: ${Settings.allowUnencryptedMessages}
-      Keep Logs: ${Settings.keepLogs}
-      Color set: ${Settings.colorSet.name}
-      Show Message Bar Hints: ${Settings.showMessageBarHints}
+======== SETTINGS ========
+Allow unencrypted messages: ${Settings.allowUnencryptedMessages}
+Keep Logs: ${Settings.keepLogs}
+Color set: ${Settings.colorSet.name}
+Show message bar hints: ${Settings.showMessageBarHints}
+Show encryption key in edit contact: ${Settings.showEncryptionKeyInEditContact}
+Allow wipeout: ${Settings.allowWipeoutTime}
+Wipeout time: ${Settings.wipeoutTime} days
       """);
     }
   } on Exception catch (error, stackTrace) {
