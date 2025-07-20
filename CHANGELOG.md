@@ -1,3 +1,9 @@
+## [1.2.0-beta](https://github.com/DrSolidDevil/Vidar/compare/v1.1.0-beta...v1.2.0-beta) (2025-07-20)
+### New Features
+* Added ability have a maximum log-on interval (otherwise keys are wiped) [`8120f1a`](https://github.com/DrSolidDevil/Vidar/commit/8120f1a760ec0dcf887f1ee5aede5205399c7a0b) [`66cf291`](https://github.com/DrSolidDevil/Vidar/commit/66cf291784d87d9a5019561f9cd2ebdc198d36d5)
+
+<br>
+
 ## [1.1.0-beta](https://github.com/DrSolidDevil/Vidar/compare/v1.0.3-beta...v1.1.0-beta) (2025-07-13)
 
 > This version of Vidar introduces color sets! You can now choose how your experience will look. In addition to color sets, now you can export logs at any time through the settings. This version also finally introduces the ability to see the time a message was sent/received.
