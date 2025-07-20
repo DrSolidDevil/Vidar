@@ -1,5 +1,4 @@
 import "package:vidar/utils/colors.dart";
-import "package:vidar/utils/common_object.dart";
 
 /// Static class for storing the active user settings of the program.
 class Settings {
@@ -19,7 +18,7 @@ class Settings {
   static ColorSet colorSet = vidarColorSet;
 
   /// Get map of the state of all instance variable of Settings.
-  Map<String, dynamic> toMap() {
+  static Map<String, dynamic> toMap() {
     return <String, dynamic>{
       "allowUnencryptedMessages": allowUnencryptedMessages,
       "keepLogs": keepLogs,
@@ -33,7 +32,7 @@ class Settings {
 
   /// Set state of all instance variables of Settings from map.
   /// If setting is not found then it goes to the default setting
-  void fromMap(final Map<String, dynamic> map) {
+  static void fromMap(final Map<String, dynamic> map) {
     keepLogs = map["keepLogs"] as bool? ?? keepLogs;
     showEncryptionKeyInEditContact =
         map["showEncryptionKeyInEditContact"] as bool? ??
@@ -44,6 +43,7 @@ class Settings {
     wipeoutTime = map["wipeoutTime"] as int? ?? wipeoutTime;
     colorSet = getColorSetFromName(map["colorSet"] as String? ?? "default");
 
-    allowUnencryptedMessages = map["allowUnencryptedMessages"]! as bool? ?? allowUnencryptedMessages;
+    allowUnencryptedMessages =
+        map["allowUnencryptedMessages"]! as bool? ?? allowUnencryptedMessages;
   }
 }

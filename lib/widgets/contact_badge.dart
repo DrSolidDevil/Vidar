@@ -73,10 +73,7 @@ class ContactBadge extends StatelessWidget {
                         onPressed: () {
                           final bool success = CommonObject.contactList
                               .removeContactByContact(contact);
-                          saveData(
-                            CommonObject.contactList,
-                            CommonObject.settings,
-                          );
+                          saveData(CommonObject.contactList);
                           if (LoggingConfiguration.extraVerboseLogs &&
                               Settings.keepLogs) {
                             CommonObject.logger!.info(
