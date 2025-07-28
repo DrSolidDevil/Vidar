@@ -29,7 +29,6 @@ class _SettingsPageState extends State<SettingsPage> {
           allowWipeoutTimeValue = !allowWipeoutTimeValue;
         });
       },
-      doSetState: false,
     );
   }
 
