@@ -27,7 +27,7 @@ class BooleanSetting extends StatefulWidget {
   /// If set to false then the BooleanSetting will not update when its value is changed.
   /// To make it update when doSetState is set to false you need to update it in a parent widget or use a builder.
   final bool doSetState;
-  
+
   @override
   _BooleanSettingState createState() => _BooleanSettingState();
 }
@@ -45,15 +45,15 @@ class _BooleanSettingState extends State<BooleanSetting> {
     doSetState = widget.doSetState;
     settingText = widget.settingText;
     onChanged = (final bool value) {
-        (widget.customOnChanged ?? (_){})(value);
-        if (doSetState) {
-          setState(() {
-            widget.setting = value;
-          });
-        } else {
+      (widget.customOnChanged ?? (_) {})(value);
+      if (doSetState) {
+        setState(() {
           widget.setting = value;
-        }
-      };
+        });
+      } else {
+        widget.setting = value;
+      }
+    };
   }
 
   @override
