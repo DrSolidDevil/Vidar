@@ -21,10 +21,10 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   _SettingsPageState() {
-    allowWipeoutTime = LightBooleanSetting(
-      initValue: allowWipeoutTimeValue,
+    allowWipeoutTime = BooleanSetting(
+      setting: allowWipeoutTimeValue,
       settingText: "Require login every X days",
-      onChanged: (final bool value) {
+      customOnChanged: (final bool value) {
         setState(() {
           allowWipeoutTimeValue = !allowWipeoutTimeValue;
         });
@@ -32,7 +32,7 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  late final LightBooleanSetting allowWipeoutTime;
+  late final BooleanSetting allowWipeoutTime;
 
   bool allowWipeoutTimeValue = Settings.allowWipeoutTime;
 
@@ -163,7 +163,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ],
               ),
               Container(
-                margin: const EdgeInsets.only(top: 60),
+                margin: const EdgeInsets.only(top: 40),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
@@ -186,7 +186,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ],
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 100),
+            padding: const EdgeInsets.only(top: 60),
             child: Column(
               spacing: 50,
               children: <Widget>[

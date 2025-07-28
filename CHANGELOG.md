@@ -1,3 +1,16 @@
+## [1.2.1-beta](https://github.com/DrSolidDevil/Vidar/compare/v1.2.0-beta...v1.2.1-beta) (2025-07-28)
+
+> Fixes and minor visual adjustments.
+
+### Bug Fixes
+* Fixed issue of `BooleanSetting` not updating in respose to user input. [`02a152f`](https://github.com/DrSolidDevil/Vidar/commit/02a152f6b7d0eae646f6040e2cb09191e21e11dc)
+
+### Other Changes
+* Minor adjustment for button distances on the settings page. [`8231b36`](https://github.com/DrSolidDevil/Vidar/commit/8231b36a4b33913ea5ce77f8da7aed5a8d890193)
+* Removed `LightBooleanSetting` and replaced it with `BooleanSetting` which now has the ability to have custom `onChanged` actions. [`02a152f`](https://github.com/DrSolidDevil/Vidar/commit/02a152f6b7d0eae646f6040e2cb09191e21e11dc) [`17ebb98`](https://github.com/DrSolidDevil/Vidar/commit/17ebb98247eaa861434a68af611128d10ac009f9) [`f5f74f5`](https://github.com/DrSolidDevil/Vidar/commit/f5f74f53aad9008b69d59358da12f4a298b9a66b)
+
+<br>
+
 ## [1.2.0-beta](https://github.com/DrSolidDevil/Vidar/compare/v1.1.0-beta...v1.2.0-beta) (2025-07-20)
 ### New Features
 * Added ability have a maximum log-on interval (otherwise keys are wiped) [`8120f1a`](https://github.com/DrSolidDevil/Vidar/commit/8120f1a760ec0dcf887f1ee5aede5205399c7a0b) [`66cf291`](https://github.com/DrSolidDevil/Vidar/commit/66cf291784d87d9a5019561f9cd2ebdc198d36d5)
