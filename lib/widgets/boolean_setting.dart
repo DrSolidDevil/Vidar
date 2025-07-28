@@ -42,6 +42,7 @@ class _BooleanSettingState extends State<BooleanSetting> {
   @override
   void initState() {
     super.initState();
+    doSetState = widget.doSetState;
     settingText = widget.settingText;
     onChanged = (final bool value) {
         (widget.customOnChanged ?? (_){})(value);
