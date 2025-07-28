@@ -21,18 +21,19 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   _SettingsPageState() {
-    allowWipeoutTime = LightBooleanSetting(
-      initValue: allowWipeoutTimeValue,
+    allowWipeoutTime = BooleanSetting(
+      setting: allowWipeoutTimeValue,
       settingText: "Require login every X days",
-      onChanged: (final bool value) {
+      customOnChanged: (final bool value) {
         setState(() {
           allowWipeoutTimeValue = !allowWipeoutTimeValue;
         });
       },
+      doSetState: false,
     );
   }
 
-  late final LightBooleanSetting allowWipeoutTime;
+  late final BooleanSetting allowWipeoutTime;
 
   bool allowWipeoutTimeValue = Settings.allowWipeoutTime;
 
