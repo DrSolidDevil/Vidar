@@ -25,6 +25,8 @@ class _EditContactPageState extends State<EditContactPage> {
   late Contact contact;
   late ContactPageCaller caller;
   late final TextEditingController encryptionKeyController;
+  late final TextEditingController phoneNumberController;
+  late final TextEditingController nameController;
 
   String? newName;
   String? newKey;
@@ -40,6 +42,8 @@ class _EditContactPageState extends State<EditContactPage> {
           ? contact.encryptionKey
           : null,
     );
+    phoneNumberController = TextEditingController(text: contact.phoneNumber);
+    nameController = TextEditingController(text: contact.name);
   }
 
   @override
@@ -220,7 +224,7 @@ class _EditContactPageState extends State<EditContactPage> {
                     ),
                     padding: const EdgeInsets.only(left: 10),
                     child: TextField(
-                      controller: TextEditingController(text: contact.name),
+                      controller: nameController,
                       decoration: InputDecoration(
                         hintText: "Name",
                         hintStyle: TextStyle(color: Settings.colorSet.text),
@@ -331,9 +335,7 @@ class _EditContactPageState extends State<EditContactPage> {
                     ),
                     padding: const EdgeInsets.only(left: 10),
                     child: TextField(
-                      controller: TextEditingController(
-                        text: contact.phoneNumber,
-                      ),
+                      controller: phoneNumberController,
                       keyboardType: TextInputType.phone,
                       decoration: InputDecoration(
                         hintText: "Phone Number (international)",
