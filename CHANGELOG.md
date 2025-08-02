@@ -1,9 +1,9 @@
 ## [1.2.2-beta](https://github.com/DrSolidDevil/Vidar/compare/v1.2.1-beta...v1.2.2-beta) (2025-08-02)
 
-> Bug fix in edit contact.
+> Bug fix on the edit contact page.
 
 ### Bug Fixes
-* Fixed issue in edit contact pertaining to text wiping when trying to change name or phone number.  [`1967207`](https://github.com/DrSolidDevil/Vidar/commit/1967207a6809cc391e5f72271f82263f01f8925c)
+* Fixed issue on the edit contact page pertaining to text wiping when trying to change name or phone number.  [`1967207`](https://github.com/DrSolidDevil/Vidar/commit/1967207a6809cc391e5f72271f82263f01f8925c)
 
 <br>
 
