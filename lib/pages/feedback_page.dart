@@ -104,7 +104,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
                         scrollController: _scrollController,
                         keyboardType: TextInputType.multiline,
                         style: TextStyle(
-                          color: Settings.colorSet.text,
+                          color: Settings.colorSet.feedbackText,
                           fontSize: SizeConfiguration.feedbackFormFontSize,
                         ),
                         decoration: InputDecoration(
