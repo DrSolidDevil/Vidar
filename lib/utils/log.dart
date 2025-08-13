@@ -86,15 +86,28 @@ Future<void> exportLogs({final BuildContext? context}) async {
     showDialog<void>(
       context: context,
       builder: (final BuildContext context) => AlertDialog(
-        title: const Text("Logs exported"),
-        content: Text('Logs have been exported to "${file.path}"'),
+        title: Text(
+          "Logs exported",
+          style: TextStyle(color: Settings.colorSet.dialogText),
+        ),
+        content: Text(
+          'Logs have been exported to "${file.path}"',
+          style: TextStyle(color: Settings.colorSet.dialogText),
+        ),
         actions: <Widget>[
           TextButton(
             onPressed: () =>
                 clearNavigatorAndPush(context, const ContactListPage()),
-            child: const Text("Dismiss"),
+            child: Text(
+              "Dismiss",
+              style: TextStyle(
+                color: Settings.colorSet.dialogButtonText,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
           ),
         ],
+        backgroundColor: Settings.colorSet.dialogBackground,
       ),
     );
   }

@@ -104,18 +104,29 @@ class _SettingsPageState extends State<SettingsPage> {
           showDialog<void>(
             context: context,
             builder: (final BuildContext context) => AlertDialog(
-              title: const Text("Can't keep logs"),
-              content: const Text(
+              title: Text(
+                "Can't keep logs",
+                style: TextStyle(color: Settings.colorSet.dialogText),
+              ),
+              content: Text(
                 "To keep logs you must allow Vidar to manage external storage.",
+                style: TextStyle(color: Settings.colorSet.dialogText),
               ),
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
                     clearNavigatorAndPush(context, const ContactListPage());
                   },
-                  child: const Text("Continue"),
+                  child: Text(
+                    "Continue",
+                    style: TextStyle(
+                      color: Settings.colorSet.dialogButtonText,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
                 ),
               ],
+              backgroundColor: Settings.colorSet.dialogBackground,
             ),
           );
         }
@@ -217,16 +228,30 @@ class _SettingsPageState extends State<SettingsPage> {
                       context: context,
                       builder: (final BuildContext context) {
                         return AlertDialog(
-                          title: const Text("Wipe all keys"),
-                          content: const Text(
+                          title: Text(
+                            "Wipe all keys",
+                            style: TextStyle(
+                              color: Settings.colorSet.dialogText,
+                            ),
+                          ),
+                          content: Text(
                             "Are you sure you want to wipe all keys? This is a permanent action which can not be undone.",
+                            style: TextStyle(
+                              color: Settings.colorSet.dialogText,
+                            ),
                           ),
                           actions: <Widget>[
                             TextButton(
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
-                              child: const Text("Cancel"),
+                              child: Text(
+                                "Cancel",
+                                style: TextStyle(
+                                  color: Settings.colorSet.dialogButtonText,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
                             ),
                             TextButton(
                               onPressed: () {
@@ -242,9 +267,16 @@ class _SettingsPageState extends State<SettingsPage> {
                                   const ContactListPage(),
                                 );
                               },
-                              child: const Text("Wipe Keys"),
+                              child: Text(
+                                "Wipe Keys",
+                                style: TextStyle(
+                                  color: Settings.colorSet.dialogButtonText,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
                             ),
                           ],
+                          backgroundColor: Settings.colorSet.dialogBackground,
                         );
                       },
                     );

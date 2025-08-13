@@ -58,16 +58,26 @@ class ContactBadge extends StatelessWidget {
                 const ContactListPage(),
                 Center(
                   child: AlertDialog(
-                    title: const Text("Delete contact"),
+                    title: Text(
+                      "Delete contact",
+                      style: TextStyle(color: Settings.colorSet.dialogText),
+                    ),
                     content: Text(
                       'Are you sure you want to delete "${contact.name}?"',
+                      style: TextStyle(color: Settings.colorSet.dialogText),
                     ),
                     actions: <Widget>[
                       TextButton(
                         onPressed: () {
                           Navigator.of(context).pop();
                         },
-                        child: const Text("Back"),
+                        child: Text(
+                          "Back",
+                          style: TextStyle(
+                            color: Settings.colorSet.dialogButtonText,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
                       ),
                       TextButton(
                         onPressed: () {
@@ -87,9 +97,16 @@ class ContactBadge extends StatelessWidget {
                             const ContactListPage(),
                           );
                         },
-                        child: const Text("Delete"),
+                        child: Text(
+                          "Delete",
+                          style: TextStyle(
+                            color: Settings.colorSet.dialogButtonText,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
                       ),
                     ],
+                    backgroundColor: Settings.colorSet.dialogBackground,
                   ),
                 ),
               ],
