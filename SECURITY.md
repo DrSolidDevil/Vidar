@@ -5,7 +5,7 @@ We appreciate and encourage reports of any security vulnerabilities in Vidar.
 If you discover a vulnerability, please do not report it through public GitHub issues, discussions, or pull requests. Instead, follow the steps below to report it privately and securely.
 
 ### How to Report
-Click [here](https://github.com/DrSolidDevil/Vidar/security/advisories/new) to report a vulnerability alternatively send the report to drsoliddevil+vidar@gmail.com.
+Click [here](https://github.com/DrSolidDevil/Vidar/security/advisories/new) to report a vulnerability alternatively send the report to drsoliddevil+vidarsecurity@gmail.com.
 
 The more information you can provide, the faster and more effectively we can address the issue. Ideally, your report should include:
 
