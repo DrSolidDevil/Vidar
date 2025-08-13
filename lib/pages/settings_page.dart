@@ -63,6 +63,11 @@ class _SettingsPageState extends State<SettingsPage> {
     settingText: "Allow feedback popups",
   );
 
+  final BooleanSetting use12HourClock = BooleanSetting(
+    setting: Settings.use12HourClock,
+    settingText: "Use 12-hour clock",
+  );
+
   final ColorSetSelect colorSetSelect = ColorSetSelect(
     selectedSet: Settings.colorSet.name,
   );
@@ -86,6 +91,7 @@ class _SettingsPageState extends State<SettingsPage> {
     Settings.allowUnencryptedMessages = allowUnencryptedMessages.setting;
     Settings.allowWipeoutTime = allowWipeoutTimeValue;
     Settings.allowUserFeedbackDialog = allowUserFeedbackDialog.setting;
+    Settings.use12HourClock = use12HourClock.setting;
     if (allowWipeoutTimeValue) {
       if (wipeoutTime.setting < 1) {
         Settings.allowWipeoutTime = false;
@@ -189,6 +195,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           ),
                           keepLogs,
                           allowUserFeedbackDialog,
+                          use12HourClock,
                           showMessageBarHints,
                           colorSetSelect,
                         ],
