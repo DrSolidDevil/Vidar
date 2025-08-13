@@ -55,7 +55,7 @@ class MiscellaneousConfiguration {
 class LoggingConfiguration {
   static const String loggerName = "VidarLogger";
 
-  static const bool extraVerboseLogs = true;
+  static const bool extraVerboseLogs = false;
 
   static const String logFileSaveLocation = "/storage/emulated/0/Download";
 
