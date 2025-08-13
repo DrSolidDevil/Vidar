@@ -32,6 +32,7 @@ class _ErrorPopupState extends State<ErrorPopup> {
   late final String title;
   late final String body;
   late final bool enableReturn;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -59,11 +60,14 @@ class _ErrorPopupState extends State<ErrorPopup> {
               ),
               child: RawScrollbar(
                 thumbColor: Settings.colorSet.dialogScrollbar,
+                controller: _scrollController,
                 thumbVisibility: true,
                 thickness: 2,
+                interactive: true,
                 padding: const EdgeInsets.only(left: 4),
                 child: TextField(
                   readOnly: true,
+                  scrollController: _scrollController,
                   controller: TextEditingController(text: body),
                   maxLines: null,
                   decoration: const InputDecoration(border: InputBorder.none),

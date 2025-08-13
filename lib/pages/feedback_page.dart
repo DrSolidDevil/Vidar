@@ -18,6 +18,7 @@ class FeedbackPage extends StatefulWidget {
 
 class _FeedbackPageState extends State<FeedbackPage> {
   String body = "";
+  final ScrollController _scrollController = ScrollController();
 
   @override
   Widget build(final BuildContext context) {
@@ -91,14 +92,16 @@ class _FeedbackPageState extends State<FeedbackPage> {
                       minHeight: formHeight,
                     ),
                     child: RawScrollbar(
-                      //reverse: false,
                       thumbColor: Settings.colorSet.feedbackScrollbar,
+                      interactive: true,
+                      controller: _scrollController,
                       thickness: 3,
                       padding: const EdgeInsets.only(top: 5, bottom: -10),
                       thumbVisibility: true,
                       radius: const Radius.circular(2),
                       child: TextField(
                         maxLines: null,
+                        scrollController: _scrollController,
                         keyboardType: TextInputType.multiline,
                         style: TextStyle(
                           color: Settings.colorSet.text,

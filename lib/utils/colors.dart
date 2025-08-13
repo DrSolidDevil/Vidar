@@ -22,6 +22,7 @@ class ColorSet {
     final Color? pDialogBackground,
     final Color? pFeedbackScrollbar,
     final Color? pDialogScrollbar,
+    final Color? pMessageBarScrollbar,
   }) {
     wipeKeyButton = pWipeKeyButton ?? secondary;
     inactiveTrack = pInactiveTrack ?? primary;
@@ -38,7 +39,8 @@ class ColorSet {
     dialogBackground = pDialogBackground ?? tertiary;
     feedbackScrollbar = pFeedbackScrollbar ?? tertiary;
     dialogScrollbar = pDialogScrollbar ?? tertiary;
-  } 
+    messageBarScrollbar = pMessageBarScrollbar ?? tertiary;
+  }
   final String name;
   final Color primary;
   final Color secondary;
@@ -60,6 +62,7 @@ class ColorSet {
   late final Color dialogBackground;
   late final Color feedbackScrollbar;
   late final Color dialogScrollbar;
+  late final Color messageBarScrollbar;
 }
 
 final List<String> availableColorSets = <String>[
@@ -83,9 +86,10 @@ final ColorSet vidarColorSet = ColorSet(
   pFeedbackBackground: const Color.fromARGB(255, 30, 32, 45),
   pDialogBackground: const Color.fromARGB(255, 172, 116, 255),
   pDialogText: const Color.fromARGB(255, 53, 22, 100),
-  pDialogButtonText:const Color.fromARGB(255, 26, 28, 40),
+  pDialogButtonText: const Color.fromARGB(255, 26, 28, 40),
   pFeedbackScrollbar: const Color.fromARGB(255, 109, 71, 166),
-  pDialogScrollbar: const Color.fromARGB(255, 109, 71, 166)
+  pDialogScrollbar: const Color.fromARGB(255, 109, 71, 166),
+  pMessageBarScrollbar: const Color.fromARGB(255, 172, 116, 255),
 );
 
 final ColorSet playaColorSet = ColorSet(

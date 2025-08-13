@@ -25,6 +25,7 @@ class _MessageBarState extends State<MessageBar> {
   String errorMessage = "";
   ExtendedChangeNotifier errorNotifier = ExtendedChangeNotifier();
   final TextEditingController controller = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -133,29 +134,42 @@ class _MessageBarState extends State<MessageBar> {
                     width:
                         MediaQuery.sizeOf(context).width -
                         SizeConfiguration.sendMessageIconSize * 2.5,
-                    child: TextField(
-                      controller: controller,
-                      style: TextStyle(color: Settings.colorSet.text),
-                      decoration: InputDecoration(
-                        hintText: () {
-                          if (Settings.showMessageBarHints) {
-                            return MiscellaneousConfiguration
-                                .messageHints[Random().nextInt(
-                              MiscellaneousConfiguration.messageHints.length,
-                            )];
-                          } else {
-                            return null;
-                          }
-                        }(),
-                        hintStyle: TextStyle(
-                          color: Settings.colorSet.messageBarHintText,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          borderSide: BorderSide.none,
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxHeight: 150),
+                      child: RawScrollbar(
+                        thickness: 2,
+                        padding: const EdgeInsets.only(bottom: -30),
+                        radius: const Radius.circular(1),
+                        controller: _scrollController,
+                        thumbColor: Settings.colorSet.messageBarScrollbar,
+                        thumbVisibility: true,
+                        child: TextField(
+                          scrollController: _scrollController,
+                          maxLines: null,
+                          controller: controller,
+                          style: TextStyle(color: Settings.colorSet.text),
+                          decoration: InputDecoration(
+                            hintText: () {
+                              if (Settings.showMessageBarHints) {
+                                return MiscellaneousConfiguration
+                                    .messageHints[Random().nextInt(
+                                  MiscellaneousConfiguration.messageHints.length,
+                                )];
+                              } else {
+                                return null;
+                              }
+                            }(),
+                            hintStyle: TextStyle(
+                              color: Settings.colorSet.messageBarHintText,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                          onChanged: (final String value) => message = value,
                         ),
                       ),
-                      onChanged: (final String value) => message = value,
                     ),
                   ),
                   SizedBox(
