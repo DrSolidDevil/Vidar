@@ -23,6 +23,8 @@ class ColorSet {
     final Color? pFeedbackScrollbar,
     final Color? pDialogScrollbar,
     final Color? pMessageBarScrollbar,
+    final Color? pFeedbackText,
+    final Color? pIntSettingFill,
   }) {
     wipeKeyButton = pWipeKeyButton ?? secondary;
     inactiveTrack = pInactiveTrack ?? primary;
@@ -40,6 +42,8 @@ class ColorSet {
     feedbackScrollbar = pFeedbackScrollbar ?? tertiary;
     dialogScrollbar = pDialogScrollbar ?? tertiary;
     messageBarScrollbar = pMessageBarScrollbar ?? tertiary;
+    feedbackText = pFeedbackText ?? text;
+    intSettingFill = pIntSettingFill ?? secondary;
   }
   final String name;
   final Color primary;
@@ -63,6 +67,8 @@ class ColorSet {
   late final Color feedbackScrollbar;
   late final Color dialogScrollbar;
   late final Color messageBarScrollbar;
+  late final Color feedbackText;
+  late final Color intSettingFill;
 }
 
 final List<String> availableColorSets = <String>[
@@ -90,6 +96,7 @@ final ColorSet vidarColorSet = ColorSet(
   pFeedbackScrollbar: const Color.fromARGB(255, 109, 71, 166),
   pDialogScrollbar: const Color.fromARGB(255, 109, 71, 166),
   pMessageBarScrollbar: const Color.fromARGB(255, 172, 116, 255),
+  pIntSettingFill: const Color.fromARGB(255, 33, 36, 52),
 );
 
 final ColorSet playaColorSet = ColorSet(
@@ -100,6 +107,13 @@ final ColorSet playaColorSet = ColorSet(
   text: const Color.fromARGB(255, 28, 60, 103),
   pWipeKeyButton: const Color.fromARGB(255, 255, 125, 41),
   pInactiveTrack: const Color.fromARGB(255, 250, 218, 122),
+  pFeedbackBackground: const Color.fromARGB(255, 28, 60, 103),
+  pFeedbackHintText: const Color.fromARGB(255, 78, 215, 241),
+  pFeedbackScrollbar: const Color.fromARGB(255, 49, 203, 234),
+  pFeedbackText: const Color.fromARGB(255, 168, 241, 255),
+  pDialogButtonText: const Color.fromARGB(255, 250, 218, 122),
+  pDialogText: const Color.fromARGB(255, 255, 250, 141),
+  pDialogScrollbar: const Color.fromARGB(255, 255, 250, 141),
 );
 
 final ColorSet monochromeColorSet = ColorSet(
@@ -112,6 +126,10 @@ final ColorSet monochromeColorSet = ColorSet(
   pInactiveTrack: const Color.fromARGB(255, 41, 41, 41),
   pSendButton: const Color.fromARGB(255, 200, 200, 200),
   pWipeKeyButtonText: Colors.black,
+  pFeedbackScrollbar: const Color.fromARGB(255, 63, 63, 63),
+  pDialogText: const Color.fromARGB(255, 147, 147, 147),
+  pDialogButtonText: const Color.fromARGB(255, 200, 200, 200),
+  pFeedbackHintText: const Color.fromARGB(255, 147, 147, 147),
 );
 
 final ColorSet bubblyColorSet = ColorSet(
@@ -126,6 +144,8 @@ final ColorSet bubblyColorSet = ColorSet(
   pDropdownFocus: const Color.fromARGB(255, 165, 40, 255),
   pMessageBarHintText: const Color.fromARGB(255, 66, 191, 221),
   pExportLogsButton: const Color.fromARGB(255, 165, 40, 255),
+  pFeedbackScrollbar: const Color.fromARGB(255, 165, 40, 255),
+  pIntSettingFill: const Color.fromARGB(255, 71, 32, 163),
 );
 
 /// If color set is not found then it returns default

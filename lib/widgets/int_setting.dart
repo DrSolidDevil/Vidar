@@ -61,7 +61,8 @@ class _IntSettingState extends State<IntSetting> {
                   ),
                   style: TextStyle(color: Settings.colorSet.text),
                   decoration: InputDecoration(
-                    fillColor: Settings.colorSet.secondary,
+                    fillColor: Settings.colorSet.intSettingFill,
+                    filled: true,
                     counter: const SizedBox.shrink(),
 
                     focusedBorder: OutlineInputBorder(
