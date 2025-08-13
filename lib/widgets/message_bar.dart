@@ -5,7 +5,7 @@ import "package:vidar/configuration.dart";
 import "package:vidar/utils/common_object.dart";
 import "package:vidar/utils/contact.dart";
 import "package:vidar/utils/encryption.dart";
-import "package:vidar/utils/public_change_notifier.dart";
+import "package:vidar/utils/extended_change_notifier.dart";
 import "package:vidar/utils/settings.dart";
 import "package:vidar/utils/sms.dart";
 
@@ -23,7 +23,7 @@ class _MessageBarState extends State<MessageBar> {
   String message = "";
   bool error = false;
   String errorMessage = "";
-  PublicChangeNotifier errorNotifier = PublicChangeNotifier();
+  ExtendedChangeNotifier errorNotifier = ExtendedChangeNotifier();
   final TextEditingController controller = TextEditingController();
 
   @override

@@ -56,6 +56,11 @@ class _SettingsPageState extends State<SettingsPage> {
     settingText: "Show message bar hints",
   );
 
+  final BooleanSetting allowUserFeedbackDialog = BooleanSetting(
+    setting: Settings.allowUserFeedbackDialog,
+    settingText: "Allow feedback popups",
+  );
+
   final ColorSetSelect colorSetSelect = ColorSetSelect(
     selectedSet: Settings.colorSet.name,
   );
@@ -78,6 +83,7 @@ class _SettingsPageState extends State<SettingsPage> {
         showEncryptionKeyInEditContact.setting;
     Settings.allowUnencryptedMessages = allowUnencryptedMessages.setting;
     Settings.allowWipeoutTime = allowWipeoutTimeValue;
+    Settings.allowUserFeedbackDialog = allowUserFeedbackDialog.setting;
     if (allowWipeoutTimeValue) {
       if (wipeoutTime.setting < 1) {
         Settings.allowWipeoutTime = false;
@@ -147,7 +153,6 @@ class _SettingsPageState extends State<SettingsPage> {
               Column(
                 children: <Widget>[
                   allowUnencryptedMessages,
-                  keepLogs,
                   showEncryptionKeyInEditContact,
                   Column(
                     children: <Widget>[
@@ -158,6 +163,8 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                     ],
                   ),
+                  keepLogs,
+                  allowUserFeedbackDialog,
                   showMessageBarHints,
                   colorSetSelect,
                 ],

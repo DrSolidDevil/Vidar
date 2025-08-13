@@ -15,6 +15,13 @@ class ColorSet {
     final Color? pWipeKeyButtonText,
     final Color? pMessageBarHintText,
     final Color? pExportLogsButton,
+    final Color? pFeedbackHintText,
+    final Color? pFeedbackBackground,
+    final Color? pDialogButtonText,
+    final Color? pDialogText,
+    final Color? pDialogBackground,
+    final Color? pFeedbackScrollbar,
+    final Color? pDialogScrollbar,
   }) {
     wipeKeyButton = pWipeKeyButton ?? secondary;
     inactiveTrack = pInactiveTrack ?? primary;
@@ -24,7 +31,14 @@ class ColorSet {
     wipeKeyButtonText = pWipeKeyButtonText ?? text;
     messageBarHintText = pMessageBarHintText ?? text;
     exportLogsButton = pExportLogsButton ?? tertiary;
-  }
+    feedbackHintText = pFeedbackHintText ?? secondary;
+    feedbackBackground = pFeedbackBackground ?? primary;
+    dialogButtonText = pDialogButtonText ?? secondary;
+    dialogText = pDialogText ?? text;
+    dialogBackground = pDialogBackground ?? tertiary;
+    feedbackScrollbar = pFeedbackScrollbar ?? tertiary;
+    dialogScrollbar = pDialogScrollbar ?? tertiary;
+  } 
   final String name;
   final Color primary;
   final Color secondary;
@@ -39,6 +53,13 @@ class ColorSet {
   late final Color wipeKeyButtonText;
   late final Color messageBarHintText;
   late final Color exportLogsButton;
+  late final Color feedbackHintText;
+  late final Color feedbackBackground;
+  late final Color dialogButtonText;
+  late final Color dialogText;
+  late final Color dialogBackground;
+  late final Color feedbackScrollbar;
+  late final Color dialogScrollbar;
 }
 
 final List<String> availableColorSets = <String>[
@@ -58,6 +79,13 @@ final ColorSet vidarColorSet = ColorSet(
   pFloatingActionButton: const Color.fromARGB(255, 39, 8, 86),
   pMessageBarHintText: const Color.fromARGB(255, 172, 116, 255),
   pSendButton: const Color.fromARGB(255, 172, 116, 255),
+  pFeedbackHintText: const Color.fromARGB(255, 109, 71, 166),
+  pFeedbackBackground: const Color.fromARGB(255, 30, 32, 45),
+  pDialogBackground: const Color.fromARGB(255, 172, 116, 255),
+  pDialogText: const Color.fromARGB(255, 53, 22, 100),
+  pDialogButtonText:const Color.fromARGB(255, 26, 28, 40),
+  pFeedbackScrollbar: const Color.fromARGB(255, 109, 71, 166),
+  pDialogScrollbar: const Color.fromARGB(255, 109, 71, 166)
 );
 
 final ColorSet playaColorSet = ColorSet(

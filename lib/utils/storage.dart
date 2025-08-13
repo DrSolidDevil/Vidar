@@ -123,6 +123,7 @@ Show message bar hints: ${Settings.showMessageBarHints}
 Show encryption key in edit contact: ${Settings.showEncryptionKeyInEditContact}
 Allow wipeout: ${Settings.allowWipeoutTime}
 Wipeout time: ${Settings.wipeoutTime} days
+Allow user feedback dialog: ${Settings.allowUserFeedbackDialog}
       """);
     }
   } on Exception catch (error, stackTrace) {

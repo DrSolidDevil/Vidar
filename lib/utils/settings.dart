@@ -17,6 +17,8 @@ class Settings {
 
   static ColorSet colorSet = vidarColorSet;
 
+  static bool allowUserFeedbackDialog = true;
+
   /// Get map of the state of all instance variable of Settings.
   static Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -27,6 +29,7 @@ class Settings {
       "wipeoutTime": wipeoutTime,
       "showMessageBarHints": showMessageBarHints,
       "colorSet": colorSet.name,
+      "allowUserFeedbackDialog": allowUserFeedbackDialog,
     };
   }
 
@@ -42,8 +45,8 @@ class Settings {
     allowWipeoutTime = map["allowWipeoutTime"] as bool? ?? allowWipeoutTime;
     wipeoutTime = map["wipeoutTime"] as int? ?? wipeoutTime;
     colorSet = getColorSetFromName(map["colorSet"] as String? ?? "default");
-
     allowUnencryptedMessages =
         map["allowUnencryptedMessages"]! as bool? ?? allowUnencryptedMessages;
+    allowUserFeedbackDialog = map["allowUserFeedbackDialog"] as bool? ?? allowUserFeedbackDialog;
   }
 }
