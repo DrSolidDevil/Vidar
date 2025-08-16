@@ -37,11 +37,14 @@ class TimeConfiguration {
 }
 
 class MiscellaneousConfiguration {
-  // Probability of the user seeing a dialog prompting them to give feedback 0-1, 
+  // Probability of the user seeing a dialog prompting them to give feedback 0-1,
   // where 1 means showing it always.
-  static const double userFeedbackDialogProbability = 0.0065; // 0,65% chance 
-  static const Duration userFeedbackDialogPopupWait = const Duration(seconds: 1); 
-  static const String userFeedbackEmailAddress = "drsoliddevil+vidarfeedback@gmail.com";
+  static const double userFeedbackDialogProbability = 0.0065; // 0,65% chance
+  static const Duration userFeedbackDialogPopupWait = const Duration(
+    seconds: 1,
+  );
+  static const String userFeedbackEmailAddress =
+      "drsoliddevil+vidarfeedback@gmail.com";
 }
 
 class ChatConfiguration {
@@ -54,7 +57,7 @@ class ChatConfiguration {
     "Talk to them, they miss you.",
   ];
   // Number of messages to check during chat update
-  static const int numCheckDuringUpdate = 5; 
+  static const int numCheckDuringUpdate = 5;
 }
 
 class LoggingConfiguration {

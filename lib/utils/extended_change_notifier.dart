@@ -8,7 +8,7 @@ class ExtendedChangeNotifier extends ChangeNotifier {
     super.notifyListeners();
   }
 
-  /// Attaches this change notifier to another. 
+  /// Attaches this change notifier to another.
   /// If the attaché notifies its listeners then this change notifiers also notifies its listeners.
   /// This change notifier removes itself from the attaché when being disposed of.
   void attach(final ChangeNotifier changeNotifier) {

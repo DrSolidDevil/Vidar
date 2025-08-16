@@ -12,7 +12,6 @@ class Conversation extends ExtendedChangeNotifier {
     smsNotifier = SmsNotifier();
     attach(smsNotifier);
   }
-  
 
   final Contact contact;
   late final List<SmsMessage> _decryptedChatLogs;
@@ -92,7 +91,10 @@ class Conversation extends ExtendedChangeNotifier {
     // I'm unsure if i should do it.
     // So for the moment it still clones.
     final List<DateTime> latestMessageDates = <DateTime>[];
-    for (final SmsMessage? chat in decryptedChatLogs.sublist(0, ChatConfiguration.numCheckDuringUpdate)) {
+    for (final SmsMessage? chat in decryptedChatLogs.sublist(
+      0,
+      ChatConfiguration.numCheckDuringUpdate,
+    )) {
       latestMessageDates.add(chat!.date!);
     }
 

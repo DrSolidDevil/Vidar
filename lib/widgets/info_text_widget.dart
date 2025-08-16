@@ -2,7 +2,12 @@ import "package:flutter/material.dart";
 import "package:vidar/utils/settings.dart";
 
 class InfoText extends StatelessWidget {
-  const InfoText({required this.text, required this.textWidthFactor, this.fontSize = 20, super.key});
+  const InfoText({
+    required this.text,
+    required this.textWidthFactor,
+    this.fontSize = 20,
+    super.key,
+  });
 
   final String text;
   final double textWidthFactor;

@@ -151,10 +151,10 @@ class _MessageBarState extends State<MessageBar> {
                           decoration: InputDecoration(
                             hintText: () {
                               if (Settings.showMessageBarHints) {
-                                return ChatConfiguration
-                                    .messageHints[Random().nextInt(
-                                  ChatConfiguration.messageHints.length,
-                                )];
+                                return ChatConfiguration.messageHints[Random()
+                                    .nextInt(
+                                      ChatConfiguration.messageHints.length,
+                                    )];
                               } else {
                                 return null;
                               }

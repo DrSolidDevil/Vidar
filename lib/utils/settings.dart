@@ -51,7 +51,8 @@ class Settings {
     colorSet = getColorSetFromName(map["colorSet"] as String? ?? "default");
     allowUnencryptedMessages =
         map["allowUnencryptedMessages"]! as bool? ?? allowUnencryptedMessages;
-    allowUserFeedbackDialog = map["allowUserFeedbackDialog"] as bool? ?? allowUserFeedbackDialog;
+    allowUserFeedbackDialog =
+        map["allowUserFeedbackDialog"] as bool? ?? allowUserFeedbackDialog;
     use12HourClock = map["use12HourClock"] as bool? ?? use12HourClock;
   }
 }

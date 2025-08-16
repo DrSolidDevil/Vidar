@@ -3,7 +3,7 @@ extension TimeFormatting on DateTime {
     return "$hour:$minute";
   }
 
-  // If time is 
+  // If time is
   String format12HourTime() {
     final bool isAM = hour < 12;
     int h = hour;

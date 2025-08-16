@@ -54,7 +54,10 @@ class _ContactListPageState extends State<ContactListPage> {
               },
               child: Text(
                 "Dismiss",
-                style: TextStyle(color: Settings.colorSet.dialogButtonText, fontWeight: FontWeight.w800),
+                style: TextStyle(
+                  color: Settings.colorSet.dialogButtonText,
+                  fontWeight: FontWeight.w800,
+                ),
               ),
             ),
             TextButton(
@@ -62,7 +65,10 @@ class _ContactListPageState extends State<ContactListPage> {
                   clearNavigatorAndPush(context, const FeedbackPage()),
               child: Text(
                 "Give Feedback",
-                style: TextStyle(color: Settings.colorSet.dialogButtonText, fontWeight: FontWeight.w800),
+                style: TextStyle(
+                  color: Settings.colorSet.dialogButtonText,
+                  fontWeight: FontWeight.w800,
+                ),
               ),
             ),
           ],
