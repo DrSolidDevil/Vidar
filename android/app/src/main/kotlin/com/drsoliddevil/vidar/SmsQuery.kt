@@ -6,7 +6,7 @@ import androidx.core.net.toUri
 import android.provider.Telephony.TextBasedSmsColumns
 
 
-fun querySms(context: Context, phoneNumber: String?): ArrayList<HashMap<String, String>>? {
+fun querySms(context: Context, phoneNumber: String?, latestN: Int?): ArrayList<HashMap<String, String>>? {
     val sms: Cursor?
     if (phoneNumber != null) {
         sms = context.contentResolver.query(
@@ -14,7 +14,7 @@ fun querySms(context: Context, phoneNumber: String?): ArrayList<HashMap<String, 
             includedQueryData,
             "address=?",
             arrayOf(phoneNumber),
-            null
+            "${TextBasedSmsColumns.DATE} DESC" // Latest message first
         )
     } else {
         sms = context.contentResolver.query(
@@ -22,13 +22,13 @@ fun querySms(context: Context, phoneNumber: String?): ArrayList<HashMap<String, 
             includedQueryData,
             null,
             null,
-            null
+            "${TextBasedSmsColumns.DATE} DESC" // Latest message first
         )
     }
     if (sms == null || !sms.moveToFirst()) {
         return null
     }
-    return cursorToListOfHashMap(sms)
+    return cursorToListOfHashMap(sms, latestN)
 }
 
 private val includedQueryData: Array<String> = arrayOf(
@@ -49,7 +49,7 @@ private val includedQueryData: Array<String> = arrayOf(
 
 // Closes the cursor when it's done
 // A list of hashmaps in kotlin is equivalent to a list of maps in dart
-private fun cursorToListOfHashMap(cursor: Cursor): ArrayList<HashMap<String, String>> {
+private fun cursorToListOfHashMap(cursor: Cursor, latestN: Int?): ArrayList<HashMap<String, String>> {
     val threadIdColumnIndex: Int = cursor.getColumnIndexOrThrow(TextBasedSmsColumns.THREAD_ID)
     val typeColumnIndex: Int = cursor.getColumnIndexOrThrow(TextBasedSmsColumns.TYPE)
     val addressColumnIndex: Int = cursor.getColumnIndexOrThrow(TextBasedSmsColumns.ADDRESS)
@@ -64,9 +64,20 @@ private fun cursorToListOfHashMap(cursor: Cursor): ArrayList<HashMap<String, Str
     val bodyColumnIndex: Int = cursor.getColumnIndexOrThrow(TextBasedSmsColumns.BODY)
     val hashMapList: ArrayList<HashMap<String, String>> = ArrayList<HashMap<String, String>>()
 
+    var i: Int = 0
+    println("latestN = $latestN")
     @Suppress("ConvertTryFinallyToUseCall")
     try {
         do {
+            println(i)
+            if (latestN != null) {
+                if (i >= latestN) {
+                    break
+                } else {
+                    ++i
+                }
+            }
+
             val entry: MutableMap<String, String> = mutableMapOf<String, String>()
             entry[TextBasedSmsColumns.THREAD_ID] = cursor.getString(threadIdColumnIndex)
             entry[TextBasedSmsColumns.TYPE] = cursor.getString(typeColumnIndex)

@@ -151,9 +151,9 @@ class _MessageBarState extends State<MessageBar> {
                           decoration: InputDecoration(
                             hintText: () {
                               if (Settings.showMessageBarHints) {
-                                return MiscellaneousConfiguration
+                                return ChatConfiguration
                                     .messageHints[Random().nextInt(
-                                  MiscellaneousConfiguration.messageHints.length,
+                                  ChatConfiguration.messageHints.length,
                                 )];
                               } else {
                                 return null;
@@ -183,10 +183,10 @@ class _MessageBarState extends State<MessageBar> {
                             contact.encryptionKey,
                           );
                           if (encryptedMessage.startsWith(
-                            MiscellaneousConfiguration.errorPrefix,
+                            ChatConfiguration.errorPrefix,
                           )) {
                             errorMessage = encryptedMessage.replaceFirst(
-                              MiscellaneousConfiguration.errorPrefix,
+                              ChatConfiguration.errorPrefix,
                               "",
                             );
                             error = true;

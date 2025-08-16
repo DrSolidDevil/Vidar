@@ -95,9 +95,10 @@ class SmsMessage {
 }
 
 /// Requires an initialization of SmsConstants beforehand
-SmsMessage? _queryMapToSms(final Map<String, String?> smsMap) {
+/// Throws an exception if SmsConstants.mapConstants == null
+SmsMessage _queryMapToSms(final Map<String, String?> smsMap) {
   if (SmsConstants.mapConstants == null) {
-    return null;
+    throw Exception("SmsConstants.mapConstants == null");
   }
   final int? threadId = int.tryParse(
     smsMap[SmsConstants.COLUMN_NAME_THREAD_ID]!,
@@ -142,11 +143,14 @@ SmsMessage? _queryMapToSms(final Map<String, String?> smsMap) {
 /// Requires an initialization of SmsConstants beforehand
 /// SMS are returned oldest to newest
 /// Returns [null] upon failure (this is to ensure compatibility with FutureBuilder)
-Future<List<SmsMessage?>> querySms({final String? phoneNumber}) async {
+Future<List<SmsMessage?>> querySms({
+  final String? phoneNumber,
+  final int? latestN,
+}) async {
   try {
     final dynamic rawResult = await MAIN_SMS_CHANNEL.invokeMethod(
       "querySms",
-      <String, String?>{"phoneNumber": phoneNumber},
+      <String, dynamic>{"phoneNumber": phoneNumber, "latestN": latestN},
     );
     if (rawResult == null) {
       if (LoggingConfiguration.extraVerboseLogs && Settings.keepLogs) {
@@ -161,8 +165,19 @@ Future<List<SmsMessage?>> querySms({final String? phoneNumber}) async {
       );
     }
     final List<SmsMessage> smsMessages = <SmsMessage>[];
-    for (final Map<String, String?> mapMessage in result) {
-      smsMessages.add(_queryMapToSms(mapMessage)!);
+    try {
+      for (final Map<String, String?> mapMessage in result) {
+        smsMessages.add(_queryMapToSms(mapMessage));
+      }
+    } catch (error, stackTrace) {
+      if (Settings.keepLogs) {
+        CommonObject.logger!.warning(
+          "Failed to convert sms maps to SmsMessage",
+          error,
+          stackTrace,
+        );
+      }
+      return <SmsMessage?>[null];
     }
     if (smsMessages.isEmpty) {
       if (LoggingConfiguration.extraVerboseLogs && Settings.keepLogs) {
@@ -172,7 +187,7 @@ Future<List<SmsMessage?>> querySms({final String? phoneNumber}) async {
     return smsMessages;
   } on PlatformException catch (error, stackTrace) {
     if (Settings.keepLogs) {
-      CommonObject.logger!.finer("Sms query failed", error, stackTrace);
+      CommonObject.logger!.finest("Sms query failed", error, stackTrace);
     }
     return <SmsMessage?>[null];
   }
@@ -180,10 +195,11 @@ Future<List<SmsMessage?>> querySms({final String? phoneNumber}) async {
 
 /// The phone number is that of the other party
 Future<void> sendSms(final String body, final String phoneNumber) async {
-  /// 0 = success, for now not used
   if (LoggingConfiguration.extraVerboseLogs && Settings.keepLogs) {
     CommonObject.logger!.info("Sending sms");
   }
+
+  // 0 = success, for now not used
   // ignore: unused_local_variable
   final dynamic result = await MAIN_SMS_CHANNEL.invokeMethod(
     "sendSms",
@@ -274,18 +290,23 @@ class SmsConstants {
   static late final String COLUMN_NAME_BODY;
 }
 
-/// Notifies when (any) sms is recieved
+/// Notifies when (any) sms is received
 class SmsNotifier extends ChangeNotifier {
   SmsNotifier() {
     SMS_NOTIFIER_CHANNEL.receiveBroadcastStream().listen((
       final dynamic onData,
     ) {
       if (onData is String && onData == "smsreceived") {
-        notifyListeners();
+        // This delay is required for the notifier to work propely with incoming SMS
+        // If there is not delay then it will rebuild before the the new message can be reached
+        // via query.
+        Future<void>.delayed(
+          const Duration(seconds: 1),
+        ).then((_) => notifyListeners());
       }
     });
   }
-  // if later you can choose the specific phone number then this can't be static
+  // If later you can choose the specific phone number then this can't be static
   static const EventChannel SMS_NOTIFIER_CHANNEL = EventChannel(
     "flutter.native/smsnotifier",
   );

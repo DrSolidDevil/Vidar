@@ -23,7 +23,7 @@ Future<String> encryptMessage(final String message, final String key) async {
     if (Settings.allowUnencryptedMessages) {
       return message;
     } else {
-      return "${MiscellaneousConfiguration.errorPrefix}$ENCRYPTION_ERROR_NO_KEY";
+      return "${ChatConfiguration.errorPrefix}$ENCRYPTION_ERROR_NO_KEY";
     }
   }
 
@@ -58,7 +58,7 @@ Future<String> encryptMessage(final String message, final String key) async {
         stackTrace,
       );
     }
-    return "${MiscellaneousConfiguration.errorPrefix}$ENCRYPTION_ERROR_ENCRYPTION_FAILED";
+    return "${ChatConfiguration.errorPrefix}$ENCRYPTION_ERROR_ENCRYPTION_FAILED";
   }
 }
 
@@ -123,7 +123,7 @@ Future<String> decryptMessage(
     if (Settings.keepLogs) {
       CommonObject.logger!.warning("Failed to decrypt message", error);
     }
-    return "${MiscellaneousConfiguration.errorPrefix}$ENCRYPTION_ERROR_DECRYPTION_FAILED";
+    return "${ChatConfiguration.errorPrefix}$ENCRYPTION_ERROR_DECRYPTION_FAILED";
   } catch (error, stackTrace) {
     if (Settings.keepLogs) {
       CommonObject.logger!.finer(
@@ -132,6 +132,6 @@ Future<String> decryptMessage(
         stackTrace,
       );
     }
-    return "${MiscellaneousConfiguration.errorPrefix}$ENCRYPTION_ERROR_DECRYPTION_FAILED";
+    return "${ChatConfiguration.errorPrefix}$ENCRYPTION_ERROR_DECRYPTION_FAILED";
   }
 }

@@ -44,9 +44,6 @@ class LoadingScreen extends StatelessWidget {
               fontSize: SizeConfiguration.loadingFontSize,
             ),
           ),
-          /*LoadingText(
-            style: TextStyle(color: VidarColors.secondaryMetallicViolet, fontSize: SizeConfiguration.loadingFontSize),
-          ),*/
         ],
       ),
     );

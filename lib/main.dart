@@ -3,13 +3,12 @@ import "package:permission_handler/permission_handler.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import "package:vidar/configuration.dart";
 import "package:vidar/pages/contact_list.dart";
-import "package:vidar/pages/no_sms_permission.dart";
 import "package:vidar/utils/common_object.dart";
 import "package:vidar/utils/settings.dart";
 import "package:vidar/utils/sms.dart";
 import "package:vidar/utils/storage.dart";
-
-late PermissionStatus smsStatus;
+import "package:vidar/widgets/info_text_widget.dart";
+import "package:vidar/widgets/loading_screen.dart";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,7 +30,6 @@ void main() async {
     wipeSecureStorage();
   }
   SmsConstants(await retrieveSmsConstantsMap());
-  smsStatus = await Permission.sms.request();
   CommonObject.lastLogon = DateTime.now();
   await (await SharedPreferences.getInstance()).setString(
     "lastlogon",
@@ -45,11 +43,34 @@ class VidarApp extends StatelessWidget {
   const VidarApp({super.key});
 
   @override
-  Widget build(final BuildContext context) {
-    if (smsStatus.isGranted) {
-      return const MaterialApp(title: "Vidar", home: ContactListPage());
-    } else {
-      return const MaterialApp(title: "Vidar", home: NoSmsPermissionPage());
-    }
-  }
+  Widget build(final BuildContext context) => MaterialApp(
+    title: "Vidar",
+    home: FutureBuilder<PermissionStatus>(
+      future: Permission.sms.request(),
+      builder:
+          (
+            final BuildContext context,
+            final AsyncSnapshot<PermissionStatus> snapshot,
+          ) {
+            if (snapshot.hasData) {
+              if (snapshot.data!.isGranted) {
+                return const ContactListPage();
+              } else {
+                return const InfoText(
+                  text:
+                      "To use Vidar you need to enable SMS permissions. Enable SMS permissions in the app settings then restart the app.",
+                  textWidthFactor: 0.8,
+                  fontSize: 20,
+                );
+              }
+            } else {
+              return const LoadingScreen(<String>[
+                "Requesting",
+                "SMS",
+                "permission",
+              ]);
+            }
+          },
+    ),
+  );
 }
