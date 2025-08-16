@@ -8,7 +8,6 @@ import "package:vidar/utils/settings.dart";
 import "package:vidar/utils/sms.dart";
 import "package:vidar/utils/storage.dart";
 import "package:vidar/widgets/info_text_widget.dart";
-import "package:vidar/widgets/loading_screen.dart";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -64,11 +63,10 @@ class VidarApp extends StatelessWidget {
                 );
               }
             } else {
-              return const LoadingScreen(<String>[
-                "Requesting",
-                "SMS",
-                "permission",
-              ]);
+              return const InfoText(
+                text: "Requesting SMS permission",
+                textWidthFactor: 0.8,
+              );
             }
           },
     ),
