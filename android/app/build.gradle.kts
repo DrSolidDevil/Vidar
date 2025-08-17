@@ -21,7 +21,7 @@ android {
 
     defaultConfig {
         applicationId = "com.drsoliddevil.vidar"
-        minSdk = 23
+        minSdkVersion(23)
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
