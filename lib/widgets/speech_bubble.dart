@@ -2,6 +2,7 @@ import "package:flutter/material.dart";
 import "package:vidar/configuration.dart";
 import "package:vidar/utils/settings.dart";
 import "package:vidar/utils/sms.dart";
+import "package:vidar/utils/time.dart";
 
 class SpeechBubble extends StatelessWidget {
   const SpeechBubble(this.message, {super.key});
@@ -54,7 +55,9 @@ class SpeechBubble extends StatelessWidget {
               margin: const EdgeInsets.only(top: 2.0, bottom: 2.0),
               child: Text(
                 (isMe ? "Sent at " : "Received at ") +
-                    message.date!.toIso8601String().substring(11, 16),
+                    (Settings.use12HourClock
+                        ? message.date!.format12HourTime()
+                        : message.date!.format24HourTime()),
                 style: const TextStyle(color: Colors.white, fontSize: 8),
               ),
             ),

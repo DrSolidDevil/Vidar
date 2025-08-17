@@ -108,16 +108,29 @@ class _EditContactPageState extends State<EditContactPage> {
             context: context,
             builder: (final BuildContext context) {
               return AlertDialog(
-                title: const Text("Invalid details"),
-                content: const Text("Please ensure edited details are correct"),
+                title: Text(
+                  "Invalid details",
+                  style: TextStyle(color: Settings.colorSet.dialogText),
+                ),
+                content: Text(
+                  "Please ensure edited details are correct",
+                  style: TextStyle(color: Settings.colorSet.dialogText),
+                ),
                 actions: <Widget>[
                   TextButton(
                     onPressed: () {
                       clearNavigatorAndPush(context, const ContactListPage());
                     },
-                    child: const Text("OK"),
+                    child: Text(
+                      "OK",
+                      style: TextStyle(
+                        color: Settings.colorSet.dialogButtonText,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
                   ),
                 ],
+                backgroundColor: Settings.colorSet.dialogBackground,
               );
             },
           );
@@ -140,18 +153,29 @@ class _EditContactPageState extends State<EditContactPage> {
             context: context,
             builder: (final BuildContext context) {
               return AlertDialog(
-                title: const Text("Invalid details"),
-                content: const Text(
+                title: Text(
+                  "Invalid details",
+                  style: TextStyle(color: Settings.colorSet.dialogText),
+                ),
+                content: Text(
                   "Please enter all details correctly to create a new contact",
+                  style: TextStyle(color: Settings.colorSet.dialogText),
                 ),
                 actions: <Widget>[
                   TextButton(
                     onPressed: () {
                       clearNavigatorAndPush(context, const ContactListPage());
                     },
-                    child: const Text("OK"),
+                    child: Text(
+                      "OK",
+                      style: TextStyle(
+                        color: Settings.colorSet.dialogButtonText,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
                   ),
                 ],
+                backgroundColor: Settings.colorSet.dialogBackground,
               );
             },
           );

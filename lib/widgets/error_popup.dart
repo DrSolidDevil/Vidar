@@ -32,37 +32,7 @@ class _ErrorPopupState extends State<ErrorPopup> {
   late final String title;
   late final String body;
   late final bool enableReturn;
-
-  List<Widget> actions(final BuildContext context) {
-    final List<Widget> list = <Widget>[
-      TextButton(
-        onPressed: () {
-          clearNavigatorAndPush(context, const ContactListPage());
-        },
-        child: const Text("Home"),
-      ),
-    ];
-    if (Settings.keepLogs) {
-      list.add(
-        TextButton(
-          onPressed: () {
-            exportLogs();
-            clearNavigatorAndPush(context, const ContactListPage());
-          },
-          child: const Text("Export logs"),
-        ),
-      );
-    }
-    list.add(
-      TextButton(
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-        child: const Text("Back"),
-      ),
-    );
-    return list;
-  }
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -80,9 +50,72 @@ class _ErrorPopupState extends State<ErrorPopup> {
         const ContactListPage(),
         Center(
           child: AlertDialog(
-            title: Text(title),
-            content: Text(body),
-            actions: actions(context),
+            title: Text(
+              title,
+              style: TextStyle(color: Settings.colorSet.dialogText),
+            ),
+            content: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height / 2,
+              ),
+              child: RawScrollbar(
+                thumbColor: Settings.colorSet.dialogScrollbar,
+                controller: _scrollController,
+                thumbVisibility: true,
+                thickness: 2,
+                interactive: true,
+                padding: const EdgeInsets.only(left: 4),
+                child: TextField(
+                  readOnly: true,
+                  scrollController: _scrollController,
+                  controller: TextEditingController(text: body),
+                  maxLines: null,
+                  decoration: const InputDecoration(border: InputBorder.none),
+                  style: TextStyle(color: Settings.colorSet.dialogText),
+                ),
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  clearNavigatorAndPush(context, const ContactListPage());
+                },
+                child: Text(
+                  "Home",
+                  style: TextStyle(
+                    color: Settings.colorSet.dialogButtonText,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+              if (Settings.keepLogs)
+                TextButton(
+                  onPressed: () {
+                    exportLogs();
+                    clearNavigatorAndPush(context, const ContactListPage());
+                  },
+                  child: Text(
+                    "Export logs",
+                    style: TextStyle(
+                      color: Settings.colorSet.dialogButtonText,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text(
+                  "Back",
+                  style: TextStyle(
+                    color: Settings.colorSet.dialogButtonText,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+            ],
+            backgroundColor: Settings.colorSet.dialogBackground,
           ),
         ),
       ],

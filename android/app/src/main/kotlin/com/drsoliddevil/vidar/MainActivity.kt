@@ -36,7 +36,7 @@ class MainActivity : FlutterActivity() {
         ).setMethodCallHandler { call, result ->
             when (call.method) {
                 "querySms" -> {
-                    result.success(querySms(context, call.argument("phoneNumber")))
+                    result.success(querySms(context, call.argument("phoneNumber"), call.argument("latestN")))
                 }
 
                 "sendSms" -> {

@@ -1,12 +1,10 @@
-import "package:cryptography/cryptography.dart" show AesGcm;
 import "package:flutter/material.dart";
 import "package:vidar/configuration.dart";
 import "package:vidar/utils/common_object.dart";
 import "package:vidar/utils/contact.dart";
 import "package:vidar/utils/conversation.dart";
-import "package:vidar/utils/encryption.dart";
 import "package:vidar/utils/settings.dart";
-import "package:vidar/utils/sms.dart";
+import "package:vidar/widgets/info_text_widget.dart";
 import "package:vidar/widgets/loading_screen.dart";
 import "package:vidar/widgets/speech_bubble.dart";
 
@@ -21,7 +19,6 @@ class ConversationWidget extends StatefulWidget {
 class _ConversationWidgetState extends State<ConversationWidget> {
   _ConversationWidgetState();
   late Contact contact;
-  late Conversation conversation;
   bool chatLoaded = false;
   String loadMessage = "Loading...";
 
@@ -29,8 +26,13 @@ class _ConversationWidgetState extends State<ConversationWidget> {
   void initState() {
     super.initState();
     contact = widget.contact;
-    conversation = Conversation(contact);
-    CommonObject.currentConversation = conversation;
+    CommonObject.currentConversation = Conversation(contact);
+  }
+
+  @override
+  void dispose() {
+    CommonObject.currentConversation?.dispose();
+    super.dispose();
   }
 
   @override
@@ -39,108 +41,67 @@ class _ConversationWidgetState extends State<ConversationWidget> {
       CommonObject.logger!.info("Querying sms for contact ${contact.uuid}...");
     }
     return ListenableBuilder(
-      listenable: conversation,
-      builder: (final BuildContext context, final Widget? asyncSnapshot) {
-        final Future<List<SmsMessage?>?> smsFuture = Future<void>.delayed(
-          const Duration(seconds: 1),
-        ).then((final void _) => querySms(phoneNumber: contact.phoneNumber));
-
-        return FutureBuilder<List<SmsMessage?>?>(
-          future: smsFuture,
+      listenable: CommonObject.currentConversation!,
+      builder: (final BuildContext context, final Widget? child) {
+        return FutureBuilder<ConversationStatus>(
+          future: CommonObject.currentConversation!.updateChatLogs(latestN: 5),
           builder:
               (
                 final BuildContext context,
-                final AsyncSnapshot<List<SmsMessage?>?> snapshot,
+                final AsyncSnapshot<ConversationStatus> snapshot,
               ) {
                 if (!snapshot.hasData) {
                   return ChatLoadingScreen(contact.name);
                 } else {
                   // snapshot.data == [null] does not work
-                  if (snapshot.data![0] == null) {
-                    if (Settings.keepLogs) {
-                      CommonObject.logger!.info(
-                        "SMS query failed for contact ${contact.uuid}",
-                      );
-                    }
-                    return ColoredBox(
-                      color: Settings.colorSet.primary,
-                      child: Center(
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.6,
-                          child: Center(
-                            child: Text(
-                              "SMS query failed, please ensure the phone number is correct.",
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: Settings.colorSet.text,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    );
-                  } else {
-                    final List<SmsMessage> chatLogs = snapshot.data!
-                        .whereType<SmsMessage>()
-                        .toList();
-                    conversation.chatLogs = <SmsMessage>[];
-                    for (final SmsMessage chat in chatLogs) {
-                      if (chat.status == SmsConstants.STATUS_FAILED) {
-                        conversation.chatLogs.add(
-                          chat.clone(newBody: "MESSAGE_FAILED"),
+                  switch (snapshot.data) {
+                    case ConversationStatus.FAILURE:
+                      if (Settings.keepLogs) {
+                        CommonObject.logger!.info(
+                          "SMS query failed for contact ${contact.uuid}",
                         );
-                      } else {
-                        conversation.chatLogs.add(chat);
                       }
-                    }
-                    if (LoggingConfiguration.extraVerboseLogs &&
-                        Settings.keepLogs) {
-                      CommonObject.logger!.info(
-                        "SMS query complete for contact ${contact.uuid}",
+                      return const InfoText(
+                        text:
+                            "SMS query failed, please ensure the phone number is correct.",
+                        textWidthFactor: 0.8,
+                        fontSize: 20,
                       );
-                    }
 
-                    final List<Widget> decryptedSpeechBubbles = <Widget>[];
-                    for (final SmsMessage message in conversation.chatLogs) {
-                      decryptedSpeechBubbles.add(
-                        FutureBuilder<String>(
-                          future: decryptMessage(
-                            message.body,
-                            contact.encryptionKey,
-                            algorithm: AesGcm.with256bits(
-                              nonceLength:
-                                  CryptographicConfiguration.nonceLength,
-                            ),
-                          ),
-                          builder:
-                              (
-                                final BuildContext context,
-                                final AsyncSnapshot<String?> snapshot,
-                              ) {
-                                if (snapshot.hasData) {
-                                  return SpeechBubble(
-                                    message.clone(newBody: snapshot.data),
-                                  );
-                                } else {
-                                  if (LoggingConfiguration.extraVerboseLogs &&
-                                      Settings.keepLogs) {
-                                    CommonObject.logger!.info(
-                                      "Snapshot has no data for contact ${contact.uuid}",
-                                    );
-                                  }
-                                }
-                                return const SizedBox.shrink();
-                              },
+                    case ConversationStatus.SUCCESS:
+                      if (LoggingConfiguration.extraVerboseLogs &&
+                          Settings.keepLogs) {
+                        CommonObject.logger!.info(
+                          "SMS query complete for contact ${contact.uuid}",
+                        );
+                      }
+                      return ColoredBox(
+                        color: Settings.colorSet.primary,
+                        child: ListView.builder(
+                          reverse: true,
+                          itemCount:
+                              CommonObject.currentConversation!.chatLogsLength,
+                          itemBuilder:
+                              (final BuildContext context, final int index) =>
+                                  SpeechBubble(
+                                    CommonObject
+                                        .currentConversation!
+                                        .decryptedChatLogs[index],
+                                  ),
                         ),
                       );
-                    }
-                    return ColoredBox(
-                      color: Settings.colorSet.primary,
-                      child: ListView(
-                        reverse: true,
-                        children: decryptedSpeechBubbles,
-                      ),
-                    );
+
+                    default:
+                      if (Settings.keepLogs) {
+                        CommonObject.logger!.info(
+                          "Unexpected case (${snapshot.data}) when loading chat logs for contact ${contact.uuid}",
+                        );
+                      }
+                      return InfoText(
+                        text:
+                            "Unexpected case (${snapshot.data}) when loading chat logs",
+                        textWidthFactor: 0.6,
+                      );
                   }
                 }
               },

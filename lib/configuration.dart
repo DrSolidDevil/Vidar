@@ -23,6 +23,7 @@ class SizeConfiguration {
   static const double messageVerticalSeperation = 5;
   static const double settingInfoText = 12;
   static const double loadingFontSize = 32;
+  static const double feedbackFormFontSize = 12;
 }
 
 class TimeConfiguration {
@@ -36,6 +37,17 @@ class TimeConfiguration {
 }
 
 class MiscellaneousConfiguration {
+  // Probability of the user seeing a dialog prompting them to give feedback 0-1,
+  // where 1 means showing it always.
+  static const double userFeedbackDialogProbability = 0.0065; // 0.65% chance
+  static const Duration userFeedbackDialogPopupWait = const Duration(
+    seconds: 1,
+  );
+  static const String userFeedbackEmailAddress =
+      "drsoliddevil+vidarfeedback@gmail.com";
+}
+
+class ChatConfiguration {
   static const String errorPrefix = "⚠";
   static const List<String> messageHints = <String>[
     "Write them a message!",
@@ -44,6 +56,8 @@ class MiscellaneousConfiguration {
     "Start gossiping...",
     "Talk to them, they miss you.",
   ];
+  // Number of messages to check during chat update
+  static const int numCheckDuringUpdate = 5;
 }
 
 class LoggingConfiguration {

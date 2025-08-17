@@ -1,3 +1,24 @@
+## [1.3.0-beta](https://github.com/DrSolidDevil/Vidar/compare/v1.2.2-beta...v1.3.0-beta) (2025-08-17)
+
+> This version of Vidar brings you quality of life and performance improvements.
+
+### New Features
+* Added option to display time using the 12-hour clock (a.m./p.m.). [`3ed6a35`](https://github.com/DrSolidDevil/Vidar/commit/3ed6a35010102d115f21d0e8af6b498ecff332b9)
+* You will now be prompted sometimes to give feedback. This feedback is sent via mail. This request for feedback can be disabled in settings. [`95d8987`](https://github.com/DrSolidDevil/Vidar/commit/95d89875bc9ae195b267ad7b309beb7a1e8ec5d8) [`1c505ae`](https://github.com/DrSolidDevil/Vidar/commit/1c505ae314404842ecf8794e413ac9b7b788578a)
+
+### Performance Improvements
+*  Rewrote message querying and rendering to be able to handle long conversations much better. [`22e1c12`](https://github.com/DrSolidDevil/Vidar/commit/22e1c126905036c7dbd16ec0d2fd16f25d662a83)
+* Rewrote the SMS permission request to utilize `FutureBuilder`. [`22e1c12`](https://github.com/DrSolidDevil/Vidar/commit/22e1c126905036c7dbd16ec0d2fd16f25d662a83) [`43a087b`](https://github.com/DrSolidDevil/Vidar/commit/43a087b6cf696e5c747d59a24f88fb342bdeaac6)
+
+### Other Changes
+* Message bar now expands when writing a long/multiline message. When the message is to long for the additional lines visible on screen then it starts to scroll. This feature makes you able to write long messages without headache. [`2a7a750`](https://github.com/DrSolidDevil/Vidar/commit/2a7a750df0a29ddc121ac5b15a1ab34ae5a7c086)
+* Dialogs/popups now scroll when its text is very long. [`2a7a750`](https://github.com/DrSolidDevil/Vidar/commit/2a7a750df0a29ddc121ac5b15a1ab34ae5a7c086)
+* Added scrollbar to settings page. [`2d6e222`](https://github.com/DrSolidDevil/Vidar/commit/2d6e22202cb1dc56613713e17a61844a006fc38f)
+* Visual improvements. [`bab8afd`](https://github.com/DrSolidDevil/Vidar/commit/bab8afdc284a7cf5e0f259a7d6b5bf392fd4212c) [`f54f40b`](https://github.com/DrSolidDevil/Vidar/commit/f54f40b2cc98ca2def8d031c707ca42749e12011)
+* Updated screenshots [`7620b55`](https://github.com/DrSolidDevil/Vidar/commit/7620b55f699dfa3288634938542fe71682467f3d)
+
+<br>
+
 ## [1.2.2-beta](https://github.com/DrSolidDevil/Vidar/compare/v1.2.1-beta...v1.2.2-beta) (2025-08-02)
 
 > Bug fix on the edit contact page.

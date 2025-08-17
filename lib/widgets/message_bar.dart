@@ -5,7 +5,7 @@ import "package:vidar/configuration.dart";
 import "package:vidar/utils/common_object.dart";
 import "package:vidar/utils/contact.dart";
 import "package:vidar/utils/encryption.dart";
-import "package:vidar/utils/public_change_notifier.dart";
+import "package:vidar/utils/extended_change_notifier.dart";
 import "package:vidar/utils/settings.dart";
 import "package:vidar/utils/sms.dart";
 
@@ -23,8 +23,9 @@ class _MessageBarState extends State<MessageBar> {
   String message = "";
   bool error = false;
   String errorMessage = "";
-  PublicChangeNotifier errorNotifier = PublicChangeNotifier();
+  ExtendedChangeNotifier errorNotifier = ExtendedChangeNotifier();
   final TextEditingController controller = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -133,29 +134,42 @@ class _MessageBarState extends State<MessageBar> {
                     width:
                         MediaQuery.sizeOf(context).width -
                         SizeConfiguration.sendMessageIconSize * 2.5,
-                    child: TextField(
-                      controller: controller,
-                      style: TextStyle(color: Settings.colorSet.text),
-                      decoration: InputDecoration(
-                        hintText: () {
-                          if (Settings.showMessageBarHints) {
-                            return MiscellaneousConfiguration
-                                .messageHints[Random().nextInt(
-                              MiscellaneousConfiguration.messageHints.length,
-                            )];
-                          } else {
-                            return null;
-                          }
-                        }(),
-                        hintStyle: TextStyle(
-                          color: Settings.colorSet.messageBarHintText,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                          borderSide: BorderSide.none,
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxHeight: 150),
+                      child: RawScrollbar(
+                        thickness: 2,
+                        padding: const EdgeInsets.only(bottom: -30),
+                        radius: const Radius.circular(1),
+                        controller: _scrollController,
+                        thumbColor: Settings.colorSet.messageBarScrollbar,
+                        thumbVisibility: true,
+                        child: TextField(
+                          scrollController: _scrollController,
+                          maxLines: null,
+                          controller: controller,
+                          style: TextStyle(color: Settings.colorSet.text),
+                          decoration: InputDecoration(
+                            hintText: () {
+                              if (Settings.showMessageBarHints) {
+                                return ChatConfiguration.messageHints[Random()
+                                    .nextInt(
+                                      ChatConfiguration.messageHints.length,
+                                    )];
+                              } else {
+                                return null;
+                              }
+                            }(),
+                            hintStyle: TextStyle(
+                              color: Settings.colorSet.messageBarHintText,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                          onChanged: (final String value) => message = value,
                         ),
                       ),
-                      onChanged: (final String value) => message = value,
                     ),
                   ),
                   SizedBox(
@@ -169,10 +183,10 @@ class _MessageBarState extends State<MessageBar> {
                             contact.encryptionKey,
                           );
                           if (encryptedMessage.startsWith(
-                            MiscellaneousConfiguration.errorPrefix,
+                            ChatConfiguration.errorPrefix,
                           )) {
                             errorMessage = encryptedMessage.replaceFirst(
-                              MiscellaneousConfiguration.errorPrefix,
+                              ChatConfiguration.errorPrefix,
                               "",
                             );
                             error = true;
