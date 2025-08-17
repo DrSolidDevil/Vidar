@@ -39,7 +39,7 @@ class TimeConfiguration {
 class MiscellaneousConfiguration {
   // Probability of the user seeing a dialog prompting them to give feedback 0-1,
   // where 1 means showing it always.
-  static const double userFeedbackDialogProbability = 0.0065; // 0,65% chance
+  static const double userFeedbackDialogProbability = 0.0065; // 0.65% chance
   static const Duration userFeedbackDialogPopupWait = const Duration(
     seconds: 1,
   );
