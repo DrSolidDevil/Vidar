@@ -173,6 +173,10 @@ class _MessageBarState extends State<MessageBar> {
                     child: Center(
                       child: IconButton(
                         onPressed: () async {
+                          if (message == "") {
+                            return;
+                          }
+                          
                           final String encryptedMessage;
                           try {
                             encryptedMessage = await encryptMessage(
@@ -187,6 +191,7 @@ class _MessageBarState extends State<MessageBar> {
                           sendSms(encryptedMessage, contact.phoneNumber);
                           controller.text =
                               ""; // Clear only after successful send
+                          message = "";
                           if (CommonObject.currentConversation != null) {
                             int delay =
                                 (encryptedMessage.length ~/ 65) *
