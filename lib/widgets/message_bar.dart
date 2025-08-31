@@ -142,6 +142,7 @@ class _MessageBarState extends State<MessageBar> {
                           scrollController: _scrollController,
                           maxLines: null,
                           controller: controller,
+                          textCapitalization: TextCapitalization.sentences,
                           style: TextStyle(color: Settings.colorSet.text),
                           decoration: InputDecoration(
                             hintText: () {
@@ -176,7 +177,7 @@ class _MessageBarState extends State<MessageBar> {
                           if (message == "") {
                             return;
                           }
-                          
+
                           final String encryptedMessage;
                           try {
                             encryptedMessage = await encryptMessage(
