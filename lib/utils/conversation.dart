@@ -3,6 +3,7 @@ import "package:vidar/configuration.dart";
 import "package:vidar/utils/common_object.dart";
 import "package:vidar/utils/contact.dart";
 import "package:vidar/utils/encryption.dart";
+import "package:vidar/utils/encryption_exceptions.dart";
 import "package:vidar/utils/extended_change_notifier.dart";
 import "package:vidar/utils/settings.dart";
 import "package:vidar/utils/sms.dart";
@@ -14,7 +15,7 @@ class Conversation extends ExtendedChangeNotifier {
   }
 
   final Contact contact;
-  late final List<SmsMessage> _decryptedChatLogs;
+  final List<SmsMessage> _decryptedChatLogs = <SmsMessage>[];
   // If there are a lot of chat logs then this can improve performance
   // by not requiring a complete count (e.g. +10K messages, etc)
   int _currentChatLogsLength = 0;
@@ -42,20 +43,31 @@ class Conversation extends ExtendedChangeNotifier {
     // I'm unsure if i should do it.
     // So for the moment it still clones.
     _currentChatLogsLength = chatLogs.length;
-    _decryptedChatLogs = <SmsMessage>[];
     for (final SmsMessage chat in chatLogs as List<SmsMessage>) {
       if (chat.status == SmsConstants.STATUS_FAILED) {
-        _decryptedChatLogs.add(chat.clone(newBody: "MESSAGE_FAILED"));
+        _decryptedChatLogs.add(chat.clone(newBody: "Message failed"));
       } else {
+        String res;
+        Exception? err;
+        (res, err) = await decryptMessage(
+          chat.body,
+          contact.encryptionKey,
+          algorithm: AesGcm.with256bits(
+            nonceLength: CryptographicConfiguration.nonceLength,
+          ),
+        );
+        if (err != null && err.runtimeType != NoEncryptionPrefixException) {
+          switch (err.runtimeType) {
+            case const (DecryptionException):
+              res = "Decryption failed";
+            default:
+              res = err.message;
+          }
+        }
         _decryptedChatLogs.add(
           chat.clone(
-            newBody: await decryptMessage(
-              chat.body,
-              contact.encryptionKey,
-              algorithm: AesGcm.with256bits(
-                nonceLength: CryptographicConfiguration.nonceLength,
-              ),
-            ),
+            newBody: res,
+            newStatus: err != null ? SmsConstants.STATUS_FAILED : chat.status,
           ),
         );
       }
@@ -91,9 +103,11 @@ class Conversation extends ExtendedChangeNotifier {
     // I'm unsure if i should do it.
     // So for the moment it still clones.
     final List<DateTime> latestMessageDates = <DateTime>[];
-    for (final SmsMessage? chat in decryptedChatLogs.sublist(
+    for (final SmsMessage? chat in _decryptedChatLogs.sublist(
       0,
-      ChatConfiguration.numCheckDuringUpdate,
+      _currentChatLogsLength < ChatConfiguration.numCheckDuringUpdate
+          ? _currentChatLogsLength
+          : ChatConfiguration.numCheckDuringUpdate,
     )) {
       latestMessageDates.add(chat!.date!);
     }
@@ -106,24 +120,42 @@ class Conversation extends ExtendedChangeNotifier {
         ++_currentChatLogsLength;
       }
       if (chat.status == SmsConstants.STATUS_FAILED) {
-        _decryptedChatLogs.insert(0, chat.clone(newBody: "MESSAGE_FAILED"));
+        _decryptedChatLogs.insert(0, chat.clone(newBody: "Message failed"));
       } else {
+        String res;
+        Exception? err;
+        (res, err) = await decryptMessage(
+          chat.body,
+          contact.encryptionKey,
+          algorithm: AesGcm.with256bits(
+            nonceLength: CryptographicConfiguration.nonceLength,
+          ),
+        );
+        if (err != null) {
+          switch (err.runtimeType) {
+            case const (DecryptionException):
+              res = "Decryption failed";
+            default:
+              res = err.toString();
+          }
+        }
         _decryptedChatLogs.insert(
           0,
           chat.clone(
-            newBody: await decryptMessage(
-              chat.body,
-              contact.encryptionKey,
-              algorithm: AesGcm.with256bits(
-                nonceLength: CryptographicConfiguration.nonceLength,
-              ),
-            ),
+            newBody: res,
+            newStatus: err != null ? SmsConstants.STATUS_FAILED : chat.status,
           ),
         );
       }
     }
     return ConversationStatus.SUCCESS;
   }
+}
+
+// If child of Exception has a "message" attribute then it will use that
+// If it does not have such an attribute it will use this.
+extension on Exception {
+  String get message => toString();
 }
 
 enum ConversationStatus { FAILURE, SUCCESS }

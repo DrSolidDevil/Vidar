@@ -3,15 +3,10 @@ import "dart:convert";
 import "package:cryptography/cryptography.dart";
 import "package:vidar/configuration.dart";
 import "package:vidar/utils/common_object.dart";
+import "package:vidar/utils/encryption_exceptions.dart";
 import "package:vidar/utils/settings.dart";
 
-const String ENCRYPTION_ERROR_ENCRYPTION_FAILED = "ENCRYPTION_FAILED";
-
-const String ENCRYPTION_ERROR_DECRYPTION_FAILED = "DECRYPTION_FAILED";
-
-const String ENCRYPTION_ERROR_NO_KEY = "NO_KEY";
-
-/// If key is blank then it returns the message argument
+/// If key is blank then it returns the message argument as is
 /// Will output with an encryption prefix (i.e. a string prefix that signals that this is an encrypted message)
 Future<String> encryptMessage(final String message, final String key) async {
   if (key == "") {
@@ -23,7 +18,7 @@ Future<String> encryptMessage(final String message, final String key) async {
     if (Settings.allowUnencryptedMessages) {
       return message;
     } else {
-      return "${ChatConfiguration.errorPrefix}$ENCRYPTION_ERROR_NO_KEY";
+      throw NoKeyException();
     }
   }
 
@@ -58,28 +53,27 @@ Future<String> encryptMessage(final String message, final String key) async {
         stackTrace,
       );
     }
-    return "${ChatConfiguration.errorPrefix}$ENCRYPTION_ERROR_ENCRYPTION_FAILED";
+    throw EncryptionException(error.toString());
   }
 }
 
-/// If key is blank or encryption prefix is missing then it returns the message argument
-/// If decryption fails then it returns "DECRYPTION_FAILED"
-Future<String> decryptMessage(
+/// If key is blank or encryption prefix is missing then it returns the message argument as is
+Future<(String, Exception?)> decryptMessage(
   final String message,
   final String key, {
   AesGcm? algorithm,
 }) async {
   if (key == "") {
-    if (Settings.keepLogs) {
+    if (Settings.keepLogs && !CryptographicConfiguration.allowNoKey) {
       CommonObject.logger!.info("No key for decryption");
     }
-    return message;
+    return (message, NoKeyException());
   }
   if (!message.startsWith(CryptographicConfiguration.encryptionPrefix)) {
-    if (Settings.keepLogs) {
+    if (Settings.keepLogs && LoggingConfiguration.extraVerboseLogs) {
       CommonObject.logger!.info("No encryption prefix");
     }
-    return message;
+    return (message, NoEncryptionPrefixException());
   }
 
   try {
@@ -118,12 +112,12 @@ Future<String> decryptMessage(
       secretKey: secretKey,
     );
     final String decryptedMessage = utf8.decode(decryptedBytes);
-    return decryptedMessage;
+    return (decryptedMessage, null);
   } on SecretBoxAuthenticationError catch (error) {
     if (Settings.keepLogs) {
       CommonObject.logger!.warning("Failed to decrypt message", error);
     }
-    return "${ChatConfiguration.errorPrefix}$ENCRYPTION_ERROR_DECRYPTION_FAILED";
+    return ("", DecryptionException(error.toString()));
   } catch (error, stackTrace) {
     if (Settings.keepLogs) {
       CommonObject.logger!.finer(
@@ -132,6 +126,6 @@ Future<String> decryptMessage(
         stackTrace,
       );
     }
-    return "${ChatConfiguration.errorPrefix}$ENCRYPTION_ERROR_DECRYPTION_FAILED";
+    return ("", DecryptionException(error.toString()));
   }
 }

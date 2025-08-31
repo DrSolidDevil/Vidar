@@ -47,7 +47,13 @@ class SpeechBubble extends StatelessWidget {
                 ),
                 child: Text(
                   message.body,
-                  style: TextStyle(color: Settings.colorSet.text, fontSize: 12),
+                  style: TextStyle(
+                    color: Settings.colorSet.text,
+                    fontSize: 12,
+                    fontStyle: message.status == SmsConstants.STATUS_FAILED
+                        ? FontStyle.italic
+                        : FontStyle.normal,
+                  ),
                 ),
               ),
             ),

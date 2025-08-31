@@ -48,7 +48,6 @@ class MiscellaneousConfiguration {
 }
 
 class ChatConfiguration {
-  static const String errorPrefix = "⚠";
   static const List<String> messageHints = <String>[
     "Write them a message!",
     "Show them some love ❤️",

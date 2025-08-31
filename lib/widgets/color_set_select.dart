@@ -41,10 +41,7 @@ class _ColorSetSelectState extends State<ColorSetSelect> {
                 ),
                 dropdownColor: Settings.colorSet.secondary,
                 focusColor: Settings.colorSet.dropdownFocus,
-                icon: Icon(
-                  Icons.palette,
-                  color: Settings.colorSet.text,
-                ),
+                icon: Icon(Icons.palette, color: Settings.colorSet.text),
                 style: TextStyle(color: Settings.colorSet.text),
                 value: widget.selectedSet,
                 items: availableColorSets

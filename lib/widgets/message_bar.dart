@@ -5,6 +5,7 @@ import "package:vidar/configuration.dart";
 import "package:vidar/utils/common_object.dart";
 import "package:vidar/utils/contact.dart";
 import "package:vidar/utils/encryption.dart";
+import "package:vidar/utils/encryption_exceptions.dart";
 import "package:vidar/utils/extended_change_notifier.dart";
 import "package:vidar/utils/settings.dart";
 import "package:vidar/utils/sms.dart";
@@ -21,8 +22,7 @@ class _MessageBarState extends State<MessageBar> {
   _MessageBarState();
   late Contact contact;
   String message = "";
-  bool error = false;
-  String errorMessage = "";
+  dynamic error;
   ExtendedChangeNotifier errorNotifier = ExtendedChangeNotifier();
   final TextEditingController controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
@@ -69,7 +69,7 @@ class _MessageBarState extends State<MessageBar> {
           ),
           IconButton(
             onPressed: () {
-              error = false;
+              error = null;
               errorNotifier.notifyListeners();
             },
             icon: Icon(Icons.sms, color: Settings.colorSet.secondary),
@@ -84,27 +84,22 @@ class _MessageBarState extends State<MessageBar> {
     return ListenableBuilder(
       listenable: errorNotifier,
       builder: (final BuildContext context, final Widget? child) {
-        if (error) {
+        if (error != null) {
           Future<void>.delayed(
             const Duration(
               seconds: TimeConfiguration.messageWidgetErrorDisplayTime,
             ),
           ).then((_) {
-            error = false;
+            error = null;
             errorNotifier.notifyListeners();
           });
-          switch (errorMessage) {
-            case ENCRYPTION_ERROR_NO_KEY:
+          switch (error.runtimeType) {
+            case const (NoKeyException):
               return buildErrorMessageWidget(
                 context,
                 "No key set for contact, either disable key requirement or set a key",
               );
-            case ENCRYPTION_ERROR_DECRYPTION_FAILED:
-              return buildErrorMessageWidget(
-                context,
-                "Decryption of message failed, please ensure your key is correct",
-              );
-            case ENCRYPTION_ERROR_ENCRYPTION_FAILED:
+            case const (EncryptionException):
               return buildErrorMessageWidget(
                 context,
                 "Encryption of message failed",
@@ -178,39 +173,35 @@ class _MessageBarState extends State<MessageBar> {
                     child: Center(
                       child: IconButton(
                         onPressed: () async {
-                          final String encryptedMessage = await encryptMessage(
-                            message,
-                            contact.encryptionKey,
-                          );
-                          if (encryptedMessage.startsWith(
-                            ChatConfiguration.errorPrefix,
-                          )) {
-                            errorMessage = encryptedMessage.replaceFirst(
-                              ChatConfiguration.errorPrefix,
-                              "",
+                          final String encryptedMessage;
+                          try {
+                            encryptedMessage = await encryptMessage(
+                              message,
+                              contact.encryptionKey,
                             );
-                            error = true;
+                          } catch (e) {
                             errorNotifier.notifyListeners();
-                          } else {
-                            sendSms(encryptedMessage, contact.phoneNumber);
-                            controller.text =
-                                ""; // Clear only after successful send
-                            if (CommonObject.currentConversation != null) {
-                              int delay =
-                                  (encryptedMessage.length ~/ 65) *
-                                  TimeConfiguration.smsUpdateDelay;
-                              delay = delay == 0 ? 1 : delay;
-                              Future<void>.delayed(
-                                Duration(seconds: delay),
-                              ).then((_) {
+                            error = e;
+                            return;
+                          }
+                          sendSms(encryptedMessage, contact.phoneNumber);
+                          controller.text =
+                              ""; // Clear only after successful send
+                          if (CommonObject.currentConversation != null) {
+                            int delay =
+                                (encryptedMessage.length ~/ 65) *
+                                TimeConfiguration.smsUpdateDelay;
+                            delay = delay == 0 ? 1 : delay;
+                            Future<void>.delayed(Duration(seconds: delay)).then(
+                              (_) {
                                 CommonObject.currentConversation!
                                     .notifyListeners();
-                              });
-                            } else if (Settings.keepLogs) {
-                              CommonObject.logger!.info(
-                                "Current conversation is null, can not notifyListeners",
-                              );
-                            }
+                              },
+                            );
+                          } else if (Settings.keepLogs) {
+                            CommonObject.logger!.info(
+                              "Current conversation is null, can not notifyListeners",
+                            );
                           }
                         },
                         icon: Icon(

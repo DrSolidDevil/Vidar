@@ -65,11 +65,9 @@ private fun cursorToListOfHashMap(cursor: Cursor, latestN: Int?): ArrayList<Hash
     val hashMapList: ArrayList<HashMap<String, String>> = ArrayList<HashMap<String, String>>()
 
     var i: Int = 0
-    println("latestN = $latestN")
     @Suppress("ConvertTryFinallyToUseCall")
     try {
         do {
-            println(i)
             if (latestN != null) {
                 if (i >= latestN) {
                     break
