@@ -68,6 +68,11 @@ class _SettingsPageState extends State<SettingsPage> {
     settingText: "Use 12-hour clock",
   );
 
+  final BooleanSetting showDay = BooleanSetting(
+    setting: Settings.showDay,
+    settingText: "Seperate days in chat",
+  );
+
   final ColorSetSelect colorSetSelect = ColorSetSelect(
     selectedSet: Settings.colorSet.name,
   );
@@ -92,6 +97,7 @@ class _SettingsPageState extends State<SettingsPage> {
     Settings.allowWipeoutTime = allowWipeoutTimeValue;
     Settings.allowUserFeedbackDialog = allowUserFeedbackDialog.setting;
     Settings.use12HourClock = use12HourClock.setting;
+    Settings.showDay = showDay.setting;
     if (allowWipeoutTimeValue) {
       if (wipeoutTime.setting < 1) {
         Settings.allowWipeoutTime = false;
@@ -196,6 +202,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           keepLogs,
                           allowUserFeedbackDialog,
                           use12HourClock,
+                          showDay,
                           showMessageBarHints,
                           colorSetSelect,
                         ],

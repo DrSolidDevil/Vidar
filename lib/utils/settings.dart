@@ -22,6 +22,8 @@ class Settings {
 
   static bool use12HourClock = false;
 
+  static bool showDay = true;
+
   /// Get map of the state of all instance variable of Settings.
   static Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -34,6 +36,7 @@ class Settings {
       "colorSet": colorSet.name,
       "allowUserFeedbackDialog": allowUserFeedbackDialog,
       "use12HourClock": use12HourClock,
+      "showDay": showDay,
     };
   }
 
@@ -54,5 +57,6 @@ class Settings {
     allowUserFeedbackDialog =
         map["allowUserFeedbackDialog"] as bool? ?? allowUserFeedbackDialog;
     use12HourClock = map["use12HourClock"] as bool? ?? use12HourClock;
+    showDay = map["showDay"] as bool? ?? showDay;
   }
 }

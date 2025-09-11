@@ -121,6 +121,7 @@ Keep Logs: ${Settings.keepLogs}
 Color set: ${Settings.colorSet.name}
 Show message bar hints: ${Settings.showMessageBarHints}
 Show encryption key in edit contact: ${Settings.showEncryptionKeyInEditContact}
+Show day seperation: ${Settings.showDay}
 Allow wipeout: ${Settings.allowWipeoutTime}
 Wipeout time: ${Settings.wipeoutTime} days
 Allow user feedback dialog: ${Settings.allowUserFeedbackDialog}
