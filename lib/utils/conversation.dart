@@ -60,8 +60,10 @@ class Conversation extends ExtendedChangeNotifier {
           switch (err.runtimeType) {
             case const (DecryptionException):
               res = "Decryption failed";
+              break;
             default:
               res = err.message;
+              break;
           }
         }
         _decryptedChatLogs.add(
@@ -131,12 +133,14 @@ class Conversation extends ExtendedChangeNotifier {
             nonceLength: CryptographicConfiguration.nonceLength,
           ),
         );
-        if (err != null) {
+        if (err != null && err.runtimeType != NoEncryptionPrefixException) {
           switch (err.runtimeType) {
             case const (DecryptionException):
               res = "Decryption failed";
+              break;
             default:
               res = err.toString();
+              break;
           }
         }
         _decryptedChatLogs.insert(
